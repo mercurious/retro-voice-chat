@@ -4,6 +4,9 @@ Push-to-talk voice chat with a local language model on a retro handheld. Hold a 
 character called TRIXY (say "Trixie") answers out loud. Everything runs on the device: no cloud, no account, no network
 once the models are downloaded. It can also play Zork I, II and III with you by voice.
 
+A second persona, **ENIGMA**, is a word-puzzle host in the manner of a radio puzzle segment: ask for a
+puzzle, a round or a challenge, answer out loud, ask for hints. See [ENIGMA](#enigma-word-puzzles).
+
 Built and tested on a **Retroid Pocket Flip 2** (Snapdragon 865 / SM8250, 8 GB) running **ROCKNIX**.
 
 > **AI disclosure.** This project was written with Claude Code (Anthropic's Claude Opus 5.5 and Claude
@@ -69,7 +72,7 @@ tar xzf retro-voice-chat-aarch64.tar.gz && cd retro-voice-chat
 ./install.sh --smart          # optional: also the larger model, 4.8 GB more
 ```
 
-Then refresh the game lists in EmulationStation and start **Retro Voice Chat** from Ports.
+Then refresh the game lists in EmulationStation and start **Retro Voice Chat** (or **Enigma Puzzles**) from Ports.
 `./install.sh --uninstall` removes the Ports entries and the mic fix; delete the directory to remove the
 rest.
 
@@ -132,6 +135,50 @@ of its state; the language model never narrates.
 - The game's text is read aloud. "Save" and "restore" are the game's own; "quit the game" saves and goes
   back to chat.
 
+## ENIGMA: word puzzles
+
+Start **Enigma Puzzles** from Ports (or set `RV_PERSONA=enigma`). Hold B and say what you'd like:
+
+- "Give me a puzzle." One puzzle: an anagram, a letter change, a hidden word, a charade, a sound-alike...
+  "A puzzle about birds" picks the category.
+- "Let's do a round." A themed set of six or seven quick ones with a worked example first, read
+  back to back, with the score at the end.
+- "Give me a challenge." A two-step puzzle to chew on, like a listener challenge.
+- While a puzzle is open: just say your answer ("is it melon?", or spell it), "hint" (up to three, each
+  closer), "say that again", "I give up", "next one", "harder", "easier".
+
+**How it works.** A 2-4B model cannot make a fair letter puzzle: it reads words in chunks, not letters, so
+its anagrams drop letters and its one-letter changes change two. So the code makes, checks, reads and
+scores every puzzle (`app/puzzles.py`), and the model only hosts: it reacts to a solve, banters, and
+answers questions about puzzles. A sentence the model writes that would give away an open answer is not
+spoken. The puzzles come from:
+
+- **generators**: letter operations (anagram, change / drop / add a letter, reversal, drop-and-rearrange,
+  two-step chains) between common words and 49 hand-checked category lists (fruits, countries, U.S.
+  states, instruments, presidents...). An answer is offered only if it is the one member of its category
+  the operation reaches; obscure members never are. About 10,000 such puzzles.
+- **a written bank** (`app/puzzle/bank/`): 150 single puzzles, 24 rounds and 40 challenges,
+  original, each with machine-checked claims (`test/test_puzzles.py` fails if an anagram is not one, a
+  hidden word is not hidden...). The sound-based ones (homophones, rhymes, spoonerisms) are the only
+  claims not checked by code.
+
+The code grades answers. A homophone the speech recognizer writes still counts ("pair" for *pear*, by the
+CMU Pronouncing Dictionary, so "peer" does not), spelling an answer out works, any answer that satisfies the
+puzzle is accepted out loud, and a wrong guess can hear which rule it broke (wrong length, two letters changed). Clues, hints, verdicts and reveals are the puzzle book's own words and play at once;
+only the host's reactions wait for the model. The manner is a composite drawn from listening to two
+radio puzzle programs (`app/puzzle/STYLE.md`); it is not an impression of either host, and no audio,
+transcript or puzzle from them is in this repository.
+
+Measured on the Flip 2, fast mode, typed turns: every puzzle turn (clue, hint, verdict, reveal, even a right
+answer) starts playing in 0.6-0.9 s; the host's own line after a solve follows 0-3 s later, and plain chat
+takes 2-5 s. The puzzle book loads and indexes in about 1.5 s while the model warms up. Smart mode's replies
+took 4-6 s and gushed more; fast mode is the better host here.
+
+**Speaking letters.** Pocket TTS garbles spelled words ("P-A-I-N-S" came back from a transcription test as
+"PA ions", a lone "M." as "Monsieur"). The app rewrites only the audio: capitals with commas
+("P, A, I, N, S"), "double-you" for W, and letter names after "the letter" ("the letter em"). The screen
+keeps B-E-A-R.
+
 ## Volume
 
 Pocket TTS speech is quiet next to a game, so the app makes it about 6 dB louder and caps the peaks with
@@ -157,6 +204,8 @@ Environment variables for `launch.sh` (set them in a Ports entry):
 | `RV_LLM_MODEL`, `RV_LLM_DRAFT`, `RV_LLM_CPUS`, `RV_LLM_T`, `RV_LLM_TB` | another model, MTP draft head, core pinning and threads |
 | `RV_ASR_CPUS`, `RV_TTS_CPUS` | cores for speech recognition and synthesis |
 | `RV_START_GAME` | `1`-`3`: start in that Zork |
+| `RV_PERSONA` | `trixy` (default) or `enigma`, the word-puzzle host |
+| `RV_PUZZLE_SEED` | fix ENIGMA's puzzle choices (for repeatable tests) |
 | `RV_FONT` | UI font size |
 | `RV_LLM_GPU`, `RV_OCL_DIR` | run the language model on the Adreno GPU, see below |
 
@@ -175,6 +224,11 @@ here depends on it.
 synthesis and prints timings; `SILENT=1` plays into a null sink. Commands can also be written to the
 FIFO `/tmp/retrovoice.ctl`: `ptt_down`, `ptt_up`, `inject <wav>`, `say <text>`, `stop`, `voice [name]`,
 `repeat`, `new`, `quit`. Per-turn metrics go to `logs/turns.jsonl`.
+
+ENIGMA: `python3 test/test_puzzles.py` checks the whole puzzle book on any machine (every bank claim, every
+generated puzzle's uniqueness, grading and the session logic). `test/enigma.txt` is a typed session;
+`python3 test/make_solve_script.py 7 > test/enigma_solve.txt` writes one in which the player solves
+puzzles, to run with `RV_PERSONA=enigma RV_PUZZLE_SEED=7 test/test_say.sh <label> test/enigma_solve.txt`.
 
 ## Status
 

@@ -12,6 +12,7 @@ new, quit.
 import array, fcntl, io, json, math, os, queue, random, re, select, shutil, struct, subprocess, sys
 import textwrap, threading, time, unicodedata, urllib.error, urllib.request, uuid, wave
 from zgame import GAMES, GameOver, ZGame
+import puzzles
 
 VERSION = "0.0.1"
 ASR_URL = os.environ.get("RV_ASR_URL", "http://127.0.0.1:8091")
@@ -53,7 +54,7 @@ CTX_FULL = re.compile(r"request \((\d+) tokens\) exceeds the available context s
 GAME_DIR = os.environ.get("RV_GAME_DIR", os.path.join(os.path.dirname(os.path.abspath(__file__)), "games"))
 DFROTZ = os.environ.get("RV_DFROTZ", os.path.join(GAME_DIR, "dfrotz"))
 # spoken commands must start the sentence: "Let's play Zork two." starts it, "I used to play Zork" does not
-ASKING = r"^\W*(?:(?:ok|okay|alright|so|now|hey|trixy|trixie|please|let's|lets|let us|can we|could we|i want to|" \
+ASKING = r"^\W*(?:(?:ok|okay|alright|so|now|hey|trixy|trixie|enigma|please|let's|lets|let us|can we|could we|i want to|" \
          r"i'd like to|i would like to|we should|time to)\W+)*"
 GAME_START = re.compile(ASKING + r"(play|start|launch|load|begin|resume|continue)\b.{0,20}?\bzork\b"
                         r"(?:\s*(1|2|3|one|two|three|iii|ii|i)\b)?", re.I)
@@ -110,7 +111,7 @@ def direct_command(text):
 def msgs_chars(msgs):
     return sum(len(m.get("content", "")) + 12 for m in msgs)   # ~12 characters of chat template per message
 
-SYSTEM_PROMPT = os.environ.get("RV_SYSTEM", (
+TRIXY_PROMPT = (
     "You are TRIXY, a friendly retro computer voice living inside a Retroid Pocket handheld game console. "
     "Everything you say is spoken aloud, so answer in one to three short sentences of plain conversational "
     "English: no lists, no markdown, no emoji, no stage directions. Be warm, curious and a little playful, "
@@ -125,7 +126,45 @@ SYSTEM_PROMPT = os.environ.get("RV_SYSTEM", (
     "Messages may end with a [Note: ...] from the game system; the player cannot see it. Follow it, and "
     "trust any verified fact it gives you.\n"
     "If you did not understand what the player said, say so briefly.\n"
-    f"Today's date is {time.strftime('%B %d, %Y')}."))
+    f"Today's date is {time.strftime('%B %d, %Y')}.")
+# ENIGMA (RV_PERSONA=enigma): a word-puzzle host. puzzles.py makes, checks, reads and scores every puzzle; the
+# model never invents or judges one (small models cannot see letters), it only hosts: reactions, praise, chat.
+# The manner is a composite of radio puzzle segments (see puzzle/STYLE.md), not an impression of anyone.
+ENIGMA_PROMPT = (
+    "You are ENIGMA, a word-puzzle master who lives inside a Retroid Pocket handheld. Everything you say is spoken "
+    "aloud, so answer in one to three short sentences of plain conversational English: no lists, no markdown, no "
+    "emoji, no stage directions.\n"
+    "Your manner is that of a beloved radio puzzle host: warm, brisk and exact, quietly delighted by words, curious "
+    "about the player. You praise a good solve simply and sincerely, tease gently, enjoy a pun, give credit "
+    "generously, and never show off. You know crosswords, anagrams, palindromes, spoonerisms and the history of "
+    "puzzles. React in one breath, then move on. Praise a clever wrong guess, admit when a puzzle was hard, and "
+    "end a round with one pun on an answer. Be curious about the player: ask what they like to solve. The sound "
+    "of you: \"There you go! Pains into Spain. No pain, no gain.\" \"Take your time; the aha always comes just "
+    "after you stop pushing.\" \"Zero for six, but you went down swinging. Another round?\"\n"
+    "The puzzle book: the app makes and checks every puzzle, reads each clue aloud, gives the hints and keeps the "
+    "score. So never make up a puzzle, riddle, anagram, clue or hint yourself, never read out a clue, and never say "
+    "whether an answer is right unless a Note tells you. If the player wants a puzzle, tell them to ask for a "
+    "puzzle, a round, or a challenge.\n"
+    "Messages may end with a [Note: ...] from the puzzle book; the player cannot see it. Follow it exactly, and keep "
+    "your reply short: the next clue may follow right after you.\n"
+    "If you did not understand what the player said, say so briefly.\n"
+    f"Today's date is {time.strftime('%B %d, %Y')}.")
+# Who is talking. name: on screen; said: how TTS should say it (and how the ASR spells it back).
+PERSONAS = {
+    "trixy": {"name": "TRIXY", "said": "Trixie", "title": " ▓▒░ T R I X Y ░▒▓", "subtitle": "   retro voice chat",
+              "system": TRIXY_PROMPT, "games": True, "trivia": True, "puzzles": False,
+              "greet": "I'm ready. Hold the B button or R1 and talk to me.",
+              "fresh": "Fresh start. What's on your mind?",
+              "colors": ("\033[38;5;46m", "\033[38;5;28m", "\033[38;5;214m", "\033[38;5;44m")},
+    "enigma": {"name": "ENIGMA", "said": "Enigma", "title": " ░▒▓ E N I G M A ▓▒░", "subtitle": "   word puzzles",
+               "system": ENIGMA_PROMPT, "games": False, "trivia": False, "puzzles": True,
+               "greet": "Hello there, I'm Enigma, and I've got a puzzle with your name on it. Hold B and ask me for "
+                        "a puzzle, a round, or a real challenge.",
+               "fresh": "Clean slate. Shall I give you a puzzle?",
+               "colors": ("\033[38;5;222m", "\033[38;5;137m", "\033[38;5;117m", "\033[38;5;180m")},
+}
+PERSONA = PERSONAS.get(os.environ.get("RV_PERSONA", "trixy").lower(), PERSONAS["trixy"])
+SYSTEM_PROMPT = os.environ.get("RV_SYSTEM", PERSONA["system"])
 TEMPERATURE = float(os.environ.get("RV_TEMP", "0.4"))
 
 # Verified trivia bank: the app, not the model, picks questions and holds the answers, so a quiz never
@@ -609,9 +648,12 @@ def transcribe(wav_bytes):
     return text.strip()
 
 
-# The assistant's name is written TRIXY and said "Trixie", which is how the ASR spells it back.
+# The assistant's name is written TRIXY and said "Trixie", which is how the ASR spells it back; ENIGMA is said
+# "Enigma" (written in capitals, TTS would spell it out).
 ASR_FIXES = [(r"\btri(?:xie|xi|xey|cksy|cksie|ksy|ksie)\b", "Trixy"),
-             (r"\bzor(?:c|g|ch|ck|ke)\b", "Zork")]
+             (r"\bzor(?:c|g|ch|ck|ke)\b", "Zork"),
+             (r"\b(?:a|an|in)[\s-]?nigma\b|\benigmas?\b", "Enigma")]
+SAY_NAME = re.compile(r"\b" + PERSONA["name"] + r"\b", re.I)
 
 
 HIDDEN = re.compile(r"\[[^\]]*(\]|$)")   # [answer: ...] notes, including an unterminated one mid-stream
@@ -627,6 +669,25 @@ def clean_for_speech(text):
         if cat[0] in "LNPZ" or ch in "'\"$%&+-=/":
             out.append(ch)
     return re.sub(r"\s+", " ", "".join(out)).strip()
+
+
+# Pocket TTS garbles spelled words ("P-A-I-N-S" came out as "PA ions", a lone "M." as "Monsieur"). What it
+# does say clearly, checked by synthesizing on the rig and transcribing back: capitals with commas
+# ("P, A, I, N, S"), W as "double-you", and a single letter by its name ("the letter em"). Only the audio is
+# rewritten; the screen keeps B-E-A-R.
+LETTER_NAMES = dict(zip("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ay bee see dee ee eff gee aitch eye jay kay ell em en oh pee cue ar "
+                                                       "ess tee you vee double-you ex why zee".split()))
+SPELLED = re.compile(r"\b[A-Z](?:-[A-Z])+\b")
+ONE_LETTER = re.compile(r"\b(the letters?|letter) ([A-Z])\b")
+PATTERN = re.compile(r"(pattern is )([^.]*)")
+
+
+def tts_text(text):
+    text = SAY_NAME.sub(PERSONA["said"], text)
+    text = SPELLED.sub(lambda m: ", ".join("double-you" if c == "W" else c for c in m.group(0).split("-")), text)
+    text = ONE_LETTER.sub(lambda m: f"{m.group(1)} {LETTER_NAMES[m.group(2)]}", text)
+    return PATTERN.sub(lambda m: m.group(1) + re.sub(r"\b[A-Z]\b", lambda c: LETTER_NAMES[c.group(0)], m.group(2)),
+                       text)
 
 
 SENT_END = re.compile(r"([.!?…]+[\"')\]]*)(\s+|$)")
@@ -676,7 +737,9 @@ class App:
         self.voices, self.voice = ["alba"], "alba"
         self.voice_pref = os.environ.get("RV_VOICE") or self.prefs.get("voice") or "random"   # a name, or "random"
         self.history = []
-        self.trivia, self.trivia_active = load_trivia(), None
+        self.trivia, self.trivia_active = (load_trivia() if PERSONA["trivia"] else []), None
+        self.book = puzzles.Puzzles(os.environ.get("RV_PUZZLE_SEED")) if PERSONA["puzzles"] else None   # generators, bank
+        self.host = puzzles.Session(self.book) if self.book else None   # the puzzle being played, the score
         self.metrics = ""
         self.n_ctx = 0             # the LLM's context window (tokens), from /props
         self.ctx_used = 0          # tokens the conversation fills: prompt + reply of the last turn
@@ -767,6 +830,8 @@ class App:
         self.voice = self.voice_pref if self.voice_pref in self.voices else random.choice(self.voices)
         self.player = Player()
         self.set_state("BOOT", "warming up the model")
+        if self.book:      # the generator index (~2 s on the rig) is built while the model warms up
+            threading.Thread(target=self.book.warm, daemon=True).start()
         self.warm_llm()
         say(system_load())
         say(f"voice: {self.voice_label()}")
@@ -776,9 +841,9 @@ class App:
         while not self.q.empty():
             time.sleep(0.05)
         time.sleep(0.2)
-        greet = "I'm ready. Hold the B button or R1 and talk to me." if self.source else \
+        greet = PERSONA["greet"] if self.source else \
             "I'm ready, but I can't find a microphone. Plug in a headset with a mic and I'll hear you."
-        self.speak_now(greet, self.add("trixy", ""))
+        self.speak_now(greet, self.add("host", ""))
         self.set_state("READY", self.source_desc)
         if os.environ.get("RV_START_GAME"):
             self.work_q.put((self.gen, "game", os.environ["RV_START_GAME"]))
@@ -907,7 +972,7 @@ class App:
             cap["t_req"], cap["i"], audio = time.time(), len(turn.get("tts", [])) if turn else 0, 0
             try:
                 req = urllib.request.Request(TTS_URL + "/v1/audio/speech",
-                                             json.dumps({"input": re.sub(r"\btrixy\b", "Trixie", cap["text"], flags=re.I),
+                                             json.dumps({"input": tts_text(cap["text"]),
                                                          "voice": self.voice,
                                                          "response_format": "pcm"}).encode(),
                                              {"Content-Type": "application/json"})
@@ -997,19 +1062,97 @@ class App:
             t["asr"] = t["t0"]
         self.add("you", user)
         self.set_state("THINKING", "")
-        if self.game or GAME_START.search(user):
+        if self.game or PERSONA["games"] and GAME_START.search(user):
             return self.game_turn(gen, user, t)
-        user_msg = self.trivia_notes(user)
+        # ENIGMA: the puzzle book answers first. Its words (clues, hints, verdicts) are spoken as written; the
+        # model is asked only when there is a note for it, or nothing from the book (plain conversation).
+        pre = after = ""
+        guard, max_tokens, ask_llm = None, CHAT_MAX_TOKENS, True
+        if self.host:
+            act = self.host.turn(user)
+            pre, after, guard = act.get("say", ""), act.get("after", ""), act.get("guard")
+            max_tokens = act.get("tokens", CHAT_MAX_TOKENS)
+            ask_llm = bool(act.get("note")) or not pre
+            user_msg = user + ("\n\n" + act["note"] if act.get("note") else "")
+            self.ev(f"puzzle [{self.host.status()}] say={pre[:70]!r} note={bool(act.get('note'))}")
+        else:
+            user_msg = self.trivia_notes(user)
+        row = self.live = self.add("host", "")   # filled in by captions_tick as the words are heard
+        t["pieces"] = 0
+        if pre:
+            t["pieces"] += self.speak(gen, pre, t, row)
+            t.setdefault("ttft", time.time())
+        reply, kept, timings, msgs = "", "", {}, []
+        if ask_llm:
+            reply, kept, timings, msgs = self.stream_reply(gen, user_msg, row, t, max_tokens, guard)
+        if gen != self.gen:
+            return
+        if after:
+            t["pieces"] += self.speak(gen, after, t, row)
+        self.live = None
+        if msgs:
+            self.take_timings(timings, msgs, reply, "chat")
+        # the raw reply keeps any hidden [answer: ...] so the next turn can grade against it
+        raw_reply = " ".join(x.strip() for x in (pre, kept, after) if x.strip())
+        reply = clean_for_speech(raw_reply)
+        self.last_reply = reply
+        self.history += [{"role": "user", "content": user_msg}, {"role": "assistant", "content": raw_reply}]
+        if self.host:
+            if ask_llm and puzzles.OFFER.search(kept):     # the model offered one: a "yes" now starts it
+                self.host.offered = True
+            if not ask_llm:     # the model has not read this exchange: let it, while the book's words play
+                self.prime([{"role": "system", "content": SYSTEM_PROMPT}] + self.history, "chat")
+        # wait for the audio to start so the metrics include it
+        for _ in range(200):
+            if "first_audio" in t or gen != self.gen:
+                break
+            time.sleep(0.05)
+        if gen == self.gen and "first_audio" not in t:   # nothing voiced (TTS failed, or nothing speakable)
+            self.lines[row][1] = reply
+            self.set_state("READY", self.source_desc)
+        asr_s = t["asr"] - t["t0"]
+        ttft_s = t.get("ttft", time.time()) - t["asr"]
+        fa = t.get("first_audio")
+        self.metrics = (f"hear {asr_s:.1f}s · think {ttft_s:.1f}s · first word "
+                        f"{(fa - t['t0']) if fa else 0:.1f}s · " +
+                        (f"{timings.get('predicted_per_second', 0):.1f} tok/s" if ask_llm else "puzzle book"))
+        self.dirty = True
+        # log once the whole reply has been voiced (or cut off), so every stall is in it
+        while gen == self.gen and len(t.get("tts", [])) < t["pieces"]:
+            time.sleep(0.1)
+        self.log.write(json.dumps({"time": time.strftime("%F %T"), "user": user, "reply": reply,
+                                   "raw": raw_reply.strip(), "gaps": t.get("gaps", 0),
+                                   "gap_s": round(t.get("gap_s", 0.0), 2), "gap_at": t.get("gap_at", []),
+                                   "tts": t.get("tts", []), "preroll_s": PREROLL_S,
+                                   "asr_s": round(asr_s, 2), "ttft_s": round(ttft_s, 2),
+                                   "first_audio_s": round(fa - t["t0"], 2) if fa else None,
+                                   "tok_s": timings.get("predicted_per_second"), "ctx": [self.ctx_used, self.n_ctx],
+                                   "bat": [self.bat_pct, round(self.bat_w, 2) if self.bat_w is not None else None],
+                                   "voice": self.voice, "llm": ask_llm,
+                                   "puzzle": self.host.status() if self.host else None,
+                                   "model": MODEL_LABEL}) + "\n")
+        self.log.flush()
+
+    def stream_reply(self, gen, user_msg, row, t, max_tokens, guard=None):
+        """Ask the model, speaking each sentence as it is written. guard: the open puzzle; a sentence that
+        names its answer is dropped, unspoken and out of the history. Returns (reply, kept, timings, msgs)."""
         self.reread_note("chat", SYSTEM_PROMPT, self.history)
-        self.history = self.fit(self.history, SYSTEM_PROMPT, user_msg, CHAT_MAX_TOKENS)
+        self.history = self.fit(self.history, SYSTEM_PROMPT, user_msg, max_tokens)
         msgs = [{"role": "system", "content": SYSTEM_PROMPT}] + self.history + [{"role": "user", "content": user_msg}]
         body = {"messages": msgs, "stream": True, "temperature": TEMPERATURE, "top_p": 0.9,
-                "max_tokens": CHAT_MAX_TOKENS, "chat_template_kwargs": {"enable_thinking": False}}
+                "max_tokens": max_tokens, "chat_template_kwargs": {"enable_thinking": False}}
         req = urllib.request.Request(LLM_URL + "/v1/chat/completions", json.dumps(body).encode(),
                                      {"Content-Type": "application/json"})
-        reply, pending, first, timings = "", "", True, {}
-        row = self.live = self.add("trixy", "")   # filled in by captions_tick as the words are heard
-        t["pieces"] = 0
+        reply, kept, pending, first, timings = "", "", "", True, {}
+
+        def say(s):
+            nonlocal kept
+            if guard and puzzles.leaks(clean_for_speech(s), guard):
+                self.ev(f"dropped a sentence that gives the answer away: {s!r}")
+                return
+            kept += s + " "
+            t["pieces"] += self.speak(gen, s, t, row)
+
         try:
             resp = urllib.request.urlopen(req, timeout=300)
         except urllib.error.HTTPError as e:   # e.g. the conversation no longer fits the context window
@@ -1035,46 +1178,11 @@ class App:
                     pending += piece
                     sents, pending = split_sentences(pending, first)
                     for s in sents:
-                        t["pieces"] += self.speak(gen, s, t, row)
+                        say(s)
                         first = False
-        if gen != self.gen:
-            return
-        if pending.strip():
-            t["pieces"] += self.speak(gen, pending, t, row)
-        self.live = None
-        self.take_timings(timings, msgs, reply, "chat")
-        raw_reply, reply = reply, clean_for_speech(reply)
-        self.last_reply = reply
-        # the raw reply keeps any hidden [answer: ...] so the next turn can grade against it
-        self.history += [{"role": "user", "content": user_msg}, {"role": "assistant", "content": raw_reply.strip()}]
-        # wait for the audio to start so the metrics include it
-        for _ in range(200):
-            if "first_audio" in t or gen != self.gen:
-                break
-            time.sleep(0.05)
-        if gen == self.gen and "first_audio" not in t:   # nothing voiced (TTS failed, or nothing speakable)
-            self.lines[row][1] = reply
-            self.set_state("READY", self.source_desc)
-        asr_s = t["asr"] - t["t0"]
-        ttft_s = t.get("ttft", time.time()) - t["asr"]
-        fa = t.get("first_audio")
-        self.metrics = (f"hear {asr_s:.1f}s · think {ttft_s:.1f}s · first word "
-                        f"{(fa - t['t0']) if fa else 0:.1f}s · {timings.get('predicted_per_second', 0):.1f} tok/s")
-        self.dirty = True
-        # log once the whole reply has been voiced (or cut off), so every stall is in it
-        while gen == self.gen and len(t.get("tts", [])) < t["pieces"]:
-            time.sleep(0.1)
-        self.log.write(json.dumps({"time": time.strftime("%F %T"), "user": user, "reply": reply,
-                                   "raw": raw_reply.strip(), "gaps": t.get("gaps", 0),
-                                   "gap_s": round(t.get("gap_s", 0.0), 2), "gap_at": t.get("gap_at", []),
-                                   "tts": t.get("tts", []), "preroll_s": PREROLL_S,
-                                   "asr_s": round(asr_s, 2), "ttft_s": round(ttft_s, 2),
-                                   "first_audio_s": round(fa - t["t0"], 2) if fa else None,
-                                   "tok_s": timings.get("predicted_per_second"), "ctx": [self.ctx_used, self.n_ctx],
-                                   "bat": [self.bat_pct, round(self.bat_w, 2) if self.bat_w is not None else None],
-                                   "voice": self.voice,
-                                   "model": MODEL_LABEL}) + "\n")
-        self.log.flush()
+        if gen == self.gen and pending.strip():
+            say(pending)
+        return reply, kept.strip(), timings, msgs
 
     def llm_error(self, body):
         """The LLM server's error message; a context overflow also pins the meter at the size it asked for."""
@@ -1162,7 +1270,7 @@ class App:
         self.speak_game(gen, self.game.intro, t)
         if os.path.exists(os.path.join(GAME_DIR, "saves", name + ".qzl")):
             t["pieces"] += self.speak(gen, "You have a saved game. Say restore to pick it up.", t,
-                                      self.add("trixy", ""))
+                                      self.add("host", ""))
         self.prime_game()
 
     def leave_game(self, msg, save=True):
@@ -1181,7 +1289,7 @@ class App:
         self.game_history, self.game_last = [], ""
         self.dirty = True
         if msg:
-            self.speak_now(msg, self.add("trixy", ""))
+            self.speak_now(msg, self.add("host", ""))
         if self.history:
             self.prime([{"role": "system", "content": SYSTEM_PROMPT}] + self.history +
                        [{"role": "user", "content": ""}], "chat")
@@ -1268,7 +1376,7 @@ class App:
                 self.speak_game(gen, out, t)
         elif not ended:
             t["pieces"] = self.speak(gen, "I didn't hear a move there. Try things like look around, go north, or "
-                                          "take the lamp.", t, self.add("trixy", ""))
+                                          "take the lamp.", t, self.add("host", ""))
         if ended or not (self.game and self.game.alive()):
             self.leave_game(f"The game is over. Say play Zork to start again.", save=False)
         elif cmds:
@@ -1463,20 +1571,22 @@ class App:
         self.history, self.lines, self.last_reply = [], [], ""
         self.ctx_used = self.ctx_base
         self.trivia_active = None
-        self.speak_now("Fresh start. What's on your mind?", self.add("trixy", ""))
+        if self.host:
+            self.host = puzzles.Session(self.book)
+            self.host.offered = True        # "Shall I give you a puzzle?" - a yes starts one
+        self.speak_now(PERSONA["fresh"], self.add("host", ""))
         self.set_state("READY", self.source_desc)
 
     # -- UI
-    G, DIM, AMB, CYN, RED, RST = "\033[38;5;46m", "\033[38;5;28m", "\033[38;5;214m", "\033[38;5;44m", \
-        "\033[38;5;203m", "\033[0m"
+    (G, DIM, AMB, CYN), RED, RST = PERSONA["colors"], "\033[38;5;203m", "\033[0m"
 
     def render(self):
         cols, rows = shutil.get_terminal_size((100, 30))
         out = ["\033[H\033[2J\033[?25l"]
-        title = " ▓▒░ T R I X Y ░▒▓   retro voice chat"
+        title = PERSONA["title"] + PERSONA["subtitle"]
         right = f"voice: {self.voice_label()}  ·  {MODEL_LABEL} "
         if self.bat_pct is not None and cols - len(title) - len(right) - 3 < 28:   # narrow: the meter wins
-            title = " ▓▒░ T R I X Y ░▒▓"
+            title = PERSONA["title"]
         bat, bat_len = self.battery_meter(cols - len(title) - len(right) - 3)
         out.append(self.G + "\033[1m" + title + self.RST + self.DIM +
                    right.rjust(max(0, cols - len(title) - bat_len)) + self.RST + bat + "\n")
@@ -1484,8 +1594,10 @@ class App:
         body_h = rows - 9
         wrapped = []
         for n, (who, text) in enumerate(self.lines):
-            color, tag = {"you": (self.AMB, "YOU  › "), "trixy": (self.G, "TRIXY› "), "game": (self.G, "ZORK › "),
-                          "sys": (self.CYN, "  ·   ")}[who]
+            color, tag = {"you": (self.AMB, "YOU" + "›".rjust(len(PERSONA["name"]) - 2)),
+                          "host": (self.G, PERSONA["name"] + "›"), "game": (self.G, "ZORK" + "›".rjust(len(PERSONA["name"]) - 3)),
+                          "sys": (self.CYN, "  ·" + " " * (len(PERSONA["name"]) - 3))}[who]
+            tag += " "
             for i, w in enumerate(textwrap.wrap(text or "…", max(20, cols - 8)) or [""]):
                 wrapped.append(color + (tag if i == 0 else " " * len(tag)) + w + self.RST)
             if not (who == "sys" and n + 1 < len(self.lines) and self.lines[n + 1][0] == "sys"):
@@ -1514,6 +1626,8 @@ class App:
             mic = self.note if self.note else self.source_desc
             ask = "hold [B] or [R1] to talk   " if self.source else ""      # no mic: nothing to hold a button for
             st = f"{self.G}▶ READY{self.RST}   {ask}{self.DIM}{mic}{self.RST}"
+            if self.host and self.host.status():
+                st = f"{self.G}▶ {self.host.status()}{self.RST}   {ask}{self.DIM}{mic}{self.RST}"
         hints = "[B]/[R1] hold: talk   [A] stop   [X] voice   [Y] repeat   [START] new chat   [SELECT+START] quit"
         if self.state in ("BOOT", "ERROR"):
             hints = "[SELECT+START] quit"       # nothing else works before the model is loaded

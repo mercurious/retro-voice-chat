@@ -1,0 +1,4058 @@
+[
+ {
+  "id": "b-001",
+  "type": "single",
+  "level": 1,
+  "clue": "Name the piece of furniture you sleep in. Change its first letter to get a color. What's the color?",
+  "answer": "red",
+  "hints": [
+   "It's the color of a fire engine.",
+   "It has three letters and starts with the letter R."
+  ],
+  "reveal": "Red. Swap the B in bed for an R.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "bed",
+     "red"
+    ]
+   },
+   {
+    "op": "change",
+    "a": "bed",
+    "b": "red"
+   }
+  ]
+ },
+ {
+  "id": "b-002",
+  "type": "single",
+  "level": 1,
+  "clue": "Think of something with a bulb and a shade that lights up a room. Change its first letter to get a word meaning slightly wet. What's the wet word?",
+  "answer": "damp",
+  "hints": [
+   "The lighting word is lamp.",
+   "Think of a towel that's not quite dry.",
+   "It starts with the letter D."
+  ],
+  "reveal": "Damp. Change the L in lamp to a D.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "lamp",
+     "damp"
+    ]
+   },
+   {
+    "op": "change",
+    "a": "lamp",
+    "b": "damp"
+   }
+  ]
+ },
+ {
+  "id": "b-003",
+  "type": "single",
+  "level": 1,
+  "clue": "Think of what a king wears on his head. Change its second letter to get someone at the circus with a red nose and big shoes. Who's that?",
+  "answer": "clown",
+  "hints": [
+   "The king's headwear is a crown.",
+   "Swap the R for an L.",
+   "It starts with C-L."
+  ],
+  "reveal": "Clown. Crown becomes clown when the R turns into an L.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "crown",
+     "clown"
+    ]
+   },
+   {
+    "op": "change",
+    "a": "crown",
+    "b": "clown"
+   }
+  ]
+ },
+ {
+  "id": "b-004",
+  "type": "single",
+  "level": 1,
+  "clue": "Think of the sweet, sticky stuff that bees make. Change its first letter to get what you keep in your wallet. What's in the wallet?",
+  "answer": "money",
+  "hints": [
+   "The bee word is honey.",
+   "Think cash.",
+   "It starts with the letter M."
+  ],
+  "reveal": "Money. Honey with an M in front instead of an H.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "honey",
+     "money"
+    ]
+   },
+   {
+    "op": "change",
+    "a": "honey",
+    "b": "money"
+   }
+  ]
+ },
+ {
+  "id": "b-005",
+  "type": "single",
+  "level": 1,
+  "clue": "Think of a sport played with clubs and a little white ball. Change its first letter to get a wild animal that howls at the moon. What's the animal?",
+  "answer": "wolf",
+  "hints": [
+   "The sport is golf.",
+   "The animal is a wild cousin of the dog.",
+   "It starts with the letter W."
+  ],
+  "reveal": "Wolf. Change the G in golf to a W.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "golf",
+     "wolf"
+    ]
+   },
+   {
+    "op": "change",
+    "a": "golf",
+    "b": "wolf"
+   }
+  ]
+ },
+ {
+  "id": "b-006",
+  "type": "single",
+  "level": 1,
+  "clue": "Think of a colorful bird that can learn to talk. Change its first letter to get an orange vegetable. What's the vegetable?",
+  "answer": "carrot",
+  "hints": [
+   "The bird is a parrot.",
+   "Rabbits love this vegetable.",
+   "It starts with the letter C."
+  ],
+  "reveal": "Carrot. Parrot with a C in place of the P.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "parrot",
+     "carrot"
+    ]
+   },
+   {
+    "op": "change",
+    "a": "parrot",
+    "b": "carrot"
+   }
+  ]
+ },
+ {
+  "id": "b-007",
+  "type": "single",
+  "level": 1,
+  "clue": "Think of a stick of wax with a wick. Change its first letter to get the part of a mug that you hold. What's the mug part?",
+  "answer": "handle",
+  "hints": [
+   "The wax stick is a candle.",
+   "A door has one too.",
+   "It starts with the letter H."
+  ],
+  "reveal": "Handle. Change the C in candle to an H.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "candle",
+     "handle"
+    ]
+   },
+   {
+    "op": "change",
+    "a": "candle",
+    "b": "handle"
+   }
+  ]
+ },
+ {
+  "id": "b-008",
+  "type": "single",
+  "level": 1,
+  "clue": "Think of a winter glove that keeps your fingers together. Change its first letter to get a baby cat. What's the baby cat?",
+  "answer": "kitten",
+  "hints": [
+   "The glove is a mitten.",
+   "It's a young cat.",
+   "It starts with the letter K."
+  ],
+  "reveal": "Kitten. Mitten with a K in place of the M.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "mitten",
+     "kitten"
+    ]
+   },
+   {
+    "op": "change",
+    "a": "mitten",
+    "b": "kitten"
+   }
+  ]
+ },
+ {
+  "id": "b-009",
+  "type": "single",
+  "level": 1,
+  "clue": "Think of something that carries a road over a river. Change its first letter to get a kitchen appliance that keeps food cold. What's the appliance?",
+  "answer": "fridge",
+  "hints": [
+   "The river crossing is a bridge.",
+   "It's a short word for refrigerator.",
+   "It starts with the letter F."
+  ],
+  "reveal": "Fridge. Change the B in bridge to an F.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "bridge",
+     "fridge"
+    ]
+   },
+   {
+    "op": "change",
+    "a": "bridge",
+    "b": "fridge"
+   }
+  ]
+ },
+ {
+  "id": "b-010",
+  "type": "single",
+  "level": 1,
+  "clue": "Put a word for wet weather together with a ribbon tied in loops. You get something colorful in the sky. What is it?",
+  "answer": "rainbow",
+  "hints": [
+   "The weather word is rain.",
+   "The ribbon word is bow.",
+   "You'll often see it after a storm."
+  ],
+  "reveal": "Rainbow. Rain plus bow.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "rain",
+     "bow",
+     "rainbow"
+    ]
+   },
+   {
+    "op": "concat",
+    "parts": [
+     "rain",
+     "bow"
+    ],
+    "b": "rainbow"
+   }
+  ]
+ },
+ {
+  "id": "b-011",
+  "type": "single",
+  "level": 1,
+  "clue": "Put a word for a twinkling light in the night sky together with a creature that swims with fins. You get a sea creature with five arms. What is it?",
+  "answer": "starfish",
+  "hints": [
+   "The night-sky word is star.",
+   "The swimming creature is a fish.",
+   "It clings to rocks in tide pools."
+  ],
+  "reveal": "Starfish. Star plus fish.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "star",
+     "fish",
+     "starfish"
+    ]
+   },
+   {
+    "op": "concat",
+    "parts": [
+     "star",
+     "fish"
+    ],
+    "b": "starfish"
+   }
+  ]
+ },
+ {
+  "id": "b-012",
+  "type": "single",
+  "level": 1,
+  "clue": "Put a vehicle together with an animal companion. You get something that covers the floor. What is it?",
+  "answer": "carpet",
+  "hints": [
+   "The vehicle has three letters.",
+   "The animal companion could be a dog or cat, and the word for it has three letters.",
+   "Car plus pet."
+  ],
+  "reveal": "Carpet. Car plus pet.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "car",
+     "pet",
+     "carpet"
+    ]
+   },
+   {
+    "op": "concat",
+    "parts": [
+     "car",
+     "pet"
+    ],
+    "b": "carpet"
+   }
+  ]
+ },
+ {
+  "id": "b-013",
+  "type": "single",
+  "level": 1,
+  "clue": "Put something you drink coffee from together with a long flat plank. You get a place in the kitchen where dishes are kept. What is it?",
+  "answer": "cupboard",
+  "hints": [
+   "The coffee holder is a cup.",
+   "The plank is a board.",
+   "The answer doesn't sound like its two halves."
+  ],
+  "reveal": "Cupboard. Cup plus board, even though we say it 'cubberd.'",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "cup",
+     "board",
+     "cupboard"
+    ]
+   },
+   {
+    "op": "concat",
+    "parts": [
+     "cup",
+     "board"
+    ],
+    "b": "cupboard"
+   }
+  ]
+ },
+ {
+  "id": "b-014",
+  "type": "single",
+  "level": 1,
+  "clue": "Put a small horse together with the part a dog wags. You get a hairstyle. What is it?",
+  "answer": "ponytail",
+  "hints": [
+   "The small horse is a pony.",
+   "The wagging part is a tail.",
+   "It's hair pulled back and tied."
+  ],
+  "reveal": "Ponytail. Pony plus tail.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "pony",
+     "tail",
+     "ponytail"
+    ]
+   },
+   {
+    "op": "concat",
+    "parts": [
+     "pony",
+     "tail"
+    ],
+    "b": "ponytail"
+   }
+  ]
+ },
+ {
+  "id": "b-015",
+  "type": "single",
+  "level": 1,
+  "clue": "Put the dark part of the day together with a female horse. You get a bad dream. What is it?",
+  "answer": "nightmare",
+  "hints": [
+   "The dark part of the day is night.",
+   "A female horse is a mare.",
+   "Night plus mare."
+  ],
+  "reveal": "Nightmare. Night plus mare.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "night",
+     "mare",
+     "nightmare"
+    ]
+   },
+   {
+    "op": "concat",
+    "parts": [
+     "night",
+     "mare"
+    ],
+    "b": "nightmare"
+   }
+  ]
+ },
+ {
+  "id": "b-016",
+  "type": "single",
+  "level": 1,
+  "clue": "Put a musical instrument you bang together with a twig. You get the leg of a roast chicken. What is it?",
+  "answer": "drumstick",
+  "hints": [
+   "The instrument is a drum.",
+   "The twig is a stick.",
+   "Funny enough, it's also what you bang the instrument with."
+  ],
+  "reveal": "Drumstick. Drum plus stick.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "drum",
+     "stick",
+     "drumstick"
+    ]
+   },
+   {
+    "op": "concat",
+    "parts": [
+     "drum",
+     "stick"
+    ],
+    "b": "drumstick"
+   }
+  ]
+ },
+ {
+  "id": "b-017",
+  "type": "single",
+  "level": 1,
+  "clue": "A color is hiding in this sentence, across two words: Is that your bag, Ray? What's the color?",
+  "answer": "gray",
+  "accept": [
+   "grey"
+  ],
+  "hints": [
+   "It's hiding across the last two words.",
+   "Listen to the end of bag and the start of Ray.",
+   "It's the color of a rain cloud."
+  ],
+  "reveal": "Gray. It's tucked into 'bag, Ray.'",
+  "check": [
+   {
+    "op": "hidden",
+    "phrase": "Is that your bag, Ray?",
+    "b": "gray"
+   },
+   {
+    "op": "words",
+    "words": [
+     "gray"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b-018",
+  "type": "single",
+  "level": 1,
+  "clue": "A pet is hiding in this phrase: a magic attic. What's the pet?",
+  "answer": "cat",
+  "hints": [
+   "It's hiding across the last two words.",
+   "Listen to the end of magic and the start of attic.",
+   "It purrs."
+  ],
+  "reveal": "Cat. It's tucked into 'magic attic.'",
+  "check": [
+   {
+    "op": "hidden",
+    "phrase": "a magic attic",
+    "b": "cat"
+   },
+   {
+    "op": "words",
+    "words": [
+     "cat"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b-019",
+  "type": "single",
+  "level": 1,
+  "clue": "What part of your face is hiding at the start of the word chinchilla?",
+  "answer": "chin",
+  "hints": [
+   "A chinchilla is a fluffy rodent, but ignore that.",
+   "It's below your mouth.",
+   "It has four letters."
+  ],
+  "reveal": "Chin. Chinchilla begins with chin.",
+  "check": [
+   {
+    "op": "contains",
+    "a": "chinchilla",
+    "b": "chin"
+   },
+   {
+    "op": "words",
+    "words": [
+     "chin",
+     "chinchilla"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b-020",
+  "type": "single",
+  "level": 1,
+  "clue": "What number is hiding inside the word weight?",
+  "answer": "eight",
+  "hints": [
+   "Just drop the first letter.",
+   "It comes after seven."
+  ],
+  "reveal": "Eight. Weight without its W is eight.",
+  "check": [
+   {
+    "op": "contains",
+    "a": "weight",
+    "b": "eight"
+   },
+   {
+    "op": "words",
+    "words": [
+     "weight",
+     "eight"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b-021",
+  "type": "single",
+  "level": 1,
+  "clue": "What tree is hiding inside the word cloak?",
+  "answer": "oak",
+  "hints": [
+   "It's the last three letters.",
+   "Acorns grow on it."
+  ],
+  "reveal": "Oak. Cloak ends in oak.",
+  "check": [
+   {
+    "op": "contains",
+    "a": "cloak",
+    "b": "oak"
+   },
+   {
+    "op": "words",
+    "words": [
+     "cloak",
+     "oak"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b-022",
+  "type": "single",
+  "level": 1,
+  "clue": "Rearrange the letters of thorn, T-H-O-R-N, to get a direction on a compass. What's the direction?",
+  "answer": "north",
+  "hints": [
+   "It's one of the four main directions.",
+   "It's at the top of most maps.",
+   "It starts with the letter N."
+  ],
+  "reveal": "North. Thorn rearranged gives north.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "thorn",
+     "north"
+    ]
+   },
+   {
+    "op": "anagram",
+    "a": "thorn",
+    "b": "north"
+   }
+  ]
+ },
+ {
+  "id": "b-023",
+  "type": "single",
+  "level": 1,
+  "clue": "Rearrange the letters of earth, E-A-R-T-H, to get the organ that pumps your blood. What's the organ?",
+  "answer": "heart",
+  "hints": [
+   "It's in your chest.",
+   "It's a symbol on Valentine's cards.",
+   "It starts with the letter H."
+  ],
+  "reveal": "Heart. Earth rearranged gives heart.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "earth",
+     "heart"
+    ]
+   },
+   {
+    "op": "anagram",
+    "a": "earth",
+    "b": "heart"
+   }
+  ]
+ },
+ {
+  "id": "b-024",
+  "type": "single",
+  "level": 1,
+  "clue": "Rearrange the letters of nails, N-A-I-L-S, to get a slow garden creature that carries its house on its back. What is it?",
+  "answer": "snail",
+  "hints": [
+   "It leaves a slimy trail.",
+   "It starts with the letter S."
+  ],
+  "reveal": "Snail. Nails rearranged gives snail.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "nails",
+     "snail"
+    ]
+   },
+   {
+    "op": "anagram",
+    "a": "nails",
+    "b": "snail"
+   }
+  ]
+ },
+ {
+  "id": "b-025",
+  "type": "single",
+  "level": 1,
+  "clue": "Rearrange the letters of diet, D-I-E-T, to get the rise and fall of the sea. What is it?",
+  "answer": "tide",
+  "hints": [
+   "The moon causes it.",
+   "It can be high or low.",
+   "It starts with the letter T."
+  ],
+  "reveal": "Tide. Diet rearranged gives tide.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "diet",
+     "tide"
+    ]
+   },
+   {
+    "op": "anagram",
+    "a": "diet",
+    "b": "tide"
+   }
+  ]
+ },
+ {
+  "id": "b-026",
+  "type": "single",
+  "level": 1,
+  "clue": "Rearrange the letters of pots, P-O-T-S, to get the word on a red, eight-sided road sign. What's the word?",
+  "answer": "stop",
+  "hints": [
+   "Drivers must halt at this sign.",
+   "It starts with the letter S."
+  ],
+  "reveal": "Stop. Pots rearranged gives stop. In fact, it's pots spelled backward.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "pots",
+     "stop"
+    ]
+   },
+   {
+    "op": "anagram",
+    "a": "pots",
+    "b": "stop"
+   }
+  ]
+ },
+ {
+  "id": "b-027",
+  "type": "single",
+  "level": 1,
+  "clue": "Think of what you chew to blow bubbles. Spell it backward to get a big cup for coffee. What's the cup?",
+  "answer": "mug",
+  "hints": [
+   "The chewy word is gum.",
+   "It's a big cup with a handle.",
+   "It starts with the letter M."
+  ],
+  "reveal": "Mug. Gum spelled backward is mug.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "gum",
+     "mug"
+    ]
+   },
+   {
+    "op": "reverse",
+    "a": "gum",
+    "b": "mug"
+   }
+  ]
+ },
+ {
+  "id": "b-028",
+  "type": "single",
+  "level": 1,
+  "clue": "Think of a word meaning to make your home somewhere, as in 'I blank in Ohio.' Spell it backward to get a word meaning wicked. What's the wicked word?",
+  "answer": "evil",
+  "hints": [
+   "The home word is live.",
+   "A villain is this.",
+   "It starts with the letter E."
+  ],
+  "reveal": "Evil. Live spelled backward is evil.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "live",
+     "evil"
+    ]
+   },
+   {
+    "op": "reverse",
+    "a": "live",
+    "b": "evil"
+   }
+  ]
+ },
+ {
+  "id": "b-029",
+  "type": "single",
+  "level": 1,
+  "clue": "Think of one of the twinkling lights in the night sky. Spell it backward to get some rodents with long tails. What are the rodents?",
+  "answer": "rats",
+  "hints": [
+   "The sky word is star.",
+   "The rodents are bigger than mice.",
+   "It starts with the letter R."
+  ],
+  "reveal": "Rats. Star spelled backward is rats.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "star",
+     "rats"
+    ]
+   },
+   {
+    "op": "reverse",
+    "a": "star",
+    "b": "rats"
+   }
+  ]
+ },
+ {
+  "id": "b-030",
+  "type": "single",
+  "level": 1,
+  "clue": "Think of the hair that grows on a man's chin. Drop one letter to get a big furry animal. Give me the chin word.",
+  "answer": "beard",
+  "hints": [
+   "The animal is a bear.",
+   "Drop the letter D.",
+   "It starts with the letter B."
+  ],
+  "reveal": "Beard. Take the D off beard and you get bear.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "beard",
+     "bear"
+    ]
+   },
+   {
+    "op": "drop",
+    "a": "beard",
+    "b": "bear"
+   }
+  ]
+ },
+ {
+  "id": "b-031",
+  "type": "single",
+  "level": 1,
+  "clue": "Think of something you sit on. Drop its first letter to get what grows on your head. Give me the thing you sit on.",
+  "answer": "chair",
+  "hints": [
+   "What grows on your head is hair.",
+   "Add one letter to the front of hair.",
+   "It has four legs and a back."
+  ],
+  "reveal": "Chair. Drop the C and you get hair.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "chair",
+     "hair"
+    ]
+   },
+   {
+    "op": "drop",
+    "a": "chair",
+    "b": "hair"
+   }
+  ]
+ },
+ {
+  "id": "b-032",
+  "type": "single",
+  "level": 1,
+  "clue": "Think of a nut that falls from an oak tree. Drop its first letter to get a vegetable that grows on a cob. Give me the nut.",
+  "answer": "acorn",
+  "hints": [
+   "The vegetable is corn.",
+   "Squirrels love it.",
+   "It starts with the letter A."
+  ],
+  "reveal": "Acorn. Drop the A and you get corn.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "acorn",
+     "corn"
+    ]
+   },
+   {
+    "op": "drop",
+    "a": "acorn",
+    "b": "corn"
+   }
+  ]
+ },
+ {
+  "id": "b-033",
+  "type": "single",
+  "level": 1,
+  "clue": "Think of something on a playground you sit on and pump your legs to go higher. Drop its first letter to get what a bird flaps. Give me the playground word.",
+  "answer": "swing",
+  "hints": [
+   "What a bird flaps is a wing.",
+   "It hangs from chains.",
+   "It starts with the letter S."
+  ],
+  "reveal": "Swing. Drop the S and you get wing.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "swing",
+     "wing"
+    ]
+   },
+   {
+    "op": "drop",
+    "a": "swing",
+    "b": "wing"
+   }
+  ]
+ },
+ {
+  "id": "b-034",
+  "type": "single",
+  "level": 1,
+  "clue": "Think of something you wear on your hand in winter. Drop its first letter to get a deep feeling of affection. Give me the thing you wear.",
+  "answer": "glove",
+  "hints": [
+   "The feeling is love.",
+   "It has a spot for each finger.",
+   "It starts with the letter G."
+  ],
+  "reveal": "Glove. Drop the G and you get love.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "glove",
+     "love"
+    ]
+   },
+   {
+    "op": "drop",
+    "a": "glove",
+    "b": "love"
+   }
+  ]
+ },
+ {
+  "id": "b-035",
+  "type": "single",
+  "level": 1,
+  "clue": "Think of a round thing that a car rolls on. Drop its first letter to get the back part of your foot. Give me the car part.",
+  "answer": "wheel",
+  "hints": [
+   "The foot part is the heel.",
+   "A car has four of them.",
+   "It starts with the letter W."
+  ],
+  "reveal": "Wheel. Drop the W and you get heel.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "wheel",
+     "heel"
+    ]
+   },
+   {
+    "op": "drop",
+    "a": "wheel",
+    "b": "heel"
+   }
+  ]
+ },
+ {
+  "id": "b-036",
+  "type": "single",
+  "level": 1,
+  "clue": "Take a grain you eat in a bowl of porridge, in its singular form. Add one letter to the front to get the water around a castle. What's the castle word?",
+  "answer": "moat",
+  "hints": [
+   "The grain is oat.",
+   "It's a ditch full of water.",
+   "It starts with the letter M."
+  ],
+  "reveal": "Moat. Put an M in front of oat.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "oat",
+     "moat"
+    ]
+   },
+   {
+    "op": "insert",
+    "a": "oat",
+    "ins": "m",
+    "b": "moat"
+   }
+  ]
+ },
+ {
+  "id": "b-037",
+  "type": "single",
+  "level": 1,
+  "clue": "Take something with a trunk, bark, and branches. Add one letter to get a number. What's the number?",
+  "answer": "three",
+  "hints": [
+   "The leafy word is tree.",
+   "Add an H after the T.",
+   "It comes after two."
+  ],
+  "reveal": "Three. Put an H into tree.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "tree",
+     "three"
+    ]
+   },
+   {
+    "op": "insert",
+    "a": "tree",
+    "ins": "h",
+    "b": "three"
+   }
+  ]
+ },
+ {
+  "id": "b-038",
+  "type": "single",
+  "level": 1,
+  "clue": "Take a distance that's a bit longer than a kilometer. Add one letter to the front to get what you do when you're happy. What do you do?",
+  "answer": "smile",
+  "hints": [
+   "The distance is a mile.",
+   "You do it with your mouth.",
+   "It starts with the letter S."
+  ],
+  "reveal": "Smile. Put an S in front of mile.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "mile",
+     "smile"
+    ]
+   },
+   {
+    "op": "insert",
+    "a": "mile",
+    "ins": "s",
+    "b": "smile"
+   }
+  ]
+ },
+ {
+  "id": "b-039",
+  "type": "single",
+  "level": 1,
+  "clue": "Take a word for a grown-up guy. Add one letter to get the long hair on a lion's neck. What's the lion word?",
+  "answer": "mane",
+  "hints": [
+   "The guy word is man.",
+   "Add a letter at the end.",
+   "A horse has one too."
+  ],
+  "reveal": "Mane. Add an E to man.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "man",
+     "mane"
+    ]
+   },
+   {
+    "op": "insert",
+    "a": "man",
+    "ins": "e",
+    "b": "mane"
+   }
+  ]
+ },
+ {
+  "id": "b-040",
+  "type": "single",
+  "level": 1,
+  "clue": "Take a farm animal that moos. Add one letter to get a big black bird that caws. What's the bird?",
+  "answer": "crow",
+  "hints": [
+   "The farm animal is a cow.",
+   "Slip an R in after the C.",
+   "Scarecrows are meant to scare it."
+  ],
+  "reveal": "Crow. Put an R into cow.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "cow",
+     "crow"
+    ]
+   },
+   {
+    "op": "insert",
+    "a": "cow",
+    "ins": "r",
+    "b": "crow"
+   }
+  ]
+ },
+ {
+  "id": "b-041",
+  "type": "single",
+  "level": 1,
+  "clue": "Take the first letters of the playground game 'cops and robbers.' What vehicle do they spell?",
+  "answer": "car",
+  "hints": [
+   "Take the C from cops, the A from and, and the R from robbers.",
+   "It has four wheels and you drive it."
+  ],
+  "reveal": "Car. Cops And Robbers gives C, A, R.",
+  "check": [
+   {
+    "op": "initials",
+    "phrase": "cops and robbers",
+    "b": "car"
+   },
+   {
+    "op": "words",
+    "words": [
+     "car"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b-042",
+  "type": "single",
+  "level": 1,
+  "clue": "Name a fruit that sounds exactly like a word for two of a kind, like two socks. What's the fruit?",
+  "answer": "pear",
+  "hints": [
+   "The word for two of a kind is pair.",
+   "It's shaped a bit like a light bulb.",
+   "It starts with the letter P."
+  ],
+  "reveal": "Pear. It sounds just like pair.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "pear",
+     "pair"
+    ]
+   },
+   {
+    "op": "sound",
+    "why": "pear and pair are pronounced the same"
+   }
+  ]
+ },
+ {
+  "id": "b-043",
+  "type": "single",
+  "level": 1,
+  "clue": "Name a baking ingredient that sounds exactly like something that blooms in a garden. What's the ingredient?",
+  "answer": "flour",
+  "hints": [
+   "It's a white powder.",
+   "You need it to make bread.",
+   "It starts with the letter F."
+  ],
+  "reveal": "Flour. It sounds just like flower.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "flour",
+     "flower"
+    ]
+   },
+   {
+    "op": "sound",
+    "why": "flour and flower are pronounced the same"
+   }
+  ]
+ },
+ {
+  "id": "b-044",
+  "type": "single",
+  "level": 1,
+  "clue": "Name an ice cream treat with toppings that sounds exactly like a day of the week. What's the treat?",
+  "answer": "sundae",
+  "hints": [
+   "Think hot fudge and a cherry on top.",
+   "The day of the week is the one before Monday.",
+   "It starts with the letter S."
+  ],
+  "reveal": "Sundae. It sounds just like Sunday.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "sundae"
+    ]
+   },
+   {
+    "op": "sound",
+    "why": "sundae and Sunday are pronounced the same"
+   }
+  ]
+ },
+ {
+  "id": "b-045",
+  "type": "single",
+  "level": 1,
+  "clue": "Name an animal like a big rabbit whose name sounds exactly like what grows on your head. What's the animal?",
+  "answer": "hare",
+  "hints": [
+   "It raced a tortoise in a famous fable.",
+   "It starts with the letter H."
+  ],
+  "reveal": "Hare. It sounds just like hair.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "hare",
+     "hair"
+    ]
+   },
+   {
+    "op": "sound",
+    "why": "hare and hair are pronounced the same"
+   }
+  ]
+ },
+ {
+  "id": "b-046",
+  "type": "single",
+  "level": 1,
+  "clue": "What word can follow blue, black, and straw to make three fruits?",
+  "answer": "berry",
+  "hints": [
+   "Each pairing makes the name of a fruit.",
+   "It's a small juicy fruit word.",
+   "It starts with the letter B."
+  ],
+  "reveal": "Berry. Blueberry, blackberry, and strawberry.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "blueberry",
+     "blackberry",
+     "strawberry",
+     "berry"
+    ]
+   },
+   {
+    "op": "free",
+    "why": "blueberry, blackberry and strawberry are all fruits"
+   }
+  ]
+ },
+ {
+  "id": "b-047",
+  "type": "single",
+  "level": 1,
+  "clue": "Name a narrow boat you paddle with a two-bladed paddle. Here's a nudge: it's spelled the same forward and backward.",
+  "answer": "kayak",
+  "hints": [
+   "It's like a canoe, but you usually sit low inside it.",
+   "It starts and ends with the letter K."
+  ],
+  "reveal": "Kayak. K-A-Y-A-K, the same both ways.",
+  "check": [
+   {
+    "op": "palindrome",
+    "w": "kayak"
+   },
+   {
+    "op": "words",
+    "words": [
+     "kayak"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b-048",
+  "type": "single",
+  "level": 1,
+  "clue": "Name the time of day when the sun is highest, a word spelled the same forward and backward.",
+  "answer": "noon",
+  "hints": [
+   "It's twelve o'clock in the daytime.",
+   "It starts and ends with the letter N."
+  ],
+  "reveal": "Noon. N-O-O-N, the same both ways.",
+  "check": [
+   {
+    "op": "palindrome",
+    "w": "noon"
+   },
+   {
+    "op": "words",
+    "words": [
+     "noon"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b-049",
+  "type": "single",
+  "level": 1,
+  "clue": "Name the system that uses radio waves to spot airplanes, a word spelled the same forward and backward.",
+  "answer": "radar",
+  "hints": [
+   "Air traffic controllers watch it on a screen.",
+   "It starts and ends with the letter R."
+  ],
+  "reveal": "Radar. R-A-D-A-R, the same both ways.",
+  "check": [
+   {
+    "op": "palindrome",
+    "w": "radar"
+   },
+   {
+    "op": "words",
+    "words": [
+     "radar"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b-050",
+  "type": "single",
+  "level": 1,
+  "clue": "Name the sound a car horn or a train whistle makes, a word spelled the same forward and backward.",
+  "answer": "toot",
+  "hints": [
+   "It's a short, cheerful honk.",
+   "It starts and ends with the letter T."
+  ],
+  "reveal": "Toot. T-O-O-T, the same both ways.",
+  "check": [
+   {
+    "op": "palindrome",
+    "w": "toot"
+   },
+   {
+    "op": "words",
+    "words": [
+     "toot"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b-051",
+  "type": "single",
+  "level": 2,
+  "clue": "Think of something that holds your cash and cards. Change its first letter to get a graceful dance performed on tiptoe. What's the dance?",
+  "answer": "ballet",
+  "hints": [
+   "The cash holder is a wallet.",
+   "The dance word rhymes with 'okay' when you say it.",
+   "It starts with the letter B."
+  ],
+  "reveal": "Ballet. Change the W in wallet to a B, and the sound changes completely.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "wallet",
+     "ballet"
+    ]
+   },
+   {
+    "op": "change",
+    "a": "wallet",
+    "b": "ballet"
+   }
+  ]
+ },
+ {
+  "id": "b-052",
+  "type": "single",
+  "level": 2,
+  "clue": "Think of what you sit on when you ride a horse. Change its first letter to get the way a duck walks. How does a duck walk?",
+  "answer": "waddle",
+  "hints": [
+   "The horse word is saddle.",
+   "It's a side-to-side, wobbly walk.",
+   "It starts with the letter W."
+  ],
+  "reveal": "Waddle. Change the S in saddle to a W.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "saddle",
+     "waddle"
+    ]
+   },
+   {
+    "op": "change",
+    "a": "saddle",
+    "b": "waddle"
+   }
+  ]
+ },
+ {
+  "id": "b-053",
+  "type": "single",
+  "level": 2,
+  "clue": "Think of a hot, thick tropical forest. Change its first vowel to get a catchy little tune in a TV commercial. What's the tune?",
+  "answer": "jingle",
+  "hints": [
+   "The forest is a jungle.",
+   "Change the U to an I.",
+   "Bells do it in a holiday song."
+  ],
+  "reveal": "Jingle. Jungle with an I instead of a U.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "jungle",
+     "jingle"
+    ]
+   },
+   {
+    "op": "change",
+    "a": "jungle",
+    "b": "jingle"
+   }
+  ]
+ },
+ {
+  "id": "b-054",
+  "type": "single",
+  "level": 2,
+  "clue": "Think of a stone building with towers where a king might live. Change one letter to get cows on a ranch. What's the ranch word?",
+  "answer": "cattle",
+  "hints": [
+   "The king's home is a castle.",
+   "Change the S to a T.",
+   "Cowboys herd them."
+  ],
+  "reveal": "Cattle. Castle with a T in place of the S.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "castle",
+     "cattle"
+    ]
+   },
+   {
+    "op": "change",
+    "a": "castle",
+    "b": "cattle"
+   }
+  ]
+ },
+ {
+  "id": "b-055",
+  "type": "single",
+  "level": 2,
+  "clue": "Think of something that blasts off into space. Change its first letter to get a little pendant that opens to hold a photo. What's the pendant?",
+  "answer": "locket",
+  "hints": [
+   "The space word is rocket.",
+   "You wear it on a chain around your neck.",
+   "It starts with the letter L."
+  ],
+  "reveal": "Locket. Change the R in rocket to an L.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "rocket",
+     "locket"
+    ]
+   },
+   {
+    "op": "change",
+    "a": "rocket",
+    "b": "locket"
+   }
+  ]
+ },
+ {
+  "id": "b-056",
+  "type": "single",
+  "level": 2,
+  "clue": "Think of a small animal that loves cheese. Change its first letter to get a word meaning to soak with water, as in 'blank the campfire.' What's the soaking word?",
+  "answer": "douse",
+  "accept": [
+   "dowse"
+  ],
+  "hints": [
+   "The animal is a mouse.",
+   "It rhymes with mouse.",
+   "It starts with the letter D."
+  ],
+  "reveal": "Douse. Change the M in mouse to a D.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "mouse",
+     "douse"
+    ]
+   },
+   {
+    "op": "change",
+    "a": "mouse",
+    "b": "douse"
+   }
+  ]
+ },
+ {
+  "id": "b-057",
+  "type": "single",
+  "level": 2,
+  "clue": "Think of a big vehicle that hauls cargo on the highway. Change its vowel to get something a magician performs. What does the magician perform?",
+  "answer": "trick",
+  "hints": [
+   "The vehicle is a truck.",
+   "Change the U to an I.",
+   "Pulling a rabbit out of a hat is one."
+  ],
+  "reveal": "Trick. Truck with an I instead of the U.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "truck",
+     "trick"
+    ]
+   },
+   {
+    "op": "change",
+    "a": "truck",
+    "b": "trick"
+   }
+  ]
+ },
+ {
+  "id": "b-058",
+  "type": "single",
+  "level": 2,
+  "clue": "Think of a prickly purple weed that's a symbol of Scotland. Change its first letter to get what a referee blows. What does the referee blow?",
+  "answer": "whistle",
+  "hints": [
+   "The weed is a thistle.",
+   "It's a small device that makes a shrill sound.",
+   "It starts with the letter W."
+  ],
+  "reveal": "Whistle. Change the T in thistle to a W.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "thistle",
+     "whistle"
+    ]
+   },
+   {
+    "op": "change",
+    "a": "thistle",
+    "b": "whistle"
+   }
+  ]
+ },
+ {
+  "id": "b-059",
+  "type": "single",
+  "level": 2,
+  "clue": "Put a word for a tiny bit together with a long stick, like one for a flag. You get a baby frog. What is it?",
+  "answer": "tadpole",
+  "hints": [
+   "The tiny-bit word is tad.",
+   "The stick is a pole.",
+   "It has a tail and lives in a pond."
+  ],
+  "reveal": "Tadpole. Tad plus pole.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "tad",
+     "pole",
+     "tadpole"
+    ]
+   },
+   {
+    "op": "concat",
+    "parts": [
+     "tad",
+     "pole"
+    ],
+    "b": "tadpole"
+   }
+  ]
+ },
+ {
+  "id": "b-060",
+  "type": "single",
+  "level": 2,
+  "clue": "Put a flying mammal together with the opposite of off. You get the stick a relay runner hands off. What is it?",
+  "answer": "baton",
+  "hints": [
+   "The flying mammal is a bat.",
+   "The opposite of off is on.",
+   "A conductor waves one too."
+  ],
+  "reveal": "Baton. Bat plus on.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "bat",
+     "on",
+     "baton"
+    ]
+   },
+   {
+    "op": "concat",
+    "parts": [
+     "bat",
+     "on"
+    ],
+    "b": "baton"
+   }
+  ]
+ },
+ {
+  "id": "b-061",
+  "type": "single",
+  "level": 2,
+  "clue": "Put the mark left by a healed cut together with a word meaning 'allow.' You get a bright red color. What's the color?",
+  "answer": "scarlet",
+  "hints": [
+   "The mark is a scar.",
+   "The allow word is let.",
+   "It's the color of a cardinal."
+  ],
+  "reveal": "Scarlet. Scar plus let.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "scar",
+     "let",
+     "scarlet"
+    ]
+   },
+   {
+    "op": "concat",
+    "parts": [
+     "scar",
+     "let"
+    ],
+    "b": "scarlet"
+   }
+  ]
+ },
+ {
+  "id": "b-062",
+  "type": "single",
+  "level": 2,
+  "clue": "Put the little mark a teacher makes for a right answer together with a word for a buddy. You get the winning move in chess. What is it?",
+  "answer": "checkmate",
+  "hints": [
+   "The teacher's mark is a check.",
+   "The buddy word is mate.",
+   "It means the king is trapped."
+  ],
+  "reveal": "Checkmate. Check plus mate.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "check",
+     "mate",
+     "checkmate"
+    ]
+   },
+   {
+    "op": "concat",
+    "parts": [
+     "check",
+     "mate"
+    ],
+    "b": "checkmate"
+   }
+  ]
+ },
+ {
+  "id": "b-063",
+  "type": "single",
+  "level": 2,
+  "clue": "Put a holiday meat together with a word meaning 'to tease.' You get something you swing in between two trees. What is it?",
+  "answer": "hammock",
+  "hints": [
+   "The meat is ham.",
+   "The tease word is mock.",
+   "It's a hanging bed for napping."
+  ],
+  "reveal": "Hammock. Ham plus mock.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "ham",
+     "mock",
+     "hammock"
+    ]
+   },
+   {
+    "op": "concat",
+    "parts": [
+     "ham",
+     "mock"
+    ],
+    "b": "hammock"
+   }
+  ]
+ },
+ {
+  "id": "b-064",
+  "type": "single",
+  "level": 2,
+  "clue": "Put a machine at a gas station together with a word for relatives. You get a big orange squash. What is it?",
+  "answer": "pumpkin",
+  "hints": [
+   "The gas station machine is a pump.",
+   "The relatives word is kin.",
+   "People carve it at Halloween."
+  ],
+  "reveal": "Pumpkin. Pump plus kin.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "pump",
+     "kin",
+     "pumpkin"
+    ]
+   },
+   {
+    "op": "concat",
+    "parts": [
+     "pump",
+     "kin"
+    ],
+    "b": "pumpkin"
+   }
+  ]
+ },
+ {
+  "id": "b-065",
+  "type": "single",
+  "level": 2,
+  "clue": "Put a limb you walk on together with the opposite of beginning. You get an old story that may or may not be true. What is it?",
+  "answer": "legend",
+  "hints": [
+   "The limb is a leg.",
+   "The opposite of beginning is end.",
+   "King Arthur is one."
+  ],
+  "reveal": "Legend. Leg plus end.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "leg",
+     "end",
+     "legend"
+    ]
+   },
+   {
+    "op": "concat",
+    "parts": [
+     "leg",
+     "end"
+    ],
+    "b": "legend"
+   }
+  ]
+ },
+ {
+  "id": "b-066",
+  "type": "single",
+  "level": 2,
+  "clue": "A fruit is hiding across two words in this sentence: The chef ignored the timer. What's the fruit?",
+  "answer": "fig",
+  "hints": [
+   "It's hiding in the second and third words.",
+   "Listen to the end of chef and the start of ignored.",
+   "It has three letters."
+  ],
+  "reveal": "Fig. It's tucked into 'chef ignored.'",
+  "check": [
+   {
+    "op": "hidden",
+    "phrase": "The chef ignored the timer.",
+    "b": "fig"
+   },
+   {
+    "op": "words",
+    "words": [
+     "fig"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b-067",
+  "type": "single",
+  "level": 2,
+  "clue": "A fruit is hiding across two words in this sentence: The sleepy pup lumbered across the yard. What's the fruit?",
+  "answer": "plum",
+  "hints": [
+   "It's in the middle of the sentence.",
+   "Listen to the end of pup and the start of lumbered.",
+   "It's a purple fruit with a pit."
+  ],
+  "reveal": "Plum. It's tucked into 'pup lumbered.'",
+  "check": [
+   {
+    "op": "hidden",
+    "phrase": "The sleepy pup lumbered across the yard.",
+    "b": "plum"
+   },
+   {
+    "op": "words",
+    "words": [
+     "plum"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b-068",
+  "type": "single",
+  "level": 2,
+  "clue": "An animal is hiding across two words in this sentence: My cousin Pam came late to dinner. What's the animal?",
+  "answer": "camel",
+  "hints": [
+   "It's in the middle of the sentence.",
+   "Listen to 'came' and the start of 'late.'",
+   "It has a hump."
+  ],
+  "reveal": "Camel. It's tucked into 'came late.'",
+  "check": [
+   {
+    "op": "hidden",
+    "phrase": "My cousin Pam came late to dinner.",
+    "b": "camel"
+   },
+   {
+    "op": "words",
+    "words": [
+     "camel"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b-069",
+  "type": "single",
+  "level": 2,
+  "clue": "A country is hiding across two words in this sentence: The bear cub ate all the honey. What's the country?",
+  "answer": "Cuba",
+  "hints": [
+   "It's an island nation.",
+   "Listen to 'cub' and the start of 'ate.'",
+   "Its capital is Havana."
+  ],
+  "reveal": "Cuba. It's tucked into 'cub ate.'",
+  "check": [
+   {
+    "op": "hidden",
+    "phrase": "The bear cub ate all the honey.",
+    "b": "cuba"
+   }
+  ]
+ },
+ {
+  "id": "b-070",
+  "type": "single",
+  "level": 2,
+  "clue": "A bird is hiding across two words in this sentence: This is Wanda, my new neighbor. What's the bird?",
+  "answer": "swan",
+  "hints": [
+   "It's near the start of the sentence.",
+   "Listen to the end of 'is' and the start of 'Wanda.'",
+   "It's a graceful white bird with a long neck."
+  ],
+  "reveal": "Swan. It's tucked into 'is Wanda.'",
+  "check": [
+   {
+    "op": "hidden",
+    "phrase": "This is Wanda, my new neighbor.",
+    "b": "swan"
+   },
+   {
+    "op": "words",
+    "words": [
+     "swan"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b-071",
+  "type": "single",
+  "level": 2,
+  "clue": "A fruit is hiding across two words in this sentence: We spent the yard sale money on pizza. What's the fruit?",
+  "answer": "lemon",
+  "hints": [
+   "Listen to the end of 'sale' and the start of 'money.'",
+   "It's a sour yellow citrus fruit."
+  ],
+  "reveal": "Lemon. It's tucked into 'sale money.'",
+  "check": [
+   {
+    "op": "hidden",
+    "phrase": "We spent the yard sale money on pizza.",
+    "b": "lemon"
+   },
+   {
+    "op": "words",
+    "words": [
+     "lemon"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b-072",
+  "type": "single",
+  "level": 2,
+  "clue": "Rearrange the letters of teach, T-E-A-C-H, to get what a sneaky card player does. What's the word?",
+  "answer": "cheat",
+  "hints": [
+   "It's what you're not supposed to do on a test.",
+   "It starts with C-H."
+  ],
+  "reveal": "Cheat. Teach rearranged gives cheat, which no good teacher allows.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "teach",
+     "cheat"
+    ]
+   },
+   {
+    "op": "anagram",
+    "a": "teach",
+    "b": "cheat"
+   }
+  ]
+ },
+ {
+  "id": "b-073",
+  "type": "single",
+  "level": 2,
+  "clue": "Rearrange the letters of listen, L-I-S-T-E-N, to get a word meaning to sign up for the army. What's the word?",
+  "answer": "enlist",
+  "hints": [
+   "It's what a new recruit does.",
+   "It starts with the letter E."
+  ],
+  "reveal": "Enlist. Listen rearranged gives enlist.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "listen",
+     "enlist"
+    ]
+   },
+   {
+    "op": "anagram",
+    "a": "listen",
+    "b": "enlist"
+   }
+  ]
+ },
+ {
+  "id": "b-074",
+  "type": "single",
+  "level": 2,
+  "clue": "Rearrange the letters of horse, H-O-R-S-E, to get the land along the edge of the sea. What's the word?",
+  "answer": "shore",
+  "hints": [
+   "Waves break on it.",
+   "It starts with the letter S."
+  ],
+  "reveal": "Shore. Horse rearranged gives shore.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "horse",
+     "shore"
+    ]
+   },
+   {
+    "op": "anagram",
+    "a": "horse",
+    "b": "shore"
+   }
+  ]
+ },
+ {
+  "id": "b-075",
+  "type": "single",
+  "level": 2,
+  "clue": "Rearrange the letters of ocean, O-C-E-A-N, to get a small boat you paddle. What's the boat?",
+  "answer": "canoe",
+  "hints": [
+   "It's long and narrow and open on top.",
+   "It starts with the letter C."
+  ],
+  "reveal": "Canoe. Ocean rearranged gives canoe, though you might prefer a lake.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "ocean",
+     "canoe"
+    ]
+   },
+   {
+    "op": "anagram",
+    "a": "ocean",
+    "b": "canoe"
+   }
+  ]
+ },
+ {
+  "id": "b-076",
+  "type": "single",
+  "level": 2,
+  "clue": "Rearrange the letters of dusty, D-U-S-T-Y, to get what you do before a big test. What's the word?",
+  "answer": "study",
+  "hints": [
+   "You might do it in a library.",
+   "It starts with the letter S."
+  ],
+  "reveal": "Study. Dusty rearranged gives study.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "dusty",
+     "study"
+    ]
+   },
+   {
+    "op": "anagram",
+    "a": "dusty",
+    "b": "study"
+   }
+  ]
+ },
+ {
+  "id": "b-077",
+  "type": "single",
+  "level": 2,
+  "clue": "Rearrange the letters of sauce, S-A-U-C-E, to get a word for a reason, or a charity you support. What's the word?",
+  "answer": "cause",
+  "hints": [
+   "'Cause and effect.'",
+   "It starts with the letter C."
+  ],
+  "reveal": "Cause. Sauce rearranged gives cause.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "sauce",
+     "cause"
+    ]
+   },
+   {
+    "op": "anagram",
+    "a": "sauce",
+    "b": "cause"
+   }
+  ]
+ },
+ {
+  "id": "b-078",
+  "type": "single",
+  "level": 2,
+  "clue": "Rearrange the letters of brush, B-R-U-S-H, to get a small bush in a garden. What's the word?",
+  "answer": "shrub",
+  "hints": [
+   "Gardeners trim it into shapes.",
+   "It starts with S-H."
+  ],
+  "reveal": "Shrub. Brush rearranged gives shrub.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "brush",
+     "shrub"
+    ]
+   },
+   {
+    "op": "anagram",
+    "a": "brush",
+    "b": "shrub"
+   }
+  ]
+ },
+ {
+  "id": "b-079",
+  "type": "single",
+  "level": 2,
+  "clue": "What metal is hiding inside the word environment?",
+  "answer": "iron",
+  "hints": [
+   "It's not at the start of the word.",
+   "It's in the middle of the word.",
+   "It's the metal in a frying skillet."
+  ],
+  "reveal": "Iron. Environment has I-R-O-N in the middle.",
+  "check": [
+   {
+    "op": "contains",
+    "a": "environment",
+    "b": "iron"
+   },
+   {
+    "op": "words",
+    "words": [
+     "environment",
+     "iron"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b-080",
+  "type": "single",
+  "level": 2,
+  "clue": "What part of your body is hiding inside the word chandelier?",
+  "answer": "hand",
+  "hints": [
+   "Chandelier starts with C-H.",
+   "It comes right after the C.",
+   "It's at the end of your arm."
+  ],
+  "reveal": "Hand. Chandelier is C, then hand, then E-L-I-E-R.",
+  "check": [
+   {
+    "op": "contains",
+    "a": "chandelier",
+    "b": "hand"
+   },
+   {
+    "op": "words",
+    "words": [
+     "chandelier",
+     "hand"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b-081",
+  "type": "single",
+  "level": 2,
+  "clue": "What month is hiding inside the word dismayed?",
+  "answer": "May",
+  "hints": [
+   "It's a spring month.",
+   "It's in the middle of the word."
+  ],
+  "reveal": "May. Dismayed has may in the middle.",
+  "check": [
+   {
+    "op": "contains",
+    "a": "dismayed",
+    "b": "may"
+   },
+   {
+    "op": "words",
+    "words": [
+     "dismayed",
+     "may"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b-082",
+  "type": "single",
+  "level": 2,
+  "clue": "What insect is hiding inside the name of the biggest land animal, the one with a trunk?",
+  "answer": "ant",
+  "hints": [
+   "The big animal is an elephant.",
+   "It's near the end of the word.",
+   "It's a tiny insect that loves picnics."
+  ],
+  "reveal": "Ant. Elephant ends in A-N-T.",
+  "check": [
+   {
+    "op": "contains",
+    "a": "elephant",
+    "b": "ant"
+   },
+   {
+    "op": "words",
+    "words": [
+     "elephant",
+     "ant"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b-083",
+  "type": "single",
+  "level": 2,
+  "clue": "What fish is hiding inside the word embassy?",
+  "answer": "bass",
+  "hints": [
+   "It starts at the third letter.",
+   "Anglers fish for it in lakes.",
+   "It has four letters."
+  ],
+  "reveal": "Bass. Embassy ends in B-A-S-S-Y, and bass is right there.",
+  "check": [
+   {
+    "op": "contains",
+    "a": "embassy",
+    "b": "bass"
+   },
+   {
+    "op": "words",
+    "words": [
+     "embassy",
+     "bass"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b-084",
+  "type": "single",
+  "level": 2,
+  "clue": "Think of the money you might get for finding a lost dog. Spell it backward to get a sliding box in a dresser. Give me the money word.",
+  "answer": "reward",
+  "hints": [
+   "The dresser box is a drawer.",
+   "Wanted posters offer one.",
+   "It starts with the letter R."
+  ],
+  "reveal": "Reward. Spelled backward it's drawer.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "reward",
+     "drawer"
+    ]
+   },
+   {
+    "op": "reverse",
+    "a": "reward",
+    "b": "drawer"
+   }
+  ]
+ },
+ {
+  "id": "b-085",
+  "type": "single",
+  "level": 2,
+  "clue": "Think of a word for how you're feeling, as in 'in a good blank.' Spell it backward to get a word for gloom and ruin. Give me the feeling word.",
+  "answer": "mood",
+  "hints": [
+   "The gloomy word is doom.",
+   "Some people put on music to change it.",
+   "It starts with the letter M."
+  ],
+  "reveal": "Mood. Spelled backward it's doom.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "mood",
+     "doom"
+    ]
+   },
+   {
+    "op": "reverse",
+    "a": "mood",
+    "b": "doom"
+   }
+  ]
+ },
+ {
+  "id": "b-086",
+  "type": "single",
+  "level": 2,
+  "clue": "Think of a general word for a hammer or a wrench. Spell it backward to get stolen treasure. Give me the hammer word.",
+  "answer": "tool",
+  "hints": [
+   "The treasure word is loot.",
+   "You'd keep it in a box in the garage.",
+   "It starts with the letter T."
+  ],
+  "reveal": "Tool. Spelled backward it's loot.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "tool",
+     "loot"
+    ]
+   },
+   {
+    "op": "reverse",
+    "a": "tool",
+    "b": "loot"
+   }
+  ]
+ },
+ {
+  "id": "b-087",
+  "type": "single",
+  "level": 2,
+  "clue": "Think of a word for someone who doesn't tell the truth. Spell it backward to get a train track. Give me the truth word.",
+  "answer": "liar",
+  "hints": [
+   "The train word is rail.",
+   "'Pants on fire.'",
+   "It starts with the letter L."
+  ],
+  "reveal": "Liar. Spelled backward it's rail.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "liar",
+     "rail"
+    ]
+   },
+   {
+    "op": "reverse",
+    "a": "liar",
+    "b": "rail"
+   }
+  ]
+ },
+ {
+  "id": "b-088",
+  "type": "single",
+  "level": 2,
+  "clue": "Think of the sturdy blue fabric that jeans are made from. Spell it backward to get a word meaning 'dug for gold or coal.' Give me the fabric.",
+  "answer": "denim",
+  "hints": [
+   "The digging word is mined.",
+   "It's a cotton fabric.",
+   "It starts with the letter D."
+  ],
+  "reveal": "Denim. Spelled backward it's mined.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "denim",
+     "mined"
+    ]
+   },
+   {
+    "op": "reverse",
+    "a": "denim",
+    "b": "mined"
+   }
+  ]
+ },
+ {
+  "id": "b-089",
+  "type": "single",
+  "level": 2,
+  "clue": "Think of what a baby wears that needs changing. Spell it backward to get a word meaning 'paid back.' Give me the baby word.",
+  "answer": "diaper",
+  "hints": [
+   "The paid-back word is repaid.",
+   "It starts with the letter D."
+  ],
+  "reveal": "Diaper. Spelled backward it's repaid.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "diaper",
+     "repaid"
+    ]
+   },
+   {
+    "op": "reverse",
+    "a": "diaper",
+    "b": "repaid"
+   }
+  ]
+ },
+ {
+  "id": "b-090",
+  "type": "single",
+  "level": 2,
+  "clue": "Name a woodwind instrument. Drop its first letter to get an old stringed instrument that a minstrel might play. Give me the woodwind.",
+  "answer": "flute",
+  "hints": [
+   "The minstrel's instrument is a lute.",
+   "You hold it sideways to play it.",
+   "It starts with the letter F."
+  ],
+  "reveal": "Flute. Drop the F and you get lute.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "flute",
+     "lute"
+    ]
+   },
+   {
+    "op": "drop",
+    "a": "flute",
+    "b": "lute"
+   }
+  ]
+ },
+ {
+  "id": "b-091",
+  "type": "single",
+  "level": 2,
+  "clue": "Think of a word for the land along the ocean. Drop one letter to get something warm you wear in winter. Give me the ocean word.",
+  "answer": "coast",
+  "hints": [
+   "The winter garment is a coat.",
+   "Drop the letter S.",
+   "It starts with C-O."
+  ],
+  "reveal": "Coast. Take the S out and you get coat.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "coast",
+     "coat"
+    ]
+   },
+   {
+    "op": "drop",
+    "a": "coast",
+    "b": "coat"
+   }
+  ]
+ },
+ {
+  "id": "b-092",
+  "type": "single",
+  "level": 2,
+  "clue": "Think of a fastener you turn with a driver. Drop its first letter to get the people who work on a ship. Give me the fastener.",
+  "answer": "screw",
+  "hints": [
+   "The ship workers are the crew.",
+   "It's like a nail with a spiral.",
+   "It starts with the letter S."
+  ],
+  "reveal": "Screw. Drop the S and you get crew.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "screw",
+     "crew"
+    ]
+   },
+   {
+    "op": "drop",
+    "a": "screw",
+    "b": "crew"
+   }
+  ]
+ },
+ {
+  "id": "b-093",
+  "type": "single",
+  "level": 2,
+  "clue": "Think of something you might pour into coffee. Drop one letter to get a word meaning to study hard at the last minute. Give me the coffee word.",
+  "answer": "cream",
+  "hints": [
+   "The study word is cram.",
+   "Drop the letter E.",
+   "It's thicker than milk."
+  ],
+  "reveal": "Cream. Take the E out and you get cram.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "cream",
+     "cram"
+    ]
+   },
+   {
+    "op": "drop",
+    "a": "cream",
+    "b": "cram"
+   }
+  ]
+ },
+ {
+  "id": "b-094",
+  "type": "single",
+  "level": 2,
+  "clue": "Think of a word meaning smart and quick-witted. Drop its first letter to get a bar you push or pull to make something work. Give me the smart word.",
+  "answer": "clever",
+  "hints": [
+   "The bar is a lever.",
+   "A fox in a story is often described this way.",
+   "It starts with the letter C."
+  ],
+  "reveal": "Clever. Drop the C and you get lever.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "clever",
+     "lever"
+    ]
+   },
+   {
+    "op": "drop",
+    "a": "clever",
+    "b": "lever"
+   }
+  ]
+ },
+ {
+  "id": "b-095",
+  "type": "single",
+  "level": 2,
+  "clue": "Think of a word for your backbone. Drop its first letter to get an evergreen tree. Give me the backbone word.",
+  "answer": "spine",
+  "hints": [
+   "The tree is a pine.",
+   "A book has one too.",
+   "It starts with the letter S."
+  ],
+  "reveal": "Spine. Drop the S and you get pine.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "spine",
+     "pine"
+    ]
+   },
+   {
+    "op": "drop",
+    "a": "spine",
+    "b": "pine"
+   }
+  ]
+ },
+ {
+  "id": "b-096",
+  "type": "single",
+  "level": 2,
+  "clue": "Think of what a basketball does when it hits the floor. Drop its first letter to get a small unit of weight. Give me the basketball word.",
+  "answer": "bounce",
+  "hints": [
+   "The weight unit is an ounce.",
+   "A rubber ball does it too.",
+   "It starts with the letter B."
+  ],
+  "reveal": "Bounce. Drop the B and you get ounce.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "bounce",
+     "ounce"
+    ]
+   },
+   {
+    "op": "drop",
+    "a": "bounce",
+    "b": "ounce"
+   }
+  ]
+ },
+ {
+  "id": "b-097",
+  "type": "single",
+  "level": 2,
+  "clue": "Take a number. Put two letters in front of it to get a gadget you call people on. What's the gadget?",
+  "answer": "phone",
+  "hints": [
+   "The number is the smallest counting number.",
+   "The two letters are P and H.",
+   "You probably have one in your pocket."
+  ],
+  "reveal": "Phone. P-H plus one.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "one",
+     "phone"
+    ]
+   },
+   {
+    "op": "insert",
+    "a": "one",
+    "ins": "ph",
+    "b": "phone"
+   }
+  ]
+ },
+ {
+  "id": "b-098",
+  "type": "single",
+  "level": 2,
+  "clue": "Take a bird that hoots at night. Put two letters in front of it to get an angry frown. What's the frown?",
+  "answer": "scowl",
+  "hints": [
+   "The bird is an owl.",
+   "The two letters are S and C.",
+   "It rhymes with growl."
+  ],
+  "reveal": "Scowl. S-C plus owl.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "owl",
+     "scowl"
+    ]
+   },
+   {
+    "op": "insert",
+    "a": "owl",
+    "ins": "sc",
+    "b": "scowl"
+   }
+  ]
+ },
+ {
+  "id": "b-099",
+  "type": "single",
+  "level": 2,
+  "clue": "Take a word for a parking area. Put two letters in front of it to get the person who flies a plane. Who's that?",
+  "answer": "pilot",
+  "hints": [
+   "The parking word is lot.",
+   "The two letters are P and I.",
+   "They sit in the cockpit."
+  ],
+  "reveal": "Pilot. P-I plus lot.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "lot",
+     "pilot"
+    ]
+   },
+   {
+    "op": "insert",
+    "a": "lot",
+    "ins": "pi",
+    "b": "pilot"
+   }
+  ]
+ },
+ {
+  "id": "b-100",
+  "type": "single",
+  "level": 2,
+  "clue": "Take a word for how old you are. Put two letters in front of it to get a picture, or a reflection in a mirror. What's the word?",
+  "answer": "image",
+  "hints": [
+   "The how-old word is age.",
+   "The two letters are I and M.",
+   "It rhymes with scrimmage."
+  ],
+  "reveal": "Image. I-M plus age.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "age",
+     "image"
+    ]
+   },
+   {
+    "op": "insert",
+    "a": "age",
+    "ins": "im",
+    "b": "image"
+   }
+  ]
+ },
+ {
+  "id": "b-101",
+  "type": "single",
+  "level": 2,
+  "clue": "Take something you fry eggs in. Add one letter to get one of the little chess pieces in the front row. What's the chess piece?",
+  "answer": "pawn",
+  "hints": [
+   "The frying thing is a pan.",
+   "Add a W.",
+   "Each player starts with eight of them."
+  ],
+  "reveal": "Pawn. Put a W into pan.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "pan",
+     "pawn"
+    ]
+   },
+   {
+    "op": "insert",
+    "a": "pan",
+    "ins": "w",
+    "b": "pawn"
+   }
+  ]
+ },
+ {
+  "id": "b-102",
+  "type": "single",
+  "level": 2,
+  "clue": "Take the first letters of the Halloween greeting 'trick or treat.' What word do they spell? It means a small child.",
+  "answer": "tot",
+  "hints": [
+   "Take the T from trick, the O from or, and the T from treat.",
+   "It's a word for a toddler."
+  ],
+  "reveal": "Tot. Trick Or Treat gives T, O, T, and lots of tots say it.",
+  "check": [
+   {
+    "op": "initials",
+    "phrase": "trick or treat",
+    "b": "tot"
+   },
+   {
+    "op": "words",
+    "words": [
+     "tot"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b-103",
+  "type": "single",
+  "level": 2,
+  "clue": "Take the first letters of the computer phrase 'cut and paste.' What do they spell? It's something you wear on your head.",
+  "answer": "cap",
+  "hints": [
+   "Take the C from cut, the A from and, and the P from paste.",
+   "A baseball player wears one."
+  ],
+  "reveal": "Cap. Cut And Paste gives C, A, P.",
+  "check": [
+   {
+    "op": "initials",
+    "phrase": "cut and paste",
+    "b": "cap"
+   },
+   {
+    "op": "words",
+    "words": [
+     "cap"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b-104",
+  "type": "single",
+  "level": 2,
+  "clue": "Take the first letters of the phrase 'song and dance.' What do they spell? Funny enough, it's a gloomy word.",
+  "answer": "sad",
+  "hints": [
+   "Take the S from song, the A from and, and the D from dance.",
+   "It's the opposite of happy."
+  ],
+  "reveal": "Sad. Song And Dance gives S, A, D.",
+  "check": [
+   {
+    "op": "initials",
+    "phrase": "song and dance",
+    "b": "sad"
+   },
+   {
+    "op": "words",
+    "words": [
+     "sad"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b-105",
+  "type": "single",
+  "level": 2,
+  "clue": "Take the first letters of the phrase 'pins and needles.' What do they spell? It's something you cook in.",
+  "answer": "pan",
+  "hints": [
+   "Take the P from pins, the A from and, and the N from needles.",
+   "You might fry an egg in it."
+  ],
+  "reveal": "Pan. Pins And Needles gives P, A, N.",
+  "check": [
+   {
+    "op": "initials",
+    "phrase": "pins and needles",
+    "b": "pan"
+   },
+   {
+    "op": "words",
+    "words": [
+     "pan"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b-106",
+  "type": "single",
+  "level": 2,
+  "clue": "Take the first letters of the phrase 'tooth and nail,' as in 'fight tooth and nail.' What do they spell? It's a color, or what you get at the beach.",
+  "answer": "tan",
+  "hints": [
+   "Take the T from tooth, the A from and, and the N from nail.",
+   "It's a light brown."
+  ],
+  "reveal": "Tan. Tooth And Nail gives T, A, N.",
+  "check": [
+   {
+    "op": "initials",
+    "phrase": "tooth and nail",
+    "b": "tan"
+   },
+   {
+    "op": "words",
+    "words": [
+     "tan"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b-107",
+  "type": "single",
+  "level": 2,
+  "clue": "Name a flower whose name sounds exactly like the lines of seats in a theater. What's the flower?",
+  "answer": "rose",
+  "hints": [
+   "The theater word is rows.",
+   "It's red on Valentine's Day.",
+   "It starts with the letter R."
+  ],
+  "reveal": "Rose. It sounds just like rows.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "rose",
+     "rows"
+    ]
+   },
+   {
+    "op": "sound",
+    "why": "rose and rows are pronounced the same"
+   }
+  ]
+ },
+ {
+  "id": "b-108",
+  "type": "single",
+  "level": 2,
+  "clue": "Name a vegetable in the onion family that sounds exactly like a drip from a broken pipe. What's the vegetable?",
+  "answer": "leek",
+  "hints": [
+   "The drip word is leak.",
+   "It's long, with white and green parts.",
+   "It starts with the letter L."
+  ],
+  "reveal": "Leek. It sounds just like leak.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "leek",
+     "leak"
+    ]
+   },
+   {
+    "op": "sound",
+    "why": "leek and leak are pronounced the same"
+   }
+  ]
+ },
+ {
+  "id": "b-109",
+  "type": "single",
+  "level": 2,
+  "clue": "Name a big animal with antlers whose name sounds exactly like a fluffy chocolate dessert. What's the animal?",
+  "answer": "moose",
+  "hints": [
+   "The dessert is mousse.",
+   "It lives in Canada and Alaska.",
+   "It starts with the letter M."
+  ],
+  "reveal": "Moose. It sounds just like mousse.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "moose",
+     "mousse"
+    ]
+   },
+   {
+    "op": "sound",
+    "why": "moose and mousse are pronounced the same"
+   }
+  ]
+ },
+ {
+  "id": "b-110",
+  "type": "single",
+  "level": 2,
+  "clue": "Name a kitchen herb that sounds exactly like what a clock tells. What's the herb?",
+  "answer": "thyme",
+  "hints": [
+   "It's in the song with parsley, sage, and rosemary.",
+   "It's spelled with a silent H after the T.",
+   "It sounds like time."
+  ],
+  "reveal": "Thyme. It sounds just like time.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "thyme",
+     "time"
+    ]
+   },
+   {
+    "op": "sound",
+    "why": "thyme and time are pronounced the same"
+   }
+  ]
+ },
+ {
+  "id": "b-111",
+  "type": "single",
+  "level": 2,
+  "clue": "Name a shellfish that sounds exactly like what a bodybuilder builds. What's the shellfish?",
+  "answer": "mussel",
+  "hints": [
+   "It has a dark blue shell.",
+   "The bodybuilder word is muscle.",
+   "It starts with the letter M."
+  ],
+  "reveal": "Mussel. It sounds just like muscle.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "mussel",
+     "muscle"
+    ]
+   },
+   {
+    "op": "sound",
+    "why": "mussel and muscle are pronounced the same"
+   }
+  ]
+ },
+ {
+  "id": "b-112",
+  "type": "single",
+  "level": 2,
+  "clue": "Name what a baker does to bread dough that sounds exactly like a word meaning 'require.' What does the baker do?",
+  "answer": "knead",
+  "hints": [
+   "It's pressing and folding the dough.",
+   "It starts with a silent K.",
+   "It sounds like need."
+  ],
+  "reveal": "Knead. It sounds just like need.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "knead",
+     "need"
+    ]
+   },
+   {
+    "op": "sound",
+    "why": "knead and need are pronounced the same"
+   }
+  ]
+ },
+ {
+  "id": "b-113",
+  "type": "single",
+  "level": 2,
+  "clue": "Give me a rhyming two-word phrase for a spooky spirit who welcomes guests to a party.",
+  "answer": "ghost host",
+  "hints": [
+   "The first word is a spirit that says boo.",
+   "The second word means someone who throws a party.",
+   "It's ghost something."
+  ],
+  "reveal": "Ghost host. A ghost who's the host.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "ghost",
+     "host"
+    ]
+   },
+   {
+    "op": "sound",
+    "why": "ghost and host rhyme"
+   }
+  ]
+ },
+ {
+  "id": "b-114",
+  "type": "single",
+  "level": 2,
+  "clue": "What word can follow both butter and dragon to make the names of two insects?",
+  "answer": "fly",
+  "hints": [
+   "Both insects have wings.",
+   "It's a three-letter word.",
+   "It's also what a bird does."
+  ],
+  "reveal": "Fly. Butterfly and dragonfly.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "butterfly",
+     "dragonfly",
+     "fly"
+    ]
+   },
+   {
+    "op": "free",
+    "why": "butterfly and dragonfly are both insects ending in fly"
+   }
+  ]
+ },
+ {
+  "id": "b-115",
+  "type": "single",
+  "level": 2,
+  "clue": "What word can follow rain, snow, and water to make three new words?",
+  "answer": "fall",
+  "hints": [
+   "Niagara is a famous water-something.",
+   "It's another name for autumn.",
+   "It starts with the letter F."
+  ],
+  "reveal": "Fall. Rainfall, snowfall, and waterfall.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "rainfall",
+     "snowfall",
+     "waterfall",
+     "fall"
+    ]
+   },
+   {
+    "op": "free",
+    "why": "rainfall, snowfall and waterfall are all words ending in fall"
+   }
+  ]
+ },
+ {
+  "id": "b-116",
+  "type": "single",
+  "level": 2,
+  "clue": "What word can follow tooth, hair, and paint to make three new words?",
+  "answer": "brush",
+  "hints": [
+   "They're all tools with bristles.",
+   "You use one every morning and night on your teeth.",
+   "It starts with the letter B."
+  ],
+  "reveal": "Brush. Toothbrush, hairbrush, and paintbrush.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "toothbrush",
+     "hairbrush",
+     "paintbrush",
+     "brush"
+    ]
+   },
+   {
+    "op": "free",
+    "why": "toothbrush, hairbrush and paintbrush are all words ending in brush"
+   }
+  ]
+ },
+ {
+  "id": "b-117",
+  "type": "single",
+  "level": 2,
+  "clue": "What word can follow pop, pepper, and candy to make three familiar words or phrases?",
+  "answer": "corn",
+  "hints": [
+   "Pop-something is a movie snack.",
+   "It's a vegetable on a cob.",
+   "It starts with the letter C."
+  ],
+  "reveal": "Corn. Popcorn, peppercorn, and candy corn.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "popcorn",
+     "peppercorn",
+     "candy corn",
+     "corn"
+    ]
+   },
+   {
+    "op": "free",
+    "why": "popcorn, peppercorn and candy corn all end in corn"
+   }
+  ]
+ },
+ {
+  "id": "b-118",
+  "type": "single",
+  "level": 2,
+  "clue": "Fill in the blank: pass blank, key blank, and cross blank. The same thing goes in every blank. What is it?",
+  "answer": "word",
+  "hints": [
+   "You type the pass-something to log in.",
+   "Cross-something is a puzzle in the newspaper.",
+   "It starts with the letter W."
+  ],
+  "reveal": "Word. Password, keyword, and crossword.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "password",
+     "keyword",
+     "crossword",
+     "word"
+    ]
+   },
+   {
+    "op": "free",
+    "why": "password, keyword and crossword all end in word"
+   }
+  ]
+ },
+ {
+  "id": "b-119",
+  "type": "single",
+  "level": 2,
+  "clue": "Name the spinning blades on top of a helicopter, a word spelled the same forward and backward.",
+  "answer": "rotor",
+  "accept": [
+   "rotors"
+  ],
+  "hints": [
+   "It has five letters.",
+   "It starts and ends with the letter R."
+  ],
+  "reveal": "Rotor. R-O-T-O-R, the same both ways.",
+  "check": [
+   {
+    "op": "palindrome",
+    "w": "rotor"
+   },
+   {
+    "op": "words",
+    "words": [
+     "rotor"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b-120",
+  "type": "single",
+  "level": 2,
+  "clue": "What six-letter word means 'more red' and is spelled the same forward and backward?",
+  "answer": "redder",
+  "hints": [
+   "It's the word you'd use if one apple is more red than another.",
+   "It starts and ends with the letter R."
+  ],
+  "reveal": "Redder. R-E-D-D-E-R, the same both ways.",
+  "check": [
+   {
+    "op": "palindrome",
+    "w": "redder"
+   },
+   {
+    "op": "words",
+    "words": [
+     "redder"
+    ]
+   },
+   {
+    "op": "length",
+    "w": "redder",
+    "n": 6
+   }
+  ]
+ },
+ {
+  "id": "b-121",
+  "type": "single",
+  "level": 3,
+  "clue": "Rearrange the letters of senator, S-E-N-A-T-O-R, to get a serious crime against your own country. What's the crime?",
+  "answer": "treason",
+  "hints": [
+   "It's the crime of betraying your nation.",
+   "It's the word reason with one letter in front.",
+   "It starts with the letter T."
+  ],
+  "reveal": "Treason. Senator rearranged gives treason.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "senator",
+     "treason"
+    ]
+   },
+   {
+    "op": "anagram",
+    "a": "senator",
+    "b": "treason"
+   }
+  ]
+ },
+ {
+  "id": "b-122",
+  "type": "single",
+  "level": 3,
+  "clue": "Rearrange the letters of admirer, A-D-M-I-R-E-R, to get what an admirer might hope to end up. It means wed.",
+  "answer": "married",
+  "hints": [
+   "It's what you are after a wedding.",
+   "It has a double R.",
+   "It starts with the letter M."
+  ],
+  "reveal": "Married. Admirer rearranged gives married.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "admirer",
+     "married"
+    ]
+   },
+   {
+    "op": "anagram",
+    "a": "admirer",
+    "b": "married"
+   }
+  ]
+ },
+ {
+  "id": "b-123",
+  "type": "single",
+  "level": 3,
+  "clue": "Rearrange the letters of fluster, F-L-U-S-T-E-R, to get its near opposite, a word meaning calm and relaxing. What's the word?",
+  "answer": "restful",
+  "hints": [
+   "It ends in F-U-L.",
+   "A good night's sleep is this.",
+   "It starts with R-E-S-T."
+  ],
+  "reveal": "Restful. Fluster rearranged gives restful.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "fluster",
+     "restful"
+    ]
+   },
+   {
+    "op": "anagram",
+    "a": "fluster",
+    "b": "restful"
+   }
+  ]
+ },
+ {
+  "id": "b-124",
+  "type": "single",
+  "level": 3,
+  "clue": "Rearrange the letters of thicken, T-H-I-C-K-E-N, to get the room where you'd probably thicken a sauce. What's the room?",
+  "answer": "kitchen",
+  "hints": [
+   "It's where the stove is.",
+   "It starts with the letter K."
+  ],
+  "reveal": "Kitchen. Thicken rearranged gives kitchen.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "thicken",
+     "kitchen"
+    ]
+   },
+   {
+    "op": "anagram",
+    "a": "thicken",
+    "b": "kitchen"
+   }
+  ]
+ },
+ {
+  "id": "b-125",
+  "type": "single",
+  "level": 3,
+  "clue": "Rearrange the letters of hornet, H-O-R-N-E-T, to get the special chair a king sits on. What is it?",
+  "answer": "throne",
+  "hints": [
+   "It's in a palace.",
+   "It starts with T-H."
+  ],
+  "reveal": "Throne. Hornet rearranged gives throne.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "hornet",
+     "throne"
+    ]
+   },
+   {
+    "op": "anagram",
+    "a": "hornet",
+    "b": "throne"
+   }
+  ]
+ },
+ {
+  "id": "b-126",
+  "type": "single",
+  "level": 3,
+  "clue": "Rearrange the letters of rental, R-E-N-T-A-L, to get one of the branching horns on a deer's head. What is it?",
+  "answer": "antler",
+  "hints": [
+   "Moose and elk have them too.",
+   "It starts with A-N-T."
+  ],
+  "reveal": "Antler. Rental rearranged gives antler.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "rental",
+     "antler"
+    ]
+   },
+   {
+    "op": "anagram",
+    "a": "rental",
+    "b": "antler"
+   }
+  ]
+ },
+ {
+  "id": "b-127",
+  "type": "single",
+  "level": 3,
+  "clue": "Rearrange the letters of lemons, L-E-M-O-N-S, to get a word meaning serious and dignified, like a quiet ceremony. What's the word?",
+  "answer": "solemn",
+  "hints": [
+   "It ends with a silent N.",
+   "It starts with the letter S."
+  ],
+  "reveal": "Solemn. Lemons rearranged gives solemn.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "lemons",
+     "solemn"
+    ]
+   },
+   {
+    "op": "anagram",
+    "a": "lemons",
+    "b": "solemn"
+   }
+  ]
+ },
+ {
+  "id": "b-128",
+  "type": "single",
+  "level": 3,
+  "clue": "Rearrange the letters of canter, C-A-N-T-E-R, to get the sweet liquid that bees collect from flowers. What is it?",
+  "answer": "nectar",
+  "hints": [
+   "Hummingbirds drink it too.",
+   "It starts with the letter N."
+  ],
+  "reveal": "Nectar. Canter rearranged gives nectar.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "canter",
+     "nectar"
+    ]
+   },
+   {
+    "op": "anagram",
+    "a": "canter",
+    "b": "nectar"
+   }
+  ]
+ },
+ {
+  "id": "b-129",
+  "type": "single",
+  "level": 3,
+  "clue": "Rearrange the letters of retain, R-E-T-A-I-N, to get a layer at the back of your eye. What is it?",
+  "answer": "retina",
+  "hints": [
+   "An eye doctor can scan it.",
+   "It starts with R-E-T, just like the word I gave you."
+  ],
+  "reveal": "Retina. Retain rearranged gives retina.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "retain",
+     "retina"
+    ]
+   },
+   {
+    "op": "anagram",
+    "a": "retain",
+    "b": "retina"
+   }
+  ]
+ },
+ {
+  "id": "b-130",
+  "type": "single",
+  "level": 3,
+  "clue": "Put what you do to a tune when you've forgotten the words together with an instrument you bang. You get a word meaning dull and boring. What is it?",
+  "answer": "humdrum",
+  "hints": [
+   "The tune word is hum.",
+   "The instrument is a drum.",
+   "Its two halves rhyme."
+  ],
+  "reveal": "Humdrum. Hum plus drum.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "hum",
+     "drum",
+     "humdrum"
+    ]
+   },
+   {
+    "op": "concat",
+    "parts": [
+     "hum",
+     "drum"
+    ],
+    "b": "humdrum"
+   }
+  ]
+ },
+ {
+  "id": "b-131",
+  "type": "single",
+  "level": 3,
+  "clue": "Put an admirer together with the price of a bus ticket. You get a flourish of trumpets. What is it?",
+  "answer": "fanfare",
+  "hints": [
+   "The admirer is a fan.",
+   "The bus price is the fare.",
+   "It's played when royalty enters."
+  ],
+  "reveal": "Fanfare. Fan plus fare.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "fan",
+     "fare",
+     "fanfare"
+    ]
+   },
+   {
+    "op": "concat",
+    "parts": [
+     "fan",
+     "fare"
+    ],
+    "b": "fanfare"
+   }
+  ]
+ },
+ {
+  "id": "b-132",
+  "type": "single",
+  "level": 3,
+  "clue": "Put a pet that barks together with a short word for mother. You get a set of beliefs held without question. What is it?",
+  "answer": "dogma",
+  "hints": [
+   "The pet is a dog.",
+   "The mother word is ma.",
+   "It starts with D-O-G."
+  ],
+  "reveal": "Dogma. Dog plus ma.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "dog",
+     "ma",
+     "dogma"
+    ]
+   },
+   {
+    "op": "concat",
+    "parts": [
+     "dog",
+     "ma"
+    ],
+    "b": "dogma"
+   }
+  ]
+ },
+ {
+  "id": "b-133",
+  "type": "single",
+  "level": 3,
+  "clue": "Put a container for soda together with a word meaning 'performed.' You get a word meaning frank and honest, like a photo nobody posed for. What is it?",
+  "answer": "candid",
+  "hints": [
+   "The soda container is a can.",
+   "The performed word is did.",
+   "It starts with C-A-N."
+  ],
+  "reveal": "Candid. Can plus did.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "can",
+     "did",
+     "candid"
+    ]
+   },
+   {
+    "op": "concat",
+    "parts": [
+     "can",
+     "did"
+    ],
+    "b": "candid"
+   }
+  ]
+ },
+ {
+  "id": "b-134",
+  "type": "single",
+  "level": 3,
+  "clue": "Put a body part you hear with together with a bird's home. You get a word meaning sincere and serious. What is it?",
+  "answer": "earnest",
+  "hints": [
+   "The body part is an ear.",
+   "The bird's home is a nest.",
+   "Oscar Wilde wrote about the importance of being this."
+  ],
+  "reveal": "Earnest. Ear plus nest.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "ear",
+     "nest",
+     "earnest"
+    ]
+   },
+   {
+    "op": "concat",
+    "parts": [
+     "ear",
+     "nest"
+    ],
+    "b": "earnest"
+   }
+  ]
+ },
+ {
+  "id": "b-135",
+  "type": "single",
+  "level": 3,
+  "clue": "Think of a sailor who flies a skull and crossbones. Drop the first letter to get a word meaning very angry. What's the angry word?",
+  "answer": "irate",
+  "hints": [
+   "The sailor is a pirate.",
+   "It starts with the letter I."
+  ],
+  "reveal": "Irate. Pirate without the P is irate.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "pirate",
+     "irate"
+    ]
+   },
+   {
+    "op": "drop",
+    "a": "pirate",
+    "b": "irate"
+   }
+  ]
+ },
+ {
+  "id": "b-136",
+  "type": "single",
+  "level": 3,
+  "clue": "Think of a word that means both a small bird with a forked tail and what you do with a bite of food. Drop its first letter to get what pigs do in the mud. What do pigs do?",
+  "answer": "wallow",
+  "hints": [
+   "The bird-and-food word is swallow.",
+   "It means to roll around happily.",
+   "It starts with the letter W."
+  ],
+  "reveal": "Wallow. Swallow without the S is wallow.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "swallow",
+     "wallow"
+    ]
+   },
+   {
+    "op": "drop",
+    "a": "swallow",
+    "b": "wallow"
+   }
+  ]
+ },
+ {
+  "id": "b-137",
+  "type": "single",
+  "level": 3,
+  "clue": "Think of a word meaning to bring a package to someone's door. Spell it backward to get a word meaning hated and scorned. Give me the package word.",
+  "answer": "deliver",
+  "hints": [
+   "The scorned word is reviled.",
+   "A mail carrier does it.",
+   "It starts with the letter D."
+  ],
+  "reveal": "Deliver. Spelled backward it's reviled.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "deliver",
+     "reviled"
+    ]
+   },
+   {
+    "op": "reverse",
+    "a": "deliver",
+    "b": "reviled"
+   }
+  ]
+ },
+ {
+  "id": "b-138",
+  "type": "single",
+  "level": 3,
+  "clue": "Think of a short word for coffee without the caffeine. Spell it backward to get a word meaning 'confronted.' Give me the coffee word.",
+  "answer": "decaf",
+  "hints": [
+   "The confronted word is faced.",
+   "It starts with the letter D."
+  ],
+  "reveal": "Decaf. Spelled backward it's faced.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "decaf",
+     "faced"
+    ]
+   },
+   {
+    "op": "reverse",
+    "a": "decaf",
+    "b": "faced"
+   }
+  ]
+ },
+ {
+  "id": "b-139",
+  "type": "single",
+  "level": 3,
+  "clue": "Name a military rank that sounds exactly like a single piece of popcorn. What's the rank?",
+  "answer": "colonel",
+  "hints": [
+   "The popcorn word is kernel.",
+   "It's a rank just below general.",
+   "It's spelled with an L but sounds like it has an R."
+  ],
+  "reveal": "Colonel. It sounds just like kernel.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "colonel",
+     "kernel"
+    ]
+   },
+   {
+    "op": "sound",
+    "why": "colonel and kernel are pronounced the same"
+   }
+  ]
+ },
+ {
+  "id": "b-140",
+  "type": "single",
+  "level": 3,
+  "clue": "Name a grain used in bread and whiskey that sounds exactly like a word meaning dryly funny. What's the grain?",
+  "answer": "rye",
+  "hints": [
+   "The funny word is wry, as in a wry smile.",
+   "It's a dark bread for a deli sandwich.",
+   "It's three letters, starting with the letter R."
+  ],
+  "reveal": "Rye. It sounds just like wry.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "rye",
+     "wry"
+    ]
+   },
+   {
+    "op": "sound",
+    "why": "rye and wry are pronounced the same"
+   }
+  ]
+ },
+ {
+  "id": "b-141",
+  "type": "single",
+  "level": 3,
+  "clue": "Name a wild cat with tufted ears whose name sounds exactly like the rings of a chain. What's the cat?",
+  "answer": "lynx",
+  "hints": [
+   "The chain word is links.",
+   "It's related to the bobcat.",
+   "It starts with the letter L."
+  ],
+  "reveal": "Lynx. It sounds just like links.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "lynx",
+     "links"
+    ]
+   },
+   {
+    "op": "sound",
+    "why": "lynx and links are pronounced the same"
+   }
+  ]
+ },
+ {
+  "id": "b-142",
+  "type": "single",
+  "level": 3,
+  "clue": "Name a brass instrument you crash in a drum kit whose name sounds exactly like a sign that stands for something. What's the instrument?",
+  "answer": "cymbal",
+  "hints": [
+   "The sign word is symbol.",
+   "Drummers hit it with a stick.",
+   "It starts with the letter C."
+  ],
+  "reveal": "Cymbal. It sounds just like symbol.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "cymbal",
+     "symbol"
+    ]
+   },
+   {
+    "op": "sound",
+    "why": "cymbal and symbol are pronounced the same"
+   }
+  ]
+ },
+ {
+  "id": "b-143",
+  "type": "single",
+  "level": 3,
+  "clue": "A country is hiding across two words in this sentence: Bring one pal to the party. What's the country?",
+  "answer": "Nepal",
+  "hints": [
+   "It's in Asia.",
+   "Listen to the end of 'one' and all of 'pal.'",
+   "Mount Everest is on its border."
+  ],
+  "reveal": "Nepal. It's tucked into 'one pal.'",
+  "check": [
+   {
+    "op": "hidden",
+    "phrase": "Bring one pal to the party.",
+    "b": "nepal"
+   }
+  ]
+ },
+ {
+  "id": "b-144",
+  "type": "single",
+  "level": 3,
+  "clue": "A country is hiding across two words in this sentence: Ken yawned all through the movie. What's the country?",
+  "answer": "Kenya",
+  "hints": [
+   "It's in Africa.",
+   "Listen to 'Ken' and the start of 'yawned.'",
+   "Its capital is Nairobi."
+  ],
+  "reveal": "Kenya. It's tucked into 'Ken yawned.'",
+  "check": [
+   {
+    "op": "hidden",
+    "phrase": "Ken yawned all through the movie.",
+    "b": "kenya"
+   }
+  ]
+ },
+ {
+  "id": "b-145",
+  "type": "single",
+  "level": 3,
+  "clue": "Take a word meaning 'at this place.' Put two letters in front of it to get the shape of a ball. What's the shape?",
+  "answer": "sphere",
+  "hints": [
+   "The place word is here.",
+   "The two letters are S and P.",
+   "A globe is one."
+  ],
+  "reveal": "Sphere. S-P plus here.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "here",
+     "sphere"
+    ]
+   },
+   {
+    "op": "insert",
+    "a": "here",
+    "ins": "sp",
+    "b": "sphere"
+   }
+  ]
+ },
+ {
+  "id": "b-146",
+  "type": "single",
+  "level": 3,
+  "clue": "Take something you sleep in on a camping trip. Put two letters in the middle to get a natural gift or skill. What's the word?",
+  "answer": "talent",
+  "hints": [
+   "The camping word is tent.",
+   "The two letters are A and L, right after the T.",
+   "Shows hunt for it."
+  ],
+  "reveal": "Talent. Tent with A-L slipped in after the T.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "tent",
+     "talent"
+    ]
+   },
+   {
+    "op": "insert",
+    "a": "tent",
+    "ins": "al",
+    "b": "talent"
+   }
+  ]
+ },
+ {
+  "id": "b-147",
+  "type": "single",
+  "level": 3,
+  "clue": "The first letters of 'zone improvement plan' spell a short word you write on an envelope. It's followed by the word code. What is it?",
+  "answer": "zip",
+  "hints": [
+   "It's a five-digit postal number in the US.",
+   "It's also what a zipper does."
+  ],
+  "reveal": "Zip. Zone Improvement Plan gives Z, I, P, as in zip code.",
+  "check": [
+   {
+    "op": "initials",
+    "phrase": "zone improvement plan",
+    "b": "zip"
+   },
+   {
+    "op": "words",
+    "words": [
+     "zip"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b-148",
+  "type": "single",
+  "level": 3,
+  "clue": "Take the first letters of the phrase 'cats and dogs,' as in raining cats and dogs. What do they spell? It's an old-fashioned word for a rude, dishonorable man.",
+  "answer": "cad",
+  "hints": [
+   "Take the C from cats, the A from and, and the D from dogs.",
+   "It rhymes with bad."
+  ],
+  "reveal": "Cad. Cats And Dogs gives C, A, D.",
+  "check": [
+   {
+    "op": "initials",
+    "phrase": "cats and dogs",
+    "b": "cad"
+   },
+   {
+    "op": "words",
+    "words": [
+     "cad"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "b-149",
+  "type": "single",
+  "level": 3,
+  "clue": "What five-letter word for a core belief or principle is spelled the same forward and backward?",
+  "answer": "tenet",
+  "hints": [
+   "It starts and ends with the letter T.",
+   "It has the word ten at the start."
+  ],
+  "reveal": "Tenet. T-E-N-E-T, the same both ways.",
+  "check": [
+   {
+    "op": "palindrome",
+    "w": "tenet"
+   },
+   {
+    "op": "words",
+    "words": [
+     "tenet"
+    ]
+   },
+   {
+    "op": "length",
+    "w": "tenet",
+    "n": 5
+   }
+  ]
+ },
+ {
+  "id": "b-150",
+  "type": "single",
+  "level": 3,
+  "clue": "A planet is hiding at the start of the name of a fluffy treat you toast over a campfire. What's the planet?",
+  "answer": "Mars",
+  "hints": [
+   "The treat goes in s'mores.",
+   "The treat is a marshmallow.",
+   "It's the red planet."
+  ],
+  "reveal": "Mars. Marshmallow starts with mars.",
+  "check": [
+   {
+    "op": "contains",
+    "a": "marshmallow",
+    "b": "mars"
+   },
+   {
+    "op": "words",
+    "words": [
+     "marshmallow"
+    ]
+   }
+  ]
+ }
+]

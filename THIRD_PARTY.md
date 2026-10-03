@@ -1,6 +1,18 @@
 # Third-party software and data
 
-This repository holds only its own code (MIT, see `LICENSE`). A release tarball built by
+This repository holds its own code (MIT, see `LICENSE`) and two third-party data sets that ENIGMA's puzzle
+book uses:
+
+| component | in this repository as | upstream | licence |
+|---|---|---|---|
+| English Speller Database (SCOWL) word lists | `app/puzzle/common.txt`, `app/puzzle/extra.txt` | https://github.com/en-wl/wordlist | MIT-like, notice in `app/puzzle/WORDLIST-LICENSE.txt` |
+| CMU Pronouncing Dictionary (trimmed, stress marks removed) | `app/puzzle/sounds.txt` | https://github.com/cmusphinx/cmudict | BSD-2-Clause-style, in `app/puzzle/SOUNDS-LICENSE.txt` |
+
+The category lists, puzzle bank and style notes in `app/puzzle/` are this project's own work (MIT). The
+style notes were written from listening to two radio puzzle programs; no audio, transcript or puzzle from
+them is included.
+
+A release tarball built by
 `build/build.sh` also contains the binaries and story files below, each built or copied from the pinned
 commit named in that script.
 

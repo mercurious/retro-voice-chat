@@ -3,3 +3,6 @@ dist/
 __pycache__/
 logs/
 prefs.json
+
+# podcast audio and transcripts for the ENIGMA style research: local only, never committed
+research/

@@ -9,7 +9,7 @@
 set -u
 H=$(cd "$(dirname "$0")" && pwd); M=${RV_MODELS:-$H/models}; P=${RV_PORTS:-/storage/roms/ports}
 WP=${HOME:-/storage}/.config/wireplumber/wireplumber.conf.d
-ENTRIES="Retro Voice Chat.sh|Retro Voice Chat (smart).sh|Retro Voice Zork.sh"
+ENTRIES="Retro Voice Chat.sh|Retro Voice Chat (smart).sh|Retro Voice Zork.sh|Enigma Puzzles.sh|Enigma Puzzles (smart).sh"
 SMART=""; JACK=""; MODELS=1
 for a in "$@"; do
   case $a in

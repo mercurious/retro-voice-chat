@@ -1,0 +1,1387 @@
+[
+ {
+  "id": "c-001",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Name a big city in Florida. Change one letter and rearrange the result to get a violent, twisting storm. What are the city and the storm?",
+  "answer": "orlando tornado",
+  "parts": [
+   "orlando",
+   "tornado"
+  ],
+  "hints": [
+   "The city is famous for its theme parks.",
+   "The storm is also called a twister.",
+   "Change the letter L in the city to the letter T, then rearrange."
+  ],
+  "reveal": "Orlando and tornado. Change the L in Orlando to a T and rearrange the letters to spell tornado.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "tornado"
+    ]
+   },
+   {
+    "op": "change",
+    "a": "orlando",
+    "b": "ortando"
+   },
+   {
+    "op": "anagram",
+    "a": "ortando",
+    "b": "tornado"
+   }
+  ]
+ },
+ {
+  "id": "c-002",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Name a European country. Change one letter and rearrange the result to get a U.S. state. What are the country and the state?",
+  "answer": "romania arizona",
+  "parts": [
+   "romania",
+   "arizona"
+  ],
+  "hints": [
+   "The state is home to the Grand Canyon.",
+   "The country includes the region of Transylvania.",
+   "Change the letter M in the country to the letter Z, then rearrange."
+  ],
+  "reveal": "Romania and Arizona. Change the M in Romania to a Z and rearrange the letters to spell Arizona.",
+  "check": [
+   {
+    "op": "words",
+    "words": []
+   },
+   {
+    "op": "change",
+    "a": "romania",
+    "b": "rozania"
+   },
+   {
+    "op": "anagram",
+    "a": "rozania",
+    "b": "arizona"
+   }
+  ]
+ },
+ {
+  "id": "c-003",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Name a leafy green herb. Change one letter and rearrange the result to get something you'd find on an office desk. What are the herb and the desk item?",
+  "answer": "parsley stapler",
+  "parts": [
+   "parsley",
+   "stapler"
+  ],
+  "hints": [
+   "The desk item fastens papers together.",
+   "The herb is a common garnish on a dinner plate.",
+   "Change the letter Y in the herb to the letter T, then rearrange."
+  ],
+  "reveal": "Parsley and stapler. Change the Y in parsley to a T and rearrange the letters to spell stapler.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "parsley",
+     "stapler"
+    ]
+   },
+   {
+    "op": "change",
+    "a": "parsley",
+    "b": "parslet"
+   },
+   {
+    "op": "anagram",
+    "a": "parslet",
+    "b": "stapler"
+   }
+  ]
+ },
+ {
+  "id": "c-004",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Name a familiar songbird. Change one letter and rearrange the result to get a geometric figure. What are the bird and the figure?",
+  "answer": "starling triangle",
+  "parts": [
+   "starling",
+   "triangle"
+  ],
+  "hints": [
+   "The figure has three sides.",
+   "The bird is known for flying in huge, swirling flocks.",
+   "Change the letter S in the bird to the letter E, then rearrange."
+  ],
+  "reveal": "Starling and triangle. Change the S in starling to an E and rearrange the letters to spell triangle.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "starling",
+     "triangle"
+    ]
+   },
+   {
+    "op": "change",
+    "a": "starling",
+    "b": "etarling"
+   },
+   {
+    "op": "anagram",
+    "a": "etarling",
+    "b": "triangle"
+   }
+  ]
+ },
+ {
+  "id": "c-005",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Name an instrument from the percussion section of an orchestra. Change one letter and rearrange the result to get a classic cocktail. What are the instrument and the cocktail?",
+  "answer": "timpani martini",
+  "parts": [
+   "timpani",
+   "martini"
+  ],
+  "hints": [
+   "The cocktail is often served with an olive.",
+   "The instrument is a set of big kettle drums.",
+   "Change the letter P in the instrument to the letter R, then rearrange."
+  ],
+  "reveal": "Timpani and martini. Change the P in timpani to an R and rearrange the letters to spell martini.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "timpani",
+     "martini"
+    ]
+   },
+   {
+    "op": "change",
+    "a": "timpani",
+    "b": "timrani"
+   },
+   {
+    "op": "anagram",
+    "a": "timrani",
+    "b": "martini"
+   }
+  ]
+ },
+ {
+  "id": "c-006",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Name a spring flower. Change one letter and rearrange the result to get the feeling you have after doing something wrong. What are the flower and the feeling?",
+  "answer": "tulip guilt",
+  "parts": [
+   "tulip",
+   "guilt"
+  ],
+  "hints": [
+   "The flower is strongly linked with the Netherlands.",
+   "The feeling has five letters.",
+   "Change the letter P in the flower to the letter G, then rearrange."
+  ],
+  "reveal": "Tulip and guilt. Change the P in tulip to a G and rearrange the letters to spell guilt.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "tulip",
+     "guilt"
+    ]
+   },
+   {
+    "op": "change",
+    "a": "tulip",
+    "b": "tulig"
+   },
+   {
+    "op": "anagram",
+    "a": "tulig",
+    "b": "guilt"
+   }
+  ]
+ },
+ {
+  "id": "c-007",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Name a kitchen appliance with six letters. Drop one letter and rearrange what's left to get an emotion. What are the appliance and the emotion?",
+  "answer": "fridge grief",
+  "parts": [
+   "fridge",
+   "grief"
+  ],
+  "hints": [
+   "The appliance keeps food cold.",
+   "The emotion is what you feel after a great loss.",
+   "Drop the letter D from the appliance."
+  ],
+  "reveal": "Fridge and grief. Drop the D from fridge and rearrange the rest to spell grief.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "fridge",
+     "grief"
+    ]
+   },
+   {
+    "op": "drop",
+    "a": "fridge",
+    "b": "frige"
+   },
+   {
+    "op": "anagram",
+    "a": "frige",
+    "b": "grief"
+   }
+  ]
+ },
+ {
+  "id": "c-008",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Name a short, flat-bottomed drinking glass. Drop one letter and rearrange what's left to get a job in a grand old mansion. What are the glass and the job?",
+  "answer": "tumbler butler",
+  "parts": [
+   "tumbler",
+   "butler"
+  ],
+  "hints": [
+   "The job belongs to the head of the household staff.",
+   "The glass is good for juice or whiskey on the rocks.",
+   "Drop the letter M from the glass."
+  ],
+  "reveal": "Tumbler and butler. Drop the M from tumbler and rearrange the rest to spell butler.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "tumbler",
+     "butler"
+    ]
+   },
+   {
+    "op": "drop",
+    "a": "tumbler",
+    "b": "tubler"
+   },
+   {
+    "op": "anagram",
+    "a": "tubler",
+    "b": "butler"
+   }
+  ]
+ },
+ {
+  "id": "c-009",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Name an outdoor job. Drop one letter and rearrange what's left to get a weapon. What are the job and the weapon?",
+  "answer": "gardener grenade",
+  "parts": [
+   "gardener",
+   "grenade"
+  ],
+  "hints": [
+   "The weapon is thrown, and it explodes.",
+   "The job involves pruning hedges and planting bulbs.",
+   "Drop one letter R from the job."
+  ],
+  "reveal": "Gardener and grenade. Drop an R from gardener and rearrange the rest to spell grenade.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "gardener",
+     "grenade"
+    ]
+   },
+   {
+    "op": "drop",
+    "a": "gardener",
+    "b": "gadener"
+   },
+   {
+    "op": "anagram",
+    "a": "gadener",
+    "b": "grenade"
+   }
+  ]
+ },
+ {
+  "id": "c-010",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Name a sound you hear in a storm. Drop one letter and rearrange what's left to get an occupation. What are the sound and the occupation?",
+  "answer": "thunder hunter",
+  "parts": [
+   "thunder",
+   "hunter"
+  ],
+  "hints": [
+   "The sound usually follows lightning.",
+   "The occupation goes after deer and ducks.",
+   "Drop the letter D from the sound."
+  ],
+  "reveal": "Thunder and hunter. Drop the D from thunder and rearrange the rest to spell hunter.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "thunder",
+     "hunter"
+    ]
+   },
+   {
+    "op": "drop",
+    "a": "thunder",
+    "b": "thuner"
+   },
+   {
+    "op": "anagram",
+    "a": "thuner",
+    "b": "hunter"
+   }
+  ]
+ },
+ {
+  "id": "c-011",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Name an emotion. Drop one letter and rearrange what's left to get a firearm. What are the emotion and the firearm?",
+  "answer": "relief rifle",
+  "parts": [
+   "relief",
+   "rifle"
+  ],
+  "hints": [
+   "The firearm has a long barrel.",
+   "The emotion often comes with a big sigh, when a worry goes away.",
+   "Drop one letter E from the emotion."
+  ],
+  "reveal": "Relief and rifle. Drop an E from relief and rearrange the rest to spell rifle.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "relief",
+     "rifle"
+    ]
+   },
+   {
+    "op": "drop",
+    "a": "relief",
+    "b": "rlief"
+   },
+   {
+    "op": "anagram",
+    "a": "rlief",
+    "b": "rifle"
+   }
+  ]
+ },
+ {
+  "id": "c-012",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Name a piece of furniture. Drop one letter and rearrange what's left to get a salad ingredient. What are the furniture and the ingredient?",
+  "answer": "ottoman tomato",
+  "parts": [
+   "ottoman",
+   "tomato"
+  ],
+  "hints": [
+   "The salad ingredient is red and juicy.",
+   "The furniture is a padded footstool.",
+   "Drop the letter N from the furniture."
+  ],
+  "reveal": "Ottoman and tomato. Drop the N from ottoman and rearrange the rest to spell tomato.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "ottoman",
+     "tomato"
+    ]
+   },
+   {
+    "op": "drop",
+    "a": "ottoman",
+    "b": "ottoma"
+   },
+   {
+    "op": "anagram",
+    "a": "ottoma",
+    "b": "tomato"
+   }
+  ]
+ },
+ {
+  "id": "c-013",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Name something cozy you wear on your feet around the house. Drop one letter and rearrange what's left to get a tool. What are the footwear and the tool?",
+  "answer": "slipper pliers",
+  "parts": [
+   "slipper",
+   "pliers"
+  ],
+  "hints": [
+   "The tool grips and bends wire.",
+   "Cinderella lost a glass one.",
+   "Drop one letter P from the footwear."
+  ],
+  "reveal": "Slipper and pliers. Drop a P from slipper and rearrange the rest to spell pliers.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "slipper",
+     "pliers"
+    ]
+   },
+   {
+    "op": "drop",
+    "a": "slipper",
+    "b": "sliper"
+   },
+   {
+    "op": "anagram",
+    "a": "sliper",
+    "b": "pliers"
+   }
+  ]
+ },
+ {
+  "id": "c-014",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Name a farm vehicle. Drop one letter and rearrange what's left to get a vegetable. What are the vehicle and the vegetable?",
+  "answer": "tractor carrot",
+  "parts": [
+   "tractor",
+   "carrot"
+  ],
+  "hints": [
+   "The vegetable is orange.",
+   "The vehicle pulls a plow.",
+   "Drop one letter T from the vehicle."
+  ],
+  "reveal": "Tractor and carrot. Drop a T from tractor and rearrange the rest to spell carrot.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "tractor",
+     "carrot"
+    ]
+   },
+   {
+    "op": "drop",
+    "a": "tractor",
+    "b": "ractor"
+   },
+   {
+    "op": "anagram",
+    "a": "ractor",
+    "b": "carrot"
+   }
+  ]
+ },
+ {
+  "id": "c-015",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Name an herb you might sprinkle on a pizza. Drop one letter and rearrange what's left to get a U.S. state. What are the herb and the state?",
+  "answer": "oregano oregon",
+  "parts": [
+   "oregano",
+   "oregon"
+  ],
+  "hints": [
+   "The state is in the Pacific Northwest.",
+   "The herb is a staple of Italian cooking, and it isn't basil.",
+   "Drop the letter A from the herb."
+  ],
+  "reveal": "Oregano and Oregon. Drop the A from oregano and rearrange the rest to spell Oregon.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "oregano"
+    ]
+   },
+   {
+    "op": "drop",
+    "a": "oregano",
+    "b": "oregno"
+   },
+   {
+    "op": "anagram",
+    "a": "oregno",
+    "b": "oregon"
+   }
+  ]
+ },
+ {
+  "id": "c-016",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Name an old-fashioned place to get a drink. Drop one letter and rearrange what's left to get a bird. What are the place and the bird?",
+  "answer": "tavern raven",
+  "parts": [
+   "tavern",
+   "raven"
+  ],
+  "hints": [
+   "The bird is large and black.",
+   "Edgar Allan Poe wrote a famous poem about the bird.",
+   "Drop the letter T from the drinking place."
+  ],
+  "reveal": "Tavern and raven. Drop the T from tavern and rearrange the rest to spell raven.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "tavern",
+     "raven"
+    ]
+   },
+   {
+    "op": "drop",
+    "a": "tavern",
+    "b": "avern"
+   },
+   {
+    "op": "anagram",
+    "a": "avern",
+    "b": "raven"
+   }
+  ]
+ },
+ {
+  "id": "c-017",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Name a South American capital. Add one letter and rearrange the result to get a wistful longing for the past. What are the capital and the feeling?",
+  "answer": "santiago nostalgia",
+  "parts": [
+   "santiago",
+   "nostalgia"
+  ],
+  "hints": [
+   "The feeling is the one old photos and old songs give you.",
+   "The capital is in Chile.",
+   "Add the letter L to the capital, then rearrange."
+  ],
+  "reveal": "Santiago and nostalgia. Add an L to Santiago and rearrange the letters to spell nostalgia.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "nostalgia"
+    ]
+   },
+   {
+    "op": "insert",
+    "a": "santiago",
+    "ins": "l",
+    "b": "santiagol"
+   },
+   {
+    "op": "anagram",
+    "a": "santiagol",
+    "b": "nostalgia"
+   }
+  ]
+ },
+ {
+  "id": "c-018",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Name a vehicle that glides over snow on runners. Add one letter and rearrange the result to get a language. What are the vehicle and the language?",
+  "answer": "sleigh english",
+  "parts": [
+   "sleigh",
+   "english"
+  ],
+  "hints": [
+   "Santa rides in one.",
+   "The language is the one you're hearing right now.",
+   "Add the letter N to the vehicle, then rearrange."
+  ],
+  "reveal": "Sleigh and English. Add an N to sleigh and rearrange the letters to spell English.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "sleigh"
+    ]
+   },
+   {
+    "op": "insert",
+    "a": "sleigh",
+    "ins": "n",
+    "b": "sleighn"
+   },
+   {
+    "op": "anagram",
+    "a": "sleighn",
+    "b": "english"
+   }
+  ]
+ },
+ {
+  "id": "c-019",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Name a language. Add one letter and rearrange the result to get a job title. What are the language and the job title?",
+  "answer": "german manager",
+  "parts": [
+   "german",
+   "manager"
+  ],
+  "hints": [
+   "The language is spoken in Berlin.",
+   "The job title belongs to someone who runs a team or a store.",
+   "Add the letter A to the language, then rearrange."
+  ],
+  "reveal": "German and manager. Add an A to German and rearrange the letters to spell manager.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "manager"
+    ]
+   },
+   {
+    "op": "insert",
+    "a": "german",
+    "ins": "a",
+    "b": "germana"
+   },
+   {
+    "op": "anagram",
+    "a": "germana",
+    "b": "manager"
+   }
+  ]
+ },
+ {
+  "id": "c-020",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Name a famous European river. Add one letter and rearrange the result to get a small pet. What are the river and the pet?",
+  "answer": "thames hamster",
+  "parts": [
+   "thames",
+   "hamster"
+  ],
+  "hints": [
+   "The pet runs on a wheel.",
+   "The river flows through London.",
+   "Add the letter R to the river, then rearrange."
+  ],
+  "reveal": "Thames and hamster. Add an R to Thames and rearrange the letters to spell hamster.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "hamster"
+    ]
+   },
+   {
+    "op": "insert",
+    "a": "thames",
+    "ins": "r",
+    "b": "thamesr"
+   },
+   {
+    "op": "anagram",
+    "a": "thamesr",
+    "b": "hamster"
+   }
+  ]
+ },
+ {
+  "id": "c-021",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Name a capital city in the Middle East. Add one letter and rearrange the result to get a big cat. What are the capital and the cat?",
+  "answer": "tehran panther",
+  "parts": [
+   "tehran",
+   "panther"
+  ],
+  "hints": [
+   "The big cat is often black.",
+   "The capital is in Iran.",
+   "Add the letter P to the capital, then rearrange."
+  ],
+  "reveal": "Tehran and panther. Add a P to Tehran and rearrange the letters to spell panther.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "panther"
+    ]
+   },
+   {
+    "op": "insert",
+    "a": "tehran",
+    "ins": "p",
+    "b": "tehranp"
+   },
+   {
+    "op": "anagram",
+    "a": "tehranp",
+    "b": "panther"
+   }
+  ]
+ },
+ {
+  "id": "c-022",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Name a European capital. Add one letter and rearrange the result to get a shape. What are the capital and the shape?",
+  "answer": "paris spiral",
+  "parts": [
+   "paris",
+   "spiral"
+  ],
+  "hints": [
+   "The shape winds around and around, like a snail's shell.",
+   "The capital has a famous iron tower.",
+   "Add the letter L to the capital, then rearrange."
+  ],
+  "reveal": "Paris and spiral. Add an L to Paris and rearrange the letters to spell spiral.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "spiral"
+    ]
+   },
+   {
+    "op": "insert",
+    "a": "paris",
+    "ins": "l",
+    "b": "parisl"
+   },
+   {
+    "op": "anagram",
+    "a": "parisl",
+    "b": "spiral"
+   }
+  ]
+ },
+ {
+  "id": "c-023",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Name a part of the body and a piece of bedroom furniture. Put them together and you get a job. What's the job?",
+  "answer": "hairdresser",
+  "accept": [
+   "hair dresser"
+  ],
+  "hints": [
+   "The furniture has drawers for clothes.",
+   "The body part grows on your head.",
+   "The job is done in a salon."
+  ],
+  "reveal": "Hairdresser. Hair plus dresser makes hairdresser.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "hair",
+     "dresser",
+     "hairdresser"
+    ]
+   },
+   {
+    "op": "concat",
+    "parts": [
+     "hair",
+     "dresser"
+    ],
+    "b": "hairdresser"
+   }
+  ]
+ },
+ {
+  "id": "c-024",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Name an emotion and a piece of furniture. Put them together, in that order, to get a word meaning unfortunate. What's the word?",
+  "answer": "regrettable",
+  "accept": [
+   "regret table"
+  ],
+  "hints": [
+   "The furniture has four legs, and you eat at it.",
+   "The emotion is the feeling of wishing you hadn't done something.",
+   "The word starts with the emotion regret."
+  ],
+  "reveal": "Regrettable. Regret plus table makes regrettable.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "regret",
+     "table",
+     "regrettable"
+    ]
+   },
+   {
+    "op": "concat",
+    "parts": [
+     "regret",
+     "table"
+    ],
+    "b": "regrettable"
+   }
+  ]
+ },
+ {
+  "id": "c-025",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Name an animal and a vegetable. Put them together to get a sharp, spicy condiment. What's the condiment?",
+  "answer": "horseradish",
+  "accept": [
+   "horse radish"
+  ],
+  "hints": [
+   "The vegetable is small, red and peppery.",
+   "The animal pulls carriages.",
+   "The condiment is often served with roast beef."
+  ],
+  "reveal": "Horseradish. Horse plus radish makes horseradish.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "horse",
+     "radish",
+     "horseradish"
+    ]
+   },
+   {
+    "op": "concat",
+    "parts": [
+     "horse",
+     "radish"
+    ],
+    "b": "horseradish"
+   }
+  ]
+ },
+ {
+  "id": "c-026",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Name a kind of weather and a color. Put them together to get a word meaning suspicion. What's the word?",
+  "answer": "mistrust",
+  "accept": [
+   "mist rust"
+  ],
+  "hints": [
+   "The color is reddish brown, like an old nail.",
+   "The weather is a light, damp haze.",
+   "The word starts with the weather mist."
+  ],
+  "reveal": "Mistrust. Mist plus rust makes mistrust.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "mist",
+     "rust",
+     "mistrust"
+    ]
+   },
+   {
+    "op": "concat",
+    "parts": [
+     "mist",
+     "rust"
+    ],
+    "b": "mistrust"
+   }
+  ]
+ },
+ {
+  "id": "c-027",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Name an item of clothing and a color. Put them together to get a strong emotion. What's the emotion?",
+  "answer": "hatred",
+  "accept": [
+   "hat red"
+  ],
+  "hints": [
+   "The color is the color of a stop sign.",
+   "The clothing goes on your head.",
+   "The emotion is the opposite of love."
+  ],
+  "reveal": "Hatred. Hat plus red makes hatred.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "hat",
+     "red",
+     "hatred"
+    ]
+   },
+   {
+    "op": "concat",
+    "parts": [
+     "hat",
+     "red"
+    ],
+    "b": "hatred"
+   }
+  ]
+ },
+ {
+  "id": "c-028",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Name a vehicle and a job. Put them together to get a word for the leading edge of a movement. What's the word?",
+  "answer": "vanguard",
+  "accept": [
+   "van guard"
+  ],
+  "hints": [
+   "The vehicle is a boxy one you might move furniture in.",
+   "The job is someone who keeps watch and protects things.",
+   "The word starts with the letter V."
+  ],
+  "reveal": "Vanguard. Van plus guard makes vanguard.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "van",
+     "guard",
+     "vanguard"
+    ]
+   },
+   {
+    "op": "concat",
+    "parts": [
+     "van",
+     "guard"
+    ],
+    "b": "vanguard"
+   }
+  ]
+ },
+ {
+  "id": "c-029",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Name an animal and a part of the body. Put them together to get an item of clothing. What's the clothing?",
+  "answer": "turtleneck",
+  "accept": [
+   "turtle neck"
+  ],
+  "hints": [
+   "The body part is between your head and your shoulders.",
+   "The animal carries its home on its back.",
+   "The clothing is a sweater with a high, folded collar."
+  ],
+  "reveal": "Turtleneck. Turtle plus neck makes turtleneck.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "turtle",
+     "neck",
+     "turtleneck"
+    ]
+   },
+   {
+    "op": "concat",
+    "parts": [
+     "turtle",
+     "neck"
+    ],
+    "b": "turtleneck"
+   }
+  ]
+ },
+ {
+  "id": "c-030",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Take a female chicken. Put a number inside it to get a word meaning to raise or intensify. What's the word?",
+  "answer": "heighten",
+  "hints": [
+   "The female chicken is a hen.",
+   "The number is eight.",
+   "The word rhymes with frighten."
+  ],
+  "reveal": "Heighten. Put eight inside hen: H, eight, E-N.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "hen",
+     "eight",
+     "heighten"
+    ]
+   },
+   {
+    "op": "insert",
+    "a": "hen",
+    "ins": "eight",
+    "b": "heighten"
+   }
+  ]
+ },
+ {
+  "id": "c-031",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Take a word for a dock that juts out into the water. Put a number inside it to get a word for a trailblazer. What's the word?",
+  "answer": "pioneer",
+  "hints": [
+   "The dock word is pier.",
+   "The number is one.",
+   "The word rhymes with engineer."
+  ],
+  "reveal": "Pioneer. Put one inside pier: P-I, one, E-R.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "pier",
+     "one",
+     "pioneer"
+    ]
+   },
+   {
+    "op": "insert",
+    "a": "pier",
+    "ins": "one",
+    "b": "pioneer"
+   }
+  ]
+ },
+ {
+  "id": "c-032",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Take a cooking vessel. Put a number inside it to get a word meaning powerful. What's the word?",
+  "answer": "potent",
+  "hints": [
+   "The cooking vessel is a pot.",
+   "The number is ten.",
+   "The word has six letters and starts with the letter P."
+  ],
+  "reveal": "Potent. Put ten inside pot: P-O, ten, T.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "pot",
+     "ten",
+     "potent"
+    ]
+   },
+   {
+    "op": "insert",
+    "a": "pot",
+    "ins": "ten",
+    "b": "potent"
+   }
+  ]
+ },
+ {
+  "id": "c-033",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Take a dessert with a crust. Put a rodent inside it to get someone who sails under a skull and crossbones. What's the word?",
+  "answer": "pirate",
+  "hints": [
+   "The dessert is pie.",
+   "The rodent is a rat.",
+   "The answer likes to say arr."
+  ],
+  "reveal": "Pirate. Put rat inside pie: P-I, rat, E.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "pie",
+     "rat",
+     "pirate"
+    ]
+   },
+   {
+    "op": "insert",
+    "a": "pie",
+    "ins": "rat",
+    "b": "pirate"
+   }
+  ]
+ },
+ {
+  "id": "c-034",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Take a garden tool. Put a male deer inside it to get a captive held for ransom. What's the word?",
+  "answer": "hostage",
+  "hints": [
+   "The garden tool is a hoe.",
+   "The male deer is a stag.",
+   "The word has seven letters and starts with the letter H."
+  ],
+  "reveal": "Hostage. Put stag inside hoe: H-O, stag, E.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "hoe",
+     "stag",
+     "hostage"
+    ]
+   },
+   {
+    "op": "insert",
+    "a": "hoe",
+    "ins": "stag",
+    "b": "hostage"
+   }
+  ]
+ },
+ {
+  "id": "c-035",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Take a word meaning to snoop. Put an insect inside it to get a place where you store food. What's the word?",
+  "answer": "pantry",
+  "hints": [
+   "The insect is tiny and lives in colonies.",
+   "The snooping word is pry.",
+   "The answer is a small room off the kitchen, and it starts with the letter P."
+  ],
+  "reveal": "Pantry. Put ant inside pry: P, ant, R-Y.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "pry",
+     "ant",
+     "pantry"
+    ]
+   },
+   {
+    "op": "insert",
+    "a": "pry",
+    "ins": "ant",
+    "b": "pantry"
+   }
+  ]
+ },
+ {
+  "id": "c-036",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Take a casual word for a gentleman. Put a limb inside it to get any item of clothing. What's the word?",
+  "answer": "garment",
+  "hints": [
+   "The word for a gentleman is gent.",
+   "The limb is an arm.",
+   "The answer starts with the letter G."
+  ],
+  "reveal": "Garment. Put arm inside gent: G, arm, E-N-T.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "gent",
+     "arm",
+     "garment"
+    ]
+   },
+   {
+    "op": "insert",
+    "a": "gent",
+    "ins": "arm",
+    "b": "garment"
+   }
+  ]
+ },
+ {
+  "id": "c-037",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Take a word meaning not wet. Put a body part inside it to get a word meaning gloomy. What's the word?",
+  "answer": "dreary",
+  "hints": [
+   "The word for not wet is dry.",
+   "The body part is the one you hear with.",
+   "The answer rhymes with weary."
+  ],
+  "reveal": "Dreary. Put ear inside dry: D-R, ear, Y.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "dry",
+     "ear",
+     "dreary"
+    ]
+   },
+   {
+    "op": "insert",
+    "a": "dry",
+    "ins": "ear",
+    "b": "dreary"
+   }
+  ]
+ },
+ {
+  "id": "c-038",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Name a European country with a kind of weather hidden inside it. Take the weather out, and the letters left spell a small, four-stringed instrument. What's the country?",
+  "answer": "ukraine",
+  "hints": [
+   "The weather is rain.",
+   "The instrument is a uke, short for ukulele.",
+   "The country's capital is Kyiv."
+  ],
+  "reveal": "Ukraine. Take rain out of Ukraine and you're left with uke, short for ukulele.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "rain"
+    ]
+   },
+   {
+    "op": "remove",
+    "a": "ukraine",
+    "del": "rain",
+    "b": "uke"
+   }
+  ]
+ },
+ {
+  "id": "c-039",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Name a U.S. president with an alcoholic drink hidden inside his name. Take the drink out, and the letters left spell a color. Who's the president?",
+  "answer": "truman",
+  "hints": [
+   "The drink is a favorite of pirates.",
+   "The color is a light brown.",
+   "He became president after Franklin Roosevelt."
+  ],
+  "reveal": "Truman. Take rum out of Truman and you're left with tan.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "rum",
+     "tan"
+    ]
+   },
+   {
+    "op": "remove",
+    "a": "truman",
+    "del": "rum",
+    "b": "tan"
+   }
+  ]
+ },
+ {
+  "id": "c-040",
+  "type": "single",
+  "level": 3,
+  "challenge": true,
+  "clue": "Name a stinging insect. Change its first letter and you get a brass instrument. Rearrange its letters instead and you get something a king sits on. What's the insect?",
+  "answer": "hornet",
+  "hints": [
+   "The insect is a large kind of wasp.",
+   "The brass instrument is a cornet.",
+   "The king's seat is a throne."
+  ],
+  "reveal": "Hornet. Change the H to a C for cornet, or rearrange the letters to spell throne.",
+  "check": [
+   {
+    "op": "words",
+    "words": [
+     "hornet",
+     "cornet",
+     "throne"
+    ]
+   },
+   {
+    "op": "change",
+    "a": "hornet",
+    "b": "cornet"
+   },
+   {
+    "op": "anagram",
+    "a": "hornet",
+    "b": "throne"
+   }
+  ]
+ }
+]

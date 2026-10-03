@@ -9,6 +9,7 @@
 # Env: RV_MODE=fast|smart RV_MODELS=<dir> RV_LLM_MODEL=<gguf basename> RV_LLM_DRAFT=<mtp gguf|none>
 #      RV_LLM_CPUS/RV_LLM_T/RV_LLM_TB RV_ASR_CPUS RV_TTS_CPUS RV_VOICE=<name> RV_SOURCE=<pulse source>
 #      RV_FONT=<pt> RV_LLM_GPU=1 with RV_OCL_DIR=<llamadreno install> (LLM on the Adreno, OpenCL)
+#      RV_PERSONA=trixy|enigma (enigma: the word-puzzle host)
 
 [ -f /etc/profile ] && . /etc/profile >/dev/null 2>&1
 V=$(cd "$(dirname "$0")" && pwd); B=$V/bin; M=${RV_MODELS:-$V/models}; L=${RV_LOG_DIR:-$V/logs}
@@ -134,6 +135,8 @@ swaymsg "workspace 97:voice" >/dev/null 2>&1
 ( for i in 1 2 3 4 5 6 7 8 9 10; do
     sleep 0.5; swaymsg '[app_id="retrovoice"] fullscreen enable' >/dev/null 2>&1 && break
   done ) &
+BG=030a03; FG=33ff66
+[ "${RV_PERSONA:-}" = enigma ] && BG=0e0b1a && FG=f2e3c0     # ink and newsprint
 foot --app-id=retrovoice -f "monospace:size=${RV_FONT:-22}" \
-  -o colors.background=030a03 -o colors.foreground=33ff66 -o colors.alpha=1.0 \
+  -o colors.background=$BG -o colors.foreground=$FG -o colors.alpha=1.0 \
   env -u OMP_PROC_BIND -u OMP_PLACES python3 $V/retrovoice.py

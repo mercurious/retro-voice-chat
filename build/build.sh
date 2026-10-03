@@ -55,9 +55,9 @@ cp "$W/b-llama/bin/llama-server" "$OUT/bin/"
 cp "$(find "$W/b-pocket" -name tts-server -type f | head -1)" "$OUT/bin/"
 cp "$W/frotz/dfrotz" "$OUT/games/"
 for g in zork1 zork2 zork3; do cp "$W/$g/COMPILED/$g.z3" "$OUT/games/"; done
-cp "$ROOT"/app/launch.sh "$ROOT"/app/retrovoice.py "$ROOT"/app/zgame.py "$ROOT"/app/trivia.json \
+cp "$ROOT"/app/launch.sh "$ROOT"/app/retrovoice.py "$ROOT"/app/zgame.py "$ROOT"/app/trivia.json "$ROOT"/app/puzzles.py \
    "$ROOT"/install.sh "$ROOT"/models.txt "$ROOT"/README.md "$ROOT"/LICENSE "$ROOT"/THIRD_PARTY.md "$OUT/"
-cp -r "$ROOT/ports" "$ROOT/extras" "$ROOT/test" "$OUT/"
+cp -r "$ROOT/ports" "$ROOT/extras" "$ROOT/test" "$ROOT/app/puzzle" "$OUT/"
 chmod +x "$OUT"/launch.sh "$OUT"/install.sh "$OUT"/test/*.sh "$OUT"/bin/* "$OUT"/games/dfrotz
 tar -C "$ROOT/dist" -czf "$ROOT/dist/retro-voice-chat-aarch64.tar.gz" retro-voice-chat
 ls -la "$OUT" "$OUT/bin" "$OUT/games"; du -sh "$ROOT/dist/retro-voice-chat-aarch64.tar.gz"

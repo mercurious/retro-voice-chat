@@ -1,0 +1,3445 @@
+[
+ {
+  "id": "a-r01",
+  "type": "round",
+  "level": 1,
+  "title": "Color swap",
+  "intro": "Every answer is a color. I'll spell a word, and you change one letter to get the color. For example, if I said bed, B-E-D, you'd say red.",
+  "items": [
+   {
+    "clue": "Glue, G-L-U-E.",
+    "answer": "blue",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "glue",
+       "blue"
+      ]
+     },
+     {
+      "op": "change",
+      "a": "glue",
+      "b": "blue"
+     }
+    ]
+   },
+   {
+    "clue": "Pine, P-I-N-E.",
+    "answer": "pink",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "pine",
+       "pink"
+      ]
+     },
+     {
+      "op": "change",
+      "a": "pine",
+      "b": "pink"
+     }
+    ]
+   },
+   {
+    "clue": "Bold, B-O-L-D.",
+    "answer": "gold",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "bold",
+       "gold"
+      ]
+     },
+     {
+      "op": "change",
+      "a": "bold",
+      "b": "gold"
+     }
+    ]
+   },
+   {
+    "clue": "Write, W-R-I-T-E.",
+    "answer": "white",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "write",
+       "white"
+      ]
+     },
+     {
+      "op": "change",
+      "a": "write",
+      "b": "white"
+     }
+    ]
+   },
+   {
+    "clue": "Greet, G-R-E-E-T.",
+    "answer": "green",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "greet",
+       "green"
+      ]
+     },
+     {
+      "op": "change",
+      "a": "greet",
+      "b": "green"
+     }
+    ]
+   },
+   {
+    "clue": "Crown, C-R-O-W-N.",
+    "answer": "brown",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "crown",
+       "brown"
+      ]
+     },
+     {
+      "op": "change",
+      "a": "crown",
+      "b": "brown"
+     }
+    ]
+   },
+   {
+    "clue": "Slack, S-L-A-C-K.",
+    "answer": "black",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "slack",
+       "black"
+      ]
+     },
+     {
+      "op": "change",
+      "a": "slack",
+      "b": "black"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a-r02",
+  "type": "round",
+  "level": 1,
+  "title": "Tail letter",
+  "intro": "Answer the first clue, then add one letter to the end to answer the second. Just tell me the longer word. For example, opposite of near, and a place with barns and cows: far, then farm. So you'd say farm.",
+  "items": [
+   {
+    "clue": "A vehicle you drive, and something you shuffle in a deck.",
+    "answer": "card",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "car",
+       "card"
+      ]
+     },
+     {
+      "op": "insert",
+      "a": "car",
+      "ins": "d",
+      "b": "card"
+     }
+    ]
+   },
+   {
+    "clue": "A little green veggie from a pod, and a fruit shaped like a light bulb.",
+    "answer": "pear",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "pea",
+       "pear"
+      ]
+     },
+     {
+      "op": "insert",
+      "a": "pea",
+      "ins": "r",
+      "b": "pear"
+     }
+    ]
+   },
+   {
+    "clue": "A boy child, and something you sing.",
+    "answer": "song",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "son",
+       "song"
+      ]
+     },
+     {
+      "op": "insert",
+      "a": "son",
+      "ins": "g",
+      "b": "song"
+     }
+    ]
+   },
+   {
+    "clue": "A hot drink, and a group of players.",
+    "answer": "team",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "tea",
+       "team"
+      ]
+     },
+     {
+      "op": "insert",
+      "a": "tea",
+      "ins": "m",
+      "b": "team"
+     }
+    ]
+   },
+   {
+    "clue": "Not him, and a big group of cattle.",
+    "answer": "herd",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "her",
+       "herd"
+      ]
+     },
+     {
+      "op": "insert",
+      "a": "her",
+      "ins": "d",
+      "b": "herd"
+     }
+    ]
+   },
+   {
+    "clue": "A twinkler in the night sky, and to begin.",
+    "answer": "start",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "star",
+       "start"
+      ]
+     },
+     {
+      "op": "insert",
+      "a": "star",
+      "ins": "t",
+      "b": "start"
+     }
+    ]
+   },
+   {
+    "clue": "The ocean, and a flippered animal that barks.",
+    "answer": "seal",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "sea",
+       "seal"
+      ]
+     },
+     {
+      "op": "insert",
+      "a": "sea",
+      "ins": "l",
+      "b": "seal"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a-r03",
+  "type": "round",
+  "level": 1,
+  "title": "Two halves",
+  "intro": "Every answer is a compound word. I'll clue the two halves, and you put them together. For example, what shines in the sky by day, and a blossom: sun plus flower, sunflower.",
+  "items": [
+   {
+    "clue": "A twinkler in the night sky, and something with fins and gills.",
+    "answer": "starfish",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "star",
+       "fish",
+       "starfish"
+      ]
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "star",
+       "fish"
+      ],
+      "b": "starfish"
+     }
+    ]
+   },
+   {
+    "clue": "What bees make, and what shines at night.",
+    "answer": "honeymoon",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "honey",
+       "moon",
+       "honeymoon"
+      ]
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "honey",
+       "moon"
+      ],
+      "b": "honeymoon"
+     }
+    ]
+   },
+   {
+    "clue": "The part of your leg you stand on, and a round toy you throw.",
+    "answer": "football",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "foot",
+       "ball",
+       "football"
+      ]
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "foot",
+       "ball"
+      ],
+      "b": "football"
+     }
+    ]
+   },
+   {
+    "clue": "A campfire's flames, and a buzzing insect.",
+    "answer": "firefly",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "fire",
+       "fly",
+       "firefly"
+      ]
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "fire",
+       "fly"
+      ],
+      "b": "firefly"
+     }
+    ]
+   },
+   {
+    "clue": "Drops from storm clouds, and a jacket.",
+    "answer": "raincoat",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "rain",
+       "coat",
+       "raincoat"
+      ]
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "rain",
+       "coat"
+      ],
+      "b": "raincoat"
+     }
+    ]
+   },
+   {
+    "clue": "Winter's white flakes, and a grown-up guy.",
+    "answer": "snowman",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "snow",
+       "man",
+       "snowman"
+      ]
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "snow",
+       "man"
+      ],
+      "b": "snowman"
+     }
+    ]
+   },
+   {
+    "clue": "A mug, and a birthday dessert.",
+    "answer": "cupcake",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "cup",
+       "cake",
+       "cupcake"
+      ]
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "cup",
+       "cake"
+      ],
+      "b": "cupcake"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a-r04",
+  "type": "round",
+  "level": 1,
+  "title": "Silent E",
+  "intro": "The first answer ends in a silent E. Drop the E to answer the second clue, and tell me the shorter word. For example, a toy you fly on a windy day, and a set of supplies: kite, then kit. So you'd say kit.",
+  "items": [
+   {
+    "clue": "To wish for something, and to jump on one foot.",
+    "answer": "hop",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "hope",
+       "hop"
+      ]
+     },
+     {
+      "op": "drop",
+      "a": "hope",
+      "b": "hop"
+     }
+    ]
+   },
+   {
+    "clue": "A superhero's cloak, and a baseball hat.",
+    "answer": "cap",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "cape",
+       "cap"
+      ]
+     },
+     {
+      "op": "drop",
+      "a": "cape",
+      "b": "cap"
+     }
+    ]
+   },
+   {
+    "clue": "Adorable, and to slice with scissors.",
+    "answer": "cut",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "cute",
+       "cut"
+      ]
+     },
+     {
+      "op": "drop",
+      "a": "cute",
+      "b": "cut"
+     }
+    ]
+   },
+   {
+    "clue": "Sticky stuff for wrapping gifts, and a faucet.",
+    "answer": "tap",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "tape",
+       "tap"
+      ]
+     },
+     {
+      "op": "drop",
+      "a": "tape",
+      "b": "tap"
+     }
+    ]
+   },
+   {
+    "clue": "An evergreen tree, and a sharp little sewing tool.",
+    "answer": "pin",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "pine",
+       "pin"
+      ]
+     },
+     {
+      "op": "drop",
+      "a": "pine",
+      "b": "pin"
+     }
+    ]
+   },
+   {
+    "clue": "The shape of a die, and a baby bear.",
+    "answer": "cub",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "cube",
+       "cub"
+      ]
+     },
+     {
+      "op": "drop",
+      "a": "cube",
+      "b": "cub"
+     }
+    ]
+   },
+   {
+    "clue": "Ready to eat, like a yellow banana, and to tear.",
+    "answer": "rip",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "ripe",
+       "rip"
+      ]
+     },
+     {
+      "op": "drop",
+      "a": "ripe",
+      "b": "rip"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a-r05",
+  "type": "round",
+  "level": 1,
+  "title": "Rhymes with cake",
+  "intro": "Every answer rhymes with cake. For example, a body of water smaller than a sea: lake.",
+  "items": [
+   {
+    "clue": "What you do to cookies in an oven.",
+    "answer": "bake",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "bake"
+      ]
+     },
+     {
+      "op": "sound",
+      "why": "bake rhymes with cake"
+     }
+    ]
+   },
+   {
+    "clue": "A long reptile with no legs.",
+    "answer": "snake",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "snake"
+      ]
+     },
+     {
+      "op": "sound",
+      "why": "snake rhymes with cake"
+     }
+    ]
+   },
+   {
+    "clue": "What you do with a hand when you meet someone.",
+    "answer": "shake",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "shake"
+      ]
+     },
+     {
+      "op": "sound",
+      "why": "shake rhymes with cake"
+     }
+    ]
+   },
+   {
+    "clue": "A tool for gathering autumn leaves.",
+    "answer": "rake",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "rake"
+      ]
+     },
+     {
+      "op": "sound",
+      "why": "rake rhymes with cake"
+     }
+    ]
+   },
+   {
+    "clue": "Opposite of asleep.",
+    "answer": "awake",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "awake"
+      ]
+     },
+     {
+      "op": "sound",
+      "why": "awake rhymes with cake"
+     }
+    ]
+   },
+   {
+    "clue": "Not real; phony.",
+    "answer": "fake",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "fake"
+      ]
+     },
+     {
+      "op": "sound",
+      "why": "fake rhymes with cake"
+     }
+    ]
+   },
+   {
+    "clue": "A thick slice of beef you grill.",
+    "answer": "steak",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "steak"
+      ]
+     },
+     {
+      "op": "sound",
+      "why": "steak rhymes with cake"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a-r06",
+  "type": "round",
+  "level": 1,
+  "title": "Sound-alikes",
+  "intro": "Each clue describes two words that sound the same but are spelled differently. Just say the word. For example, what you do with a needle and thread, and what a farmer does with seeds: sew and sow.",
+  "items": [
+   {
+    "clue": "Powder for baking bread, and a daisy or a rose.",
+    "answer": "flour",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "flour",
+       "flower"
+      ]
+     },
+     {
+      "op": "sound",
+      "why": "flour and flower sound the same in American English"
+     }
+    ],
+    "accept": [
+     "flower"
+    ]
+   },
+   {
+    "clue": "Seven days, and lacking strength.",
+    "answer": "week",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "week",
+       "weak"
+      ]
+     },
+     {
+      "op": "sound",
+      "why": "week and weak sound the same in American English"
+     }
+    ],
+    "accept": [
+     "weak"
+    ]
+   },
+   {
+    "clue": "A speedy animal like a rabbit, and what grows on your head.",
+    "answer": "hare",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "hare",
+       "hair"
+      ]
+     },
+     {
+      "op": "sound",
+      "why": "hare and hair sound the same in American English"
+     }
+    ],
+    "accept": [
+     "hair"
+    ]
+   },
+   {
+    "clue": "Bambi is one, and the way a letter begins.",
+    "answer": "deer",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "deer",
+       "dear"
+      ]
+     },
+     {
+      "op": "sound",
+      "why": "deer and dear sound the same in American English"
+     }
+    ],
+    "accept": [
+     "dear"
+    ]
+   },
+   {
+    "clue": "What your eyes do, and the ocean.",
+    "answer": "see",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "see",
+       "sea"
+      ]
+     },
+     {
+      "op": "sound",
+      "why": "see and sea sound the same in American English"
+     }
+    ],
+    "accept": [
+     "sea"
+    ]
+   },
+   {
+    "clue": "A juicy fruit, and two of a kind.",
+    "answer": "pear",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "pear",
+       "pair"
+      ]
+     },
+     {
+      "op": "sound",
+      "why": "pear and pair sound the same in American English"
+     }
+    ],
+    "accept": [
+     "pair"
+    ]
+   },
+   {
+    "clue": "An armored horseman, and the time after sunset.",
+    "answer": "knight",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "knight",
+       "night"
+      ]
+     },
+     {
+      "op": "sound",
+      "why": "knight and night sound the same in American English"
+     }
+    ],
+    "accept": [
+     "night"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a-r07",
+  "type": "round",
+  "level": 1,
+  "title": "Initial answers",
+  "intro": "I'll give you two initials and a clue. Every answer is a familiar two-word phrase with those initials. For example, I-C, a frozen treat in a cone: ice cream.",
+  "items": [
+   {
+    "clue": "P-B: a sandwich spread made from nuts.",
+    "answer": "peanut butter",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "peanut butter"
+      ]
+     },
+     {
+      "op": "initials",
+      "phrase": "peanut butter",
+      "b": "pb"
+     }
+    ]
+   },
+   {
+    "clue": "P-P: a faraway friend you trade letters with.",
+    "answer": "pen pal",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "pen pal"
+      ]
+     },
+     {
+      "op": "initials",
+      "phrase": "pen pal",
+      "b": "pp"
+     }
+    ]
+   },
+   {
+    "clue": "H-D: a sausage in a bun.",
+    "answer": "hot dog",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "hot dog"
+      ]
+     },
+     {
+      "op": "initials",
+      "phrase": "hot dog",
+      "b": "hd"
+     }
+    ]
+   },
+   {
+    "clue": "T-B: a stuffed toy you hug at bedtime.",
+    "answer": "teddy bear",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "teddy bear"
+      ]
+     },
+     {
+      "op": "initials",
+      "phrase": "teddy bear",
+      "b": "tb"
+     }
+    ]
+   },
+   {
+    "clue": "B-F: your closest pal.",
+    "answer": "best friend",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "best friend"
+      ]
+     },
+     {
+      "op": "initials",
+      "phrase": "best friend",
+      "b": "bf"
+     }
+    ]
+   },
+   {
+    "clue": "C-C: a cookie dotted with sweet brown bits.",
+    "answer": "chocolate chip",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "chocolate chip"
+      ]
+     },
+     {
+      "op": "initials",
+      "phrase": "chocolate chip",
+      "b": "cc"
+     }
+    ],
+    "accept": [
+     "chocolate chip cookie"
+    ]
+   },
+   {
+    "clue": "S-B: the big yellow ride that takes kids to class.",
+    "answer": "school bus",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "school bus"
+      ]
+     },
+     {
+      "op": "initials",
+      "phrase": "school bus",
+      "b": "sb"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a-r08",
+  "type": "round",
+  "level": 1,
+  "title": "Same both ways",
+  "intro": "Every answer is spelled the same forward and backward. For example, another word for father: dad.",
+  "items": [
+   {
+    "clue": "Twelve o'clock in the daytime.",
+    "answer": "noon",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "noon"
+      ]
+     },
+     {
+      "op": "palindrome",
+      "w": "noon"
+     }
+    ]
+   },
+   {
+    "clue": "A narrow boat you paddle.",
+    "answer": "kayak",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "kayak"
+      ]
+     },
+     {
+      "op": "palindrome",
+      "w": "kayak"
+     }
+    ]
+   },
+   {
+    "clue": "A device that tracks airplanes.",
+    "answer": "radar",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "radar"
+      ]
+     },
+     {
+      "op": "palindrome",
+      "w": "radar"
+     }
+    ]
+   },
+   {
+    "clue": "Perfectly flat and even.",
+    "answer": "level",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "level"
+      ]
+     },
+     {
+      "op": "palindrome",
+      "w": "level"
+     }
+    ]
+   },
+   {
+    "clue": "The sound of a train whistle.",
+    "answer": "toot",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "toot"
+      ]
+     },
+     {
+      "op": "palindrome",
+      "w": "toot"
+     }
+    ]
+   },
+   {
+    "clue": "What you say when you're amazed.",
+    "answer": "wow",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "wow"
+      ]
+     },
+     {
+      "op": "palindrome",
+      "w": "wow"
+     }
+    ]
+   },
+   {
+    "clue": "A baby chick's tiny chirp.",
+    "answer": "peep",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "peep"
+      ]
+     },
+     {
+      "op": "palindrome",
+      "w": "peep"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a-r09",
+  "type": "round",
+  "level": 2,
+  "title": "Country change",
+  "intro": "Every answer is a country. I'll spell a word, and you change one letter to get the country. For example, tuba, T-U-B-A, becomes Cuba.",
+  "items": [
+   {
+    "clue": "Iron, I-R-O-N.",
+    "answer": "Iran",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "iron"
+      ]
+     },
+     {
+      "op": "change",
+      "a": "iron",
+      "b": "Iran"
+     }
+    ]
+   },
+   {
+    "clue": "Omen, O-M-E-N.",
+    "answer": "Oman",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "omen"
+      ]
+     },
+     {
+      "op": "change",
+      "a": "omen",
+      "b": "Oman"
+     }
+    ]
+   },
+   {
+    "clue": "Chat, C-H-A-T.",
+    "answer": "Chad",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "chat",
+       "Chad"
+      ]
+     },
+     {
+      "op": "change",
+      "a": "chat",
+      "b": "Chad"
+     }
+    ]
+   },
+   {
+    "clue": "Perk, P-E-R-K.",
+    "answer": "Peru",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "perk"
+      ]
+     },
+     {
+      "op": "change",
+      "a": "perk",
+      "b": "Peru"
+     }
+    ]
+   },
+   {
+    "clue": "Chili, C-H-I-L-I.",
+    "answer": "Chile",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "chili"
+      ]
+     },
+     {
+      "op": "change",
+      "a": "chili",
+      "b": "Chile"
+     }
+    ]
+   },
+   {
+    "clue": "Stain, S-T-A-I-N.",
+    "answer": "Spain",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "stain"
+      ]
+     },
+     {
+      "op": "change",
+      "a": "stain",
+      "b": "Spain"
+     }
+    ]
+   },
+   {
+    "clue": "Sedan, S-E-D-A-N.",
+    "answer": "Sudan",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "sedan"
+      ]
+     },
+     {
+      "op": "change",
+      "a": "sedan",
+      "b": "Sudan"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a-r10",
+  "type": "round",
+  "level": 2,
+  "title": "Hidden animals",
+  "intro": "Each sentence I say hides an animal, running across the words. For example, 'The club earned a prize' hides bear, in club earned.",
+  "items": [
+   {
+    "clue": "Fill the tub at bedtime.",
+    "answer": "bat",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "bat"
+      ]
+     },
+     {
+      "op": "hidden",
+      "phrase": "Fill the tub at bedtime.",
+      "b": "bat"
+     }
+    ]
+   },
+   {
+    "clue": "Go slow, Larry.",
+    "answer": "owl",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "owl"
+      ]
+     },
+     {
+      "op": "hidden",
+      "phrase": "Go slow, Larry.",
+      "b": "owl"
+     }
+    ]
+   },
+   {
+    "clue": "Call Amber tonight.",
+    "answer": "lamb",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "lamb"
+      ]
+     },
+     {
+      "op": "hidden",
+      "phrase": "Call Amber tonight.",
+      "b": "lamb"
+     }
+    ]
+   },
+   {
+    "clue": "Please always knock.",
+    "answer": "seal",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "seal"
+      ]
+     },
+     {
+      "op": "hidden",
+      "phrase": "Please always knock.",
+      "b": "seal"
+     }
+    ]
+   },
+   {
+    "clue": "Visit Japan, darling.",
+    "answer": "panda",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "panda"
+      ]
+     },
+     {
+      "op": "hidden",
+      "phrase": "Visit Japan, darling.",
+      "b": "panda"
+     }
+    ]
+   },
+   {
+    "clue": "Let's go at noon.",
+    "answer": "goat",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "goat"
+      ]
+     },
+     {
+      "op": "hidden",
+      "phrase": "Let's go at noon.",
+      "b": "goat"
+     }
+    ]
+   },
+   {
+    "clue": "He made errors.",
+    "answer": "deer",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "deer"
+      ]
+     },
+     {
+      "op": "hidden",
+      "phrase": "He made errors.",
+      "b": "deer"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a-r11",
+  "type": "round",
+  "level": 2,
+  "title": "Mix it up",
+  "intro": "I'll spell a word, then rearrange its letters to get the word I describe. For example, earth, E-A-R-T-H, into the organ that beats in your chest: heart.",
+  "items": [
+   {
+    "clue": "Lemon, L-E-M-O-N, into a big juicy fruit with a rind.",
+    "answer": "melon",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "lemon",
+       "melon"
+      ]
+     },
+     {
+      "op": "anagram",
+      "a": "lemon",
+      "b": "melon"
+     }
+    ]
+   },
+   {
+    "clue": "Below, B-E-L-O-W, into the joint in the middle of your arm.",
+    "answer": "elbow",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "below",
+       "elbow"
+      ]
+     },
+     {
+      "op": "anagram",
+      "a": "below",
+      "b": "elbow"
+     }
+    ]
+   },
+   {
+    "clue": "Sword, S-W-O-R-D, into the things you say.",
+    "answer": "words",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "sword",
+       "words"
+      ]
+     },
+     {
+      "op": "anagram",
+      "a": "sword",
+      "b": "words"
+     }
+    ]
+   },
+   {
+    "clue": "Peach, P-E-A-C-H, into inexpensive.",
+    "answer": "cheap",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "peach",
+       "cheap"
+      ]
+     },
+     {
+      "op": "anagram",
+      "a": "peach",
+      "b": "cheap"
+     }
+    ]
+   },
+   {
+    "clue": "Ocean, O-C-E-A-N, into a small boat you paddle.",
+    "answer": "canoe",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "ocean",
+       "canoe"
+      ]
+     },
+     {
+      "op": "anagram",
+      "a": "ocean",
+      "b": "canoe"
+     }
+    ]
+   },
+   {
+    "clue": "Dusty, D-U-S-T-Y, into what students do before a test.",
+    "answer": "study",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "dusty",
+       "study"
+      ]
+     },
+     {
+      "op": "anagram",
+      "a": "dusty",
+      "b": "study"
+     }
+    ]
+   },
+   {
+    "clue": "Inch, I-N-C-H, into the bottom of your face.",
+    "answer": "chin",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "inch",
+       "chin"
+      ]
+     },
+     {
+      "op": "anagram",
+      "a": "inch",
+      "b": "chin"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a-r12",
+  "type": "round",
+  "level": 2,
+  "title": "Ants in the answers",
+  "intro": "Every answer has the little word ant hiding inside it. For example, a song like the national one sung before a ball game: anthem.",
+  "items": [
+   {
+    "clue": "A huge creature from a fairy tale.",
+    "answer": "giant",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "giant"
+      ]
+     },
+     {
+      "op": "contains",
+      "a": "giant",
+      "b": "ant"
+     }
+    ]
+   },
+   {
+    "clue": "A big gray animal with a trunk.",
+    "answer": "elephant",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "elephant"
+      ]
+     },
+     {
+      "op": "contains",
+      "a": "elephant",
+      "b": "ant"
+     }
+    ]
+   },
+   {
+    "clue": "Something green that grows in a pot.",
+    "answer": "plant",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "plant"
+      ]
+     },
+     {
+      "op": "contains",
+      "a": "plant",
+      "b": "ant"
+     }
+    ]
+   },
+   {
+    "clue": "Jeans are one kind.",
+    "answer": "pants",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "pants"
+      ]
+     },
+     {
+      "op": "contains",
+      "a": "pants",
+      "b": "ant"
+     }
+    ]
+   },
+   {
+    "clue": "To wish for something.",
+    "answer": "want",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "want"
+      ]
+     },
+     {
+      "op": "contains",
+      "a": "want",
+      "b": "ant"
+     }
+    ]
+   },
+   {
+    "clue": "A ghost.",
+    "answer": "phantom",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "phantom"
+      ]
+     },
+     {
+      "op": "contains",
+      "a": "phantom",
+      "b": "ant"
+     }
+    ]
+   },
+   {
+    "clue": "A big hairy spider.",
+    "answer": "tarantula",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "tarantula"
+      ]
+     },
+     {
+      "op": "contains",
+      "a": "tarantula",
+      "b": "ant"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a-r13",
+  "type": "round",
+  "level": 2,
+  "title": "Charades",
+  "intro": "Each answer is a longer word made by joining two short ones. I'll clue both short words, then the whole thing. For example, a vehicle plus a household animal, for a floor covering: car plus pet, carpet.",
+  "items": [
+   {
+    "clue": "A pig's meat plus to make fun of, for a hanging bed.",
+    "answer": "hammock",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "hammock"
+      ]
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "ham",
+       "mock"
+      ],
+      "b": "hammock"
+     }
+    ]
+   },
+   {
+    "clue": "The Greek letter that sounds like a dessert, plus speed, for a sea robber.",
+    "answer": "pirate",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "pirate"
+      ]
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "pi",
+       "rate"
+      ],
+      "b": "pirate"
+     }
+    ]
+   },
+   {
+    "clue": "A limb plus the finish, for an old tale.",
+    "answer": "legend",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "legend"
+      ]
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "leg",
+       "end"
+      ],
+      "b": "legend"
+     }
+    ]
+   },
+   {
+    "clue": "Sticky road goo plus to receive, for a bull's-eye.",
+    "answer": "target",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "target"
+      ]
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "tar",
+       "get"
+      ],
+      "b": "target"
+     }
+    ]
+   },
+   {
+    "clue": "A flower before it blooms plus to obtain, for a spending plan.",
+    "answer": "budget",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "budget"
+      ]
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "bud",
+       "get"
+      ],
+      "b": "budget"
+     }
+    ]
+   },
+   {
+    "clue": "A camp bed plus two thousand pounds, for a fluffy fabric.",
+    "answer": "cotton",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "cotton"
+      ]
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "cot",
+       "ton"
+      ],
+      "b": "cotton"
+     }
+    ]
+   },
+   {
+    "clue": "A skillet plus an attempt, for a food cupboard.",
+    "answer": "pantry",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "pantry"
+      ]
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "pan",
+       "try"
+      ],
+      "b": "pantry"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a-r14",
+  "type": "round",
+  "level": 2,
+  "title": "Head start",
+  "intro": "Answer the first clue, then take away its first letter to answer the second. Tell me the longer word. For example, something you wear on your hand, and a deep affection: glove, then love. So you'd say glove.",
+  "items": [
+   {
+    "clue": "Something you toast for breakfast, and what you do with a book.",
+    "answer": "bread",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "bread",
+       "read"
+      ]
+     },
+     {
+      "op": "remove",
+      "a": "bread",
+      "del": "b",
+      "b": "read"
+     }
+    ]
+   },
+   {
+    "clue": "A big grin, and a unit of road distance.",
+    "answer": "smile",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "smile",
+       "mile"
+      ]
+     },
+     {
+      "op": "remove",
+      "a": "smile",
+      "del": "s",
+      "b": "mile"
+     }
+    ]
+   },
+   {
+    "clue": "A playground seat that goes back and forth, and what a bird flies with.",
+    "answer": "swing",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "swing",
+       "wing"
+      ]
+     },
+     {
+      "op": "remove",
+      "a": "swing",
+      "del": "s",
+      "b": "wing"
+     }
+    ]
+   },
+   {
+    "clue": "A grain for making flour, and warmth.",
+    "answer": "wheat",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "wheat",
+       "heat"
+      ]
+     },
+     {
+      "op": "remove",
+      "a": "wheat",
+      "del": "w",
+      "b": "heat"
+     }
+    ]
+   },
+   {
+    "clue": "A slimy garden creature with a shell, and something you hammer.",
+    "answer": "snail",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "snail",
+       "nail"
+      ]
+     },
+     {
+      "op": "remove",
+      "a": "snail",
+      "del": "s",
+      "b": "nail"
+     }
+    ]
+   },
+   {
+    "clue": "What something costs, and a grain you eat with chopsticks.",
+    "answer": "price",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "price",
+       "rice"
+      ]
+     },
+     {
+      "op": "remove",
+      "a": "price",
+      "del": "p",
+      "b": "rice"
+     }
+    ]
+   },
+   {
+    "clue": "A barn for horses, and furniture you eat at.",
+    "answer": "stable",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "stable",
+       "table"
+      ]
+     },
+     {
+      "op": "remove",
+      "a": "stable",
+      "del": "s",
+      "b": "table"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a-r15",
+  "type": "round",
+  "level": 2,
+  "title": "Rhyme pairs",
+  "intro": "Every answer is two rhyming words that fit my description. For example, a home for a little rodent: mouse house.",
+  "items": [
+   {
+    "clue": "A cheerful father.",
+    "answer": "glad dad",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "glad",
+       "dad"
+      ]
+     },
+     {
+      "op": "sound",
+      "why": "glad rhymes with dad"
+     }
+    ]
+   },
+   {
+    "clue": "A large hog.",
+    "answer": "big pig",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "big",
+       "pig"
+      ]
+     },
+     {
+      "op": "sound",
+      "why": "big rhymes with pig"
+     }
+    ]
+   },
+   {
+    "clue": "A crimson place to sleep.",
+    "answer": "red bed",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "red",
+       "bed"
+      ]
+     },
+     {
+      "op": "sound",
+      "why": "red rhymes with bed"
+     }
+    ]
+   },
+   {
+    "clue": "A bashful insect.",
+    "answer": "shy fly",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "shy",
+       "fly"
+      ]
+     },
+     {
+      "op": "sound",
+      "why": "shy rhymes with fly"
+     }
+    ]
+   },
+   {
+    "clue": "A soaked airplane.",
+    "answer": "wet jet",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "wet",
+       "jet"
+      ]
+     },
+     {
+      "op": "sound",
+      "why": "wet rhymes with jet"
+     }
+    ]
+   },
+   {
+    "clue": "A phony serpent.",
+    "answer": "fake snake",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "fake",
+       "snake"
+      ]
+     },
+     {
+      "op": "sound",
+      "why": "fake rhymes with snake"
+     }
+    ]
+   },
+   {
+    "clue": "A noisy throng.",
+    "answer": "loud crowd",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "loud",
+       "crowd"
+      ]
+     },
+     {
+      "op": "sound",
+      "why": "loud rhymes with crowd"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a-r16",
+  "type": "round",
+  "level": 2,
+  "title": "Backwords",
+  "intro": "Answer the first clue, then spell it backward to answer the second. Tell me the first word. For example, a kitchen vessel, and the highest part: pot, which backward is top. So you'd say pot.",
+  "items": [
+   {
+    "clue": "A wild animal that howls, and the movement of a river.",
+    "answer": "wolf",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "wolf",
+       "flow"
+      ]
+     },
+     {
+      "op": "reverse",
+      "a": "wolf",
+      "b": "flow"
+     }
+    ]
+   },
+   {
+    "clue": "A place to swim, and a ring of string.",
+    "answer": "pool",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "pool",
+       "loop"
+      ]
+     },
+     {
+      "op": "reverse",
+      "a": "pool",
+      "b": "loop"
+     }
+    ]
+   },
+   {
+    "clue": "A blue fabric for jeans, and dug from the earth.",
+    "answer": "denim",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "denim",
+       "mined"
+      ]
+     },
+     {
+      "op": "reverse",
+      "a": "denim",
+      "b": "mined"
+     }
+    ]
+   },
+   {
+    "clue": "Something you blow bubbles with, and a coffee cup.",
+    "answer": "gum",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "gum",
+       "mug"
+      ]
+     },
+     {
+      "op": "reverse",
+      "a": "gum",
+      "b": "mug"
+     }
+    ]
+   },
+   {
+    "clue": "A prize for good work, and a dresser compartment.",
+    "answer": "reward",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "reward",
+       "drawer"
+      ]
+     },
+     {
+      "op": "reverse",
+      "a": "reward",
+      "b": "drawer"
+     }
+    ]
+   },
+   {
+    "clue": "Something you sip a milkshake through, and bumps on a toad.",
+    "answer": "straw",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "straw",
+       "warts"
+      ]
+     },
+     {
+      "op": "reverse",
+      "a": "straw",
+      "b": "warts"
+     }
+    ]
+   },
+   {
+    "clue": "Someone who fibs, and a train track.",
+    "answer": "liar",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "liar",
+       "rail"
+      ]
+     },
+     {
+      "op": "reverse",
+      "a": "liar",
+      "b": "rail"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a-r17",
+  "type": "round",
+  "level": 2,
+  "title": "Slip one in",
+  "intro": "Answer the first clue, then slip one letter into the middle to answer the second. Tell me the longer word. For example, a frying vessel, and a scheme: pan, then plan. So you'd say plan.",
+  "items": [
+   {
+    "clue": "Thick gray mist, and a green hopper in a pond.",
+    "answer": "frog",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "fog",
+       "frog"
+      ]
+     },
+     {
+      "op": "insert",
+      "a": "fog",
+      "ins": "r",
+      "b": "frog"
+     }
+    ]
+   },
+   {
+    "clue": "A garden water tube, and an animal you ride.",
+    "answer": "horse",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "hose",
+       "horse"
+      ]
+     },
+     {
+      "op": "insert",
+      "a": "hose",
+      "ins": "r",
+      "b": "horse"
+     }
+    ]
+   },
+   {
+    "clue": "A little ball on a necklace, and a loaf for sandwiches.",
+    "answer": "bread",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "bead",
+       "bread"
+      ]
+     },
+     {
+      "op": "insert",
+      "a": "bead",
+      "ins": "r",
+      "b": "bread"
+     }
+    ]
+   },
+   {
+    "clue": "To fold in a shirt, and a big rig on the highway.",
+    "answer": "truck",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "tuck",
+       "truck"
+      ]
+     },
+     {
+      "op": "insert",
+      "a": "tuck",
+      "ins": "r",
+      "b": "truck"
+     }
+    ]
+   },
+   {
+    "clue": "A dairy animal, and a big black bird.",
+    "answer": "crow",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "cow",
+       "crow"
+      ]
+     },
+     {
+      "op": "insert",
+      "a": "cow",
+      "ins": "r",
+      "b": "crow"
+     }
+    ]
+   },
+   {
+    "clue": "The sound of a clock, and a magician's stunt.",
+    "answer": "trick",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "tick",
+       "trick"
+      ]
+     },
+     {
+      "op": "insert",
+      "a": "tick",
+      "ins": "r",
+      "b": "trick"
+     }
+    ]
+   },
+   {
+    "clue": "To trade for money, and what a nose does.",
+    "answer": "smell",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "sell",
+       "smell"
+      ]
+     },
+     {
+      "op": "insert",
+      "a": "sell",
+      "ins": "m",
+      "b": "smell"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a-r18",
+  "type": "round",
+  "level": 2,
+  "title": "Alphabet soup",
+  "intro": "Every answer is a word that sounds just like a letter of the alphabet. For example, a question word that asks for a reason: why, which sounds like the letter Y.",
+  "items": [
+   {
+    "clue": "A honey maker.",
+    "answer": "bee",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "bee"
+      ]
+     },
+     {
+      "op": "sound",
+      "why": "bee sounds like the letter B"
+     }
+    ],
+    "accept": [
+     "b"
+    ]
+   },
+   {
+    "clue": "A hot drink you steep in a cup.",
+    "answer": "tea",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "tea"
+      ]
+     },
+     {
+      "op": "sound",
+      "why": "tea sounds like the letter T"
+     }
+    ],
+    "accept": [
+     "t",
+     "tee"
+    ]
+   },
+   {
+    "clue": "A female sheep.",
+    "answer": "ewe",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "ewe"
+      ]
+     },
+     {
+      "op": "sound",
+      "why": "ewe sounds like the letter U"
+     }
+    ],
+    "accept": [
+     "u",
+     "you"
+    ]
+   },
+   {
+    "clue": "A pool player's stick.",
+    "answer": "cue",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "cue"
+      ]
+     },
+     {
+      "op": "sound",
+      "why": "cue sounds like the letter Q"
+     }
+    ],
+    "accept": [
+     "q",
+     "queue"
+    ]
+   },
+   {
+    "clue": "A tiny green vegetable from a pod.",
+    "answer": "pea",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "pea"
+      ]
+     },
+     {
+      "op": "sound",
+      "why": "pea sounds like the letter P"
+     }
+    ],
+    "accept": [
+     "p"
+    ]
+   },
+   {
+    "clue": "A noisy bird, blue and crested.",
+    "answer": "jay",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "jay"
+      ]
+     },
+     {
+      "op": "sound",
+      "why": "jay sounds like the letter J"
+     }
+    ],
+    "accept": [
+     "j"
+    ]
+   },
+   {
+    "clue": "The part of your face that sees.",
+    "answer": "eye",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "eye"
+      ]
+     },
+     {
+      "op": "sound",
+      "why": "eye sounds like the letter I"
+     }
+    ],
+    "accept": [
+     "i"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a-r19",
+  "type": "round",
+  "level": 2,
+  "title": "Sound swap",
+  "intro": "I'll say a silly phrase. Swap the first sounds of its two words to get a familiar phrase. For example, pea tot becomes teapot.",
+  "items": [
+   {
+    "clue": "Dot hog.",
+    "answer": "hot dog",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "hot",
+       "dog"
+      ]
+     },
+     {
+      "op": "sound",
+      "why": "swapping the D and H sounds of dot hog gives hot dog"
+     }
+    ]
+   },
+   {
+    "clue": "Belly jean.",
+    "answer": "jelly bean",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "jelly",
+       "bean"
+      ]
+     },
+     {
+      "op": "sound",
+      "why": "swapping the B and J sounds of belly jean gives jelly bean"
+     }
+    ]
+   },
+   {
+    "clue": "Bunny phone.",
+    "answer": "funny bone",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "funny",
+       "bone"
+      ]
+     },
+     {
+      "op": "sound",
+      "why": "swapping the B and F sounds of bunny phone gives funny bone"
+     }
+    ]
+   },
+   {
+    "clue": "Mode rap.",
+    "answer": "road map",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "road",
+       "map"
+      ]
+     },
+     {
+      "op": "sound",
+      "why": "swapping the M and R sounds of mode rap gives road map"
+     }
+    ]
+   },
+   {
+    "clue": "Hog douse.",
+    "answer": "dog house",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "dog",
+       "house"
+      ]
+     },
+     {
+      "op": "sound",
+      "why": "swapping the H and D sounds of hog douse gives doghouse"
+     }
+    ]
+   },
+   {
+    "clue": "Ray hide.",
+    "answer": "hay ride",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "hay",
+       "ride"
+      ]
+     },
+     {
+      "op": "sound",
+      "why": "swapping the R and H sounds of ray hide gives hayride"
+     }
+    ]
+   },
+   {
+    "clue": "Lad buck.",
+    "answer": "bad luck",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "bad",
+       "luck"
+      ]
+     },
+     {
+      "op": "sound",
+      "why": "swapping the L and B sounds of lad buck gives bad luck"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a-r20",
+  "type": "round",
+  "level": 2,
+  "title": "Front word",
+  "intro": "I'll say three words. Find one word that goes in front of each to make three compound words. For example, storm, ball, and flake: snow, for snowstorm, snowball, snowflake.",
+  "items": [
+   {
+    "clue": "Fly, cup, and milk.",
+    "answer": "butter",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "butter",
+       "butterfly",
+       "buttercup",
+       "buttermilk"
+      ]
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "butter",
+       "fly"
+      ],
+      "b": "butterfly"
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "butter",
+       "cup"
+      ],
+      "b": "buttercup"
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "butter",
+       "milk"
+      ],
+      "b": "buttermilk"
+     }
+    ]
+   },
+   {
+    "clue": "Glasses, burn, and set.",
+    "answer": "sun",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "sun",
+       "sunglasses",
+       "sunburn",
+       "sunset"
+      ]
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "sun",
+       "glasses"
+      ],
+      "b": "sunglasses"
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "sun",
+       "burn"
+      ],
+      "b": "sunburn"
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "sun",
+       "set"
+      ],
+      "b": "sunset"
+     }
+    ]
+   },
+   {
+    "clue": "Ache, band, and phone.",
+    "answer": "head",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "head",
+       "headache",
+       "headband",
+       "headphone"
+      ]
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "head",
+       "ache"
+      ],
+      "b": "headache"
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "head",
+       "band"
+      ],
+      "b": "headband"
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "head",
+       "phone"
+      ],
+      "b": "headphone"
+     }
+    ]
+   },
+   {
+    "clue": "Brush, paste, and pick.",
+    "answer": "tooth",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "tooth",
+       "toothbrush",
+       "toothpaste",
+       "toothpick"
+      ]
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "tooth",
+       "brush"
+      ],
+      "b": "toothbrush"
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "tooth",
+       "paste"
+      ],
+      "b": "toothpaste"
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "tooth",
+       "pick"
+      ],
+      "b": "toothpick"
+     }
+    ]
+   },
+   {
+    "clue": "Case, mark, and worm.",
+    "answer": "book",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "book",
+       "bookcase",
+       "bookmark",
+       "bookworm"
+      ]
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "book",
+       "case"
+      ],
+      "b": "bookcase"
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "book",
+       "mark"
+      ],
+      "b": "bookmark"
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "book",
+       "worm"
+      ],
+      "b": "bookworm"
+     }
+    ]
+   },
+   {
+    "clue": "Bell, knob, and mat.",
+    "answer": "door",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "door",
+       "doorbell",
+       "doorknob",
+       "doormat"
+      ]
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "door",
+       "bell"
+      ],
+      "b": "doorbell"
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "door",
+       "knob"
+      ],
+      "b": "doorknob"
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "door",
+       "mat"
+      ],
+      "b": "doormat"
+     }
+    ]
+   },
+   {
+    "clue": "Works, place, and wood.",
+    "answer": "fire",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "fire",
+       "fireworks",
+       "fireplace",
+       "firewood"
+      ]
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "fire",
+       "works"
+      ],
+      "b": "fireworks"
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "fire",
+       "place"
+      ],
+      "b": "fireplace"
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "fire",
+       "wood"
+      ],
+      "b": "firewood"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a-r21",
+  "type": "round",
+  "level": 3,
+  "title": "Animal crackers",
+  "intro": "Think of a word that fits my clue, then rearrange its letters to name an animal. Tell me the animal. For example, a robe worn in ancient Rome is a toga, which rearranges to goat.",
+  "items": [
+   {
+    "clue": "The edge of the sea.",
+    "answer": "horse",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "shore",
+       "horse"
+      ]
+     },
+     {
+      "op": "anagram",
+      "a": "shore",
+      "b": "horse"
+     }
+    ]
+   },
+   {
+    "clue": "A soothing ointment for chapped lips.",
+    "answer": "lamb",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "balm",
+       "lamb"
+      ]
+     },
+     {
+      "op": "anagram",
+      "a": "balm",
+      "b": "lamb"
+     }
+    ]
+   },
+   {
+    "clue": "Past tense of go.",
+    "answer": "newt",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "went",
+       "newt"
+      ]
+     },
+     {
+      "op": "anagram",
+      "a": "went",
+      "b": "newt"
+     }
+    ]
+   },
+   {
+    "clue": "A cut of meat from the lower back.",
+    "answer": "lion",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "loin",
+       "lion"
+      ]
+     },
+     {
+      "op": "anagram",
+      "a": "loin",
+      "b": "lion"
+     }
+    ]
+   },
+   {
+    "clue": "Without any clothes on.",
+    "answer": "bear",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "bare",
+       "bear"
+      ]
+     },
+     {
+      "op": "anagram",
+      "a": "bare",
+      "b": "bear"
+     }
+    ]
+   },
+   {
+    "clue": "To creep around quietly.",
+    "answer": "snake",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "sneak",
+       "snake"
+      ]
+     },
+     {
+      "op": "anagram",
+      "a": "sneak",
+      "b": "snake"
+     }
+    ]
+   },
+   {
+    "clue": "A store's discount event.",
+    "answer": "seal",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "sale",
+       "seal"
+      ]
+     },
+     {
+      "op": "anagram",
+      "a": "sale",
+      "b": "seal"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a-r22",
+  "type": "round",
+  "level": 3,
+  "title": "State secrets",
+  "intro": "Each sentence I say hides the name of a U.S. state, running across the words. For example, 'The wind, Ian, ate my hat' hides Indiana.",
+  "items": [
+   {
+    "clue": "Visit Grandma in Europe.",
+    "answer": "Maine",
+    "check": [
+     {
+      "op": "hidden",
+      "phrase": "Visit Grandma in Europe.",
+      "b": "Maine"
+     }
+    ]
+   },
+   {
+    "clue": "Oh, I only want one.",
+    "answer": "Ohio",
+    "check": [
+     {
+      "op": "hidden",
+      "phrase": "Oh, I only want one.",
+      "b": "Ohio"
+     }
+    ]
+   },
+   {
+    "clue": "Put a hat on.",
+    "answer": "Utah",
+    "check": [
+     {
+      "op": "hidden",
+      "phrase": "Put a hat on.",
+      "b": "Utah"
+     }
+    ]
+   },
+   {
+    "clue": "Turn the radio way up.",
+    "answer": "Iowa",
+    "check": [
+     {
+      "op": "hidden",
+      "phrase": "Turn the radio way up.",
+      "b": "Iowa"
+     }
+    ]
+   },
+   {
+    "clue": "Dad did a home repair.",
+    "answer": "Idaho",
+    "check": [
+     {
+      "op": "hidden",
+      "phrase": "Dad did a home repair.",
+      "b": "Idaho"
+     }
+    ]
+   },
+   {
+    "clue": "Is the score gone already?",
+    "answer": "Oregon",
+    "check": [
+     {
+      "op": "hidden",
+      "phrase": "Is the score gone already?",
+      "b": "Oregon"
+     }
+    ]
+   },
+   {
+    "clue": "Hey pal, ask a friend.",
+    "answer": "Alaska",
+    "check": [
+     {
+      "op": "hidden",
+      "phrase": "Hey pal, ask a friend.",
+      "b": "Alaska"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a-r23",
+  "type": "round",
+  "level": 3,
+  "title": "Peel twice",
+  "intro": "I'll give three clues. Each answer is the one before it with its first letter taken off. Tell me the longest word. For example, a seat with four legs, what grows on your head, and what you breathe: chair, hair, air. So you'd say chair.",
+  "items": [
+   {
+    "clue": "Not fresh, a story, and a pub drink.",
+    "answer": "stale",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "stale",
+       "tale",
+       "ale"
+      ]
+     },
+     {
+      "op": "remove",
+      "a": "stale",
+      "del": "s",
+      "b": "tale"
+     },
+     {
+      "op": "remove",
+      "a": "tale",
+      "del": "t",
+      "b": "ale"
+     }
+    ]
+   },
+   {
+    "clue": "A dinner dish, not on time, and had a meal.",
+    "answer": "plate",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "plate",
+       "late",
+       "ate"
+      ]
+     },
+     {
+      "op": "remove",
+      "a": "plate",
+      "del": "p",
+      "b": "late"
+     },
+     {
+      "op": "remove",
+      "a": "late",
+      "del": "l",
+      "b": "ate"
+     }
+    ]
+   },
+   {
+    "clue": "To begin, a small fruit pie, and paintings in a museum.",
+    "answer": "start",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "start",
+       "tart",
+       "art"
+      ]
+     },
+     {
+      "op": "remove",
+      "a": "start",
+      "del": "s",
+      "b": "tart"
+     },
+     {
+      "op": "remove",
+      "a": "tart",
+      "del": "t",
+      "b": "art"
+     }
+    ]
+   },
+   {
+    "clue": "To tell off a naughty child, chilly, and not young.",
+    "answer": "scold",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "scold",
+       "cold",
+       "old"
+      ]
+     },
+     {
+      "op": "remove",
+      "a": "scold",
+      "del": "s",
+      "b": "cold"
+     },
+     {
+      "op": "remove",
+      "a": "cold",
+      "del": "c",
+      "b": "old"
+     }
+    ]
+   },
+   {
+    "clue": "To knock over a drink, a tablet of medicine, and sick.",
+    "answer": "spill",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "spill",
+       "pill",
+       "ill"
+      ]
+     },
+     {
+      "op": "remove",
+      "a": "spill",
+      "del": "s",
+      "b": "pill"
+     },
+     {
+      "op": "remove",
+      "a": "pill",
+      "del": "p",
+      "b": "ill"
+     }
+    ]
+   },
+   {
+    "clue": "To copy a drawing by following its lines, a contest of speed, and a top playing card.",
+    "answer": "trace",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "trace",
+       "race",
+       "ace"
+      ]
+     },
+     {
+      "op": "remove",
+      "a": "trace",
+      "del": "t",
+      "b": "race"
+     },
+     {
+      "op": "remove",
+      "a": "race",
+      "del": "r",
+      "b": "ace"
+     }
+    ]
+   },
+   {
+    "clue": "A leather band, a snare for mice, and a kind of music.",
+    "answer": "strap",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "strap",
+       "trap",
+       "rap"
+      ]
+     },
+     {
+      "op": "remove",
+      "a": "strap",
+      "del": "s",
+      "b": "trap"
+     },
+     {
+      "op": "remove",
+      "a": "trap",
+      "del": "t",
+      "b": "rap"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "a-r24",
+  "type": "round",
+  "level": 3,
+  "title": "Body building",
+  "intro": "Each answer is a word that starts with a part of the body. Take that part away and a new word is left. I'll clue the whole word, then the leftover. For example, a tube of color for your mouth, and a twig: lipstick, which is lip plus stick.",
+  "items": [
+   {
+    "clue": "An old tale, and the finish.",
+    "answer": "legend",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "leg",
+       "end",
+       "legend"
+      ]
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "leg",
+       "end"
+      ],
+      "b": "legend"
+     }
+    ]
+   },
+   {
+    "clue": "A knight's metal suit, and a little word that offers a choice.",
+    "answer": "armor",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "arm",
+       "or",
+       "armor"
+      ]
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "arm",
+       "or"
+      ],
+      "b": "armor"
+     }
+    ]
+   },
+   {
+    "clue": "Very serious and sincere, and a bird's home.",
+    "answer": "earnest",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "ear",
+       "nest",
+       "earnest"
+      ]
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "ear",
+       "nest"
+      ],
+      "b": "earnest"
+     }
+    ]
+   },
+   {
+    "clue": "Good-looking, and a few.",
+    "answer": "handsome",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "hand",
+       "some",
+       "handsome"
+      ]
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "hand",
+       "some"
+      ],
+      "b": "handsome"
+     }
+    ]
+   },
+   {
+    "clue": "Film clips, and how old you are.",
+    "answer": "footage",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "foot",
+       "age",
+       "footage"
+      ]
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "foot",
+       "age"
+      ],
+      "b": "footage"
+     }
+    ]
+   },
+   {
+    "clue": "Jewelry worn around your throat, and a delicate fabric.",
+    "answer": "necklace",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "neck",
+       "lace",
+       "necklace"
+      ]
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "neck",
+       "lace"
+      ],
+      "b": "necklace"
+     }
+    ]
+   },
+   {
+    "clue": "A lively party, and to use a shovel.",
+    "answer": "shindig",
+    "check": [
+     {
+      "op": "words",
+      "words": [
+       "shin",
+       "dig",
+       "shindig"
+      ]
+     },
+     {
+      "op": "concat",
+      "parts": [
+       "shin",
+       "dig"
+      ],
+      "b": "shindig"
+     }
+    ]
+   }
+  ]
+ }
+]
