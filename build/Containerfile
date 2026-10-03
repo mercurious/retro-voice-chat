@@ -1,0 +1,5 @@
+# Build environment for the release binaries. ubuntu:24.04 has glibc 2.39; ROCKNIX has 2.41, so what is
+# built here runs there.
+FROM docker.io/library/ubuntu:24.04
+RUN apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends \
+      build-essential cmake ninja-build git ca-certificates >/dev/null && rm -rf /var/lib/apt/lists/*

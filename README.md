@@ -1,0 +1,188 @@
+# Retro Voice Chat
+
+Push-to-talk voice chat with a local language model on a retro handheld. Hold a button, talk, and a
+character called TRIXY (say "Trixie") answers out loud. Everything runs on the device: no cloud, no account, no network
+once the models are downloaded. It can also play Zork I, II and III with you by voice.
+
+Built and tested on a **Retroid Pocket Flip 2** (Snapdragon 865 / SM8250, 8 GB) running **ROCKNIX**.
+
+> **AI disclosure.** This project was written with Claude Code (Anthropic's Claude Opus 5.5 and Claude
+> Fable 5.1). Most of the code and this README are model output, produced under the author's direction.
+> The author chose what to build, ran it on the hardware, and made every listening and usability
+> judgment recorded here. Measurements were taken on the device named above. Treat it as a working
+> prototype, not a finished product.
+
+```
+gamepad (push-to-talk)
+  -> microphone (PipeWire)
+  -> speech recognition: Qwen3-ASR-0.6B, llama-server            big cores 4-7, port 8091
+  -> language model: Gemma 4 E2B (or E4B), llama-server          big cores 4-5, port 8092
+  -> sentence splitter
+  -> speech: Pocket TTS, tts-server, streamed                    big cores 6-7, port 8093
+  -> peak limiter -> speaker or headphones
+```
+
+## What to expect
+
+Measured on the Flip 2 (8 GB), CPU only:
+
+| | fast mode (default) | smart mode |
+|---|---|---|
+| language model | Gemma 4 E2B, QAT Q4_0 | Gemma 4 E4B, QAT Q4_0 |
+| time to the first spoken word (typed test turns) | 3.0-4.9 s | 3.6-4.9 s |
+| the same with speech recognition (spoken turns) | 4.9-6.0 s | not measured |
+| generation speed | about 10 tokens/s | 5.5-7 tokens/s |
+| speech recognition | 1.0-1.7 s per utterance | same |
+| speech synthesis | about 2x real time | same |
+| memory left while running | about 3.5 GB | about 2.3 GB |
+
+Small models make things up. A bank of 40 checked retro-gaming trivia questions and a few honesty rules
+keep TRIXY from inventing trivia, but do not rely on it for facts.
+
+## Requirements
+
+- An aarch64 handheld running ROCKNIX with the sway session (the UI runs in `foot`), PipeWire, and
+  Python 3. Tested only on the Flip 2 with ROCKNIX 20260901. Other SM8250 devices (Retroid Pocket 5,
+  Mini) are likely to work and are untested; other chips need different core numbers (`RV_*_CPUS`).
+- 8 GB of RAM for fast mode. Smart mode fits in 8 GB with little to spare.
+- Storage: 4.4 GB for the models (9.2 GB with smart mode), about 17 MB for the programs.
+- **A microphone.** This is the part most likely to trip you up on a Flip 2:
+
+| microphone | on stock ROCKNIX |
+|---|---|
+| USB-C or Bluetooth headset | used first when present |
+| 3.5 mm headset (TRRS) | records white noise until capture is pinned to 16-bit: `install.sh --jack-mic` (the pin ETK installs; not yet tested on its own) |
+| built-in mic | not powered by the stock device tree; the app shows "no mic" |
+
+  The built-in mic needs a device tree that routes and powers it. The author's
+  [ETK](https://github.com/mercurious/etk) kit does that on its own kernel entries; stock ROCKNIX does
+  not yet. Headphones without a mic therefore leave the app with nothing to listen with.
+
+## Install
+
+On the handheld (over ssh), in a directory with enough room, for example on the SD card:
+
+```sh
+tar xzf retro-voice-chat-aarch64.tar.gz && cd retro-voice-chat
+./install.sh                  # downloads the models (4.4 GB), adds the Ports entries
+./install.sh --jack-mic       # optional: the 3.5 mm headset mic fix; reboot afterwards
+./install.sh --smart          # optional: also the larger model, 4.8 GB more
+```
+
+Then refresh the game lists in EmulationStation and start **Retro Voice Chat** from Ports.
+`./install.sh --uninstall` removes the Ports entries and the mic fix; delete the directory to remove the
+rest.
+
+There is no release tarball yet. To make one, run `build/build.sh` on an arm64 Linux machine with podman:
+it fetches llama.cpp, pockettts.cpp, Frotz and the Zork story files at pinned commits and builds
+`dist/retro-voice-chat-aarch64.tar.gz`.
+
+## Controls
+
+The buttons are named by position, with the Flip 2's own letters.
+
+| button | action |
+|---|---|
+| hold B (bottom face) or R1 | talk, release to send |
+| A (right face) | stop / interrupt |
+| X (top face) | next voice (27 Pocket TTS voices, then "random") |
+| Y (left face) | repeat the last reply |
+| Start | new conversation |
+| Select+Start, or Home | quit |
+| D-pad up/down | scroll the transcript |
+
+The top right corner shows the battery, the lower right how full the model's memory (context window) is.
+The status line says which microphone is in use; plugging or pulling a headset updates it within about
+two seconds.
+
+**Voice.** X steps through the voices; after the last one comes **random**, a different voice each
+session. Your choice is saved (`prefs.json` next to the app) and used the next time; until you choose,
+it is random.
+
+## The boot screen
+
+While the models load, the screen shows what is running. The button hints and TRIXY's greeting appear
+only once the model is ready, so nothing asks you to press a button that does not work yet.
+
+```
+  ·   v0.0.1 brought to you by mercurious assisted by claude
+  ·   controller: built-in pad (via InputPlumber)
+  ·   driver: none in use: the model runs on the CPU
+  ·   llama.cpp: 0.5.0-dev (build 1, commit 6c7a87f), unpatched, CPU backend
+  ·   tuning: LLM cores 4-5 x2 (prompt x2) · TTS cores 6-7 x2 (nice -10) · ASR cores 4-7 x4
+  ·   load: CPU 6% · GPU off · RAM 44% of 7.4 GB
+  ·   voice: javert (random)
+
+TRIXY› I'm ready. Hold the B button or R1 and talk to me.
+```
+
+With the GPU option on, the driver line is what the driver reports about itself, for example
+`llamadreno: Mesa 26.2.3 (git-94b0078f80) rusticl on FD650, OpenCL 3.1`. The GPU entry in `load` says
+what the GPU is doing, not a percentage: this kernel exposes no GPU busy figure.
+
+## Zork
+
+Say "let's play Zork" (or "play Zork two", "Zork three"), or start **Retro Voice Zork** from Ports. The
+games are Infocom's own story files, run by Frotz. The game writes every word of the story and keeps all
+of its state; the language model never narrates.
+
+- A line that already is a command ("Go north.", "Open the mailbox.") goes straight to the game. Anything
+  else ("grab the leaflet and read it") goes to the language model, which turns it into game commands.
+- Several moves fit in one line: "North, then take the egg, then up."
+- The game's text is read aloud. "Save" and "restore" are the game's own; "quit the game" saves and goes
+  back to chat.
+
+## Volume
+
+Pocket TTS speech is quiet next to a game, so the app makes it about 6 dB louder and caps the peaks with
+a limiter (`RV_GAIN_DB`, default `12`, and `RV_CEIL_DB`, default `-1`). In listening tests on the Flip 2's
+headphone jack at 60% volume that was judged loud enough and clean.
+
+At 100% volume the Flip 2's headphone amp is on its top gain step and crackles on speech peaks. If you
+listen that loud, set `RV_CEIL_DB=-6`, or turn the volume down.
+
+## Settings
+
+Environment variables for `launch.sh` (set them in a Ports entry):
+
+| variable | meaning |
+|---|---|
+| `RV_MODE` | `fast` (default) or `smart` |
+| `RV_MODELS` | the models directory |
+| `RV_VOICE` | voice for this session, overriding the saved choice |
+| `RV_SOURCE` | force a PipeWire source by name |
+| `RV_GAIN_DB`, `RV_CEIL_DB` | voice level, see Volume |
+| `RV_CONTEXT` | `trim` (default: forgets the oldest exchanges when memory fills) or `endurance` (never forgets) |
+| `RV_SYSTEM`, `RV_TEMP`, `RV_TRIVIA` | persona prompt, temperature, trivia bank |
+| `RV_LLM_MODEL`, `RV_LLM_DRAFT`, `RV_LLM_CPUS`, `RV_LLM_T`, `RV_LLM_TB` | another model, MTP draft head, core pinning and threads |
+| `RV_ASR_CPUS`, `RV_TTS_CPUS` | cores for speech recognition and synthesis |
+| `RV_START_GAME` | `1`-`3`: start in that Zork |
+| `RV_FONT` | UI font size |
+| `RV_LLM_GPU`, `RV_OCL_DIR` | run the language model on the Adreno GPU, see below |
+
+## The GPU option
+
+With a separate OpenCL build of llama.cpp and a private Mesa rusticl driver (the planned `llamadreno`
+kit), `RV_LLM_GPU=1` runs the language model on the Adreno 650. It works, but on an 8 GB Flip 2 it does
+not make conversation faster: the first word arrives at the same time, generation is the same speed, and
+it costs about 3 GB more memory. The larger model does not fit at all. It reads long prompts about twice
+as fast, which only matters when the conversation's memory is re-read. It is off by default and nothing
+here depends on it.
+
+## Testing without talking
+
+`test/test_say.sh <label> <prompts.txt>` runs typed turns through the language model and speech
+synthesis and prints timings; `SILENT=1` plays into a null sink. Commands can also be written to the
+FIFO `/tmp/retrovoice.ctl`: `ptt_down`, `ptt_up`, `inject <wav>`, `say <text>`, `stop`, `voice [name]`,
+`repeat`, `new`, `quit`. Per-turn metrics go to `logs/turns.jsonl`.
+
+## Status
+
+Works on the author's Flip 2. Not yet tested: a ROCKNIX install without the author's ETK kit, the
+20261001 ROCKNIX release, USB-C microphones on the current build, any other handheld. Reports from other
+devices are welcome; please say what hardware and ROCKNIX version you ran it on.
+
+## Licence
+
+MIT, see `LICENSE`. The programs and story files a release bundles, and the models the installer
+downloads, have their own licences: see `THIRD_PARTY.md`.

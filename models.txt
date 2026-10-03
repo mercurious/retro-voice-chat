@@ -1,0 +1,10 @@
+# Models the installer downloads from Hugging Face: <set> <repo> <file> [saved as]
+# base = what fast mode needs (about 4.4 GB); smart = the larger LLM for smart mode (another 4.8 GB).
+base  ggml-org/Qwen3-ASR-0.6B-GGUF           Qwen3-ASR-0.6B-Q8_0.gguf
+base  ggml-org/Qwen3-ASR-0.6B-GGUF           mmproj-Qwen3-ASR-0.6B-Q8_0.gguf
+base  google/gemma-4-E2B-it-qat-q4_0-gguf    gemma-4-E2B_q4_0-it.gguf
+base  Serveurperso/pocket-tts-GGUF           pocket-tts-english_2026-09-Q8_0.gguf
+base  Serveurperso/pocket-tts-GGUF           pocket-tts-english_2026-09-voices.gguf
+smart google/gemma-4-E4B-it-qat-q4_0-gguf    gemma-4-E4B_q4_0-it.gguf
+# Optional for smart mode: the MTP draft head mtp-gemma-4-E4B-it-Q4_0.gguf (+10-30% generation speed).
+# launch.sh uses it when the file is in the models directory. Its download source still has to be added here.

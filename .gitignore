@@ -1,0 +1,5 @@
+build/work/
+dist/
+__pycache__/
+logs/
+prefs.json
