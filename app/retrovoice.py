@@ -143,8 +143,11 @@ ENIGMA_PROMPT = (
     "after you stop pushing.\" \"Zero for six, but you went down swinging. Another round?\"\n"
     "The puzzle book: the app makes and checks every puzzle, reads each clue aloud, gives the hints and keeps the "
     "score. So never make up a puzzle, riddle, anagram, clue or hint yourself, never read out a clue, and never say "
-    "whether an answer is right unless a Note tells you. If the player wants a puzzle, tell them to ask for a "
-    "puzzle, a round, or a challenge.\n"
+    "whether an answer is right unless a Note tells you. What the book offers: a single puzzle (anagrams, letter "
+    "changes, hidden words, charades, sound-alikes, consonants, alphabet puzzles), a round of six or seven on one "
+    "theme, a two-step challenge, or ten questions that climb from level one to ten. The player can name a topic "
+    "(geography, food, animals, music, science...) and a level from 1 to 10, or just say harder or easier. When "
+    "they want a puzzle, invite them to ask for one; the book will give it.\n"
     "Messages may end with a [Note: ...] from the puzzle book; the player cannot see it. Follow it exactly, and keep "
     "your reply short: the next clue may follow right after you.\n"
     "If you did not understand what the player said, say so briefly.\n"
@@ -630,10 +633,15 @@ def healthy(url):
         return False
 
 
-def transcribe(wav_bytes):
+def transcribe(wav_bytes, language=None):
+    """The utterance as text. Qwen3-ASR names the language it heard ("language Portuguese<asr_text>..."): a
+    short English word could come back as Portuguese ("sim"), and noise as the model's own prompt translated
+    ("Transcreva audio para texto"). So anything not English is heard again with an English hint (an "en" hint
+    leaves silence silent; "English" made the model read its prompt back)."""
     boundary = uuid.uuid4().hex
     parts = []
-    for name, val in (("model", "asr"), ("response_format", "json")):
+    fields = [("model", "asr"), ("response_format", "json")] + ([("language", language)] if language else [])
+    for name, val in fields:
         parts.append(f'--{boundary}\r\nContent-Disposition: form-data; name="{name}"\r\n\r\n{val}\r\n'.encode())
     parts.append((f'--{boundary}\r\nContent-Disposition: form-data; name="file"; filename="utt.wav"\r\n'
                   f"Content-Type: audio/wav\r\n\r\n").encode() + wav_bytes + b"\r\n")
@@ -642,7 +650,10 @@ def transcribe(wav_bytes):
                   headers={"Content-Type": f"multipart/form-data; boundary={boundary}"})
     text = r.get("text", "")
     if "<asr_text>" in text:
-        text = text.split("<asr_text>", 1)[1]
+        head, text = text.split("<asr_text>", 1)
+        lang = head.replace("language", "").strip()
+        if lang not in ("English", "None", "") and not language:
+            return transcribe(wav_bytes, "en")
     for pat, rep in ASR_FIXES:
         text = re.sub(pat, rep, text, flags=re.I)
     return text.strip()
@@ -1067,7 +1078,7 @@ class App:
         # ENIGMA: the puzzle book answers first. Its words (clues, hints, verdicts) are spoken as written; the
         # model is asked only when there is a note for it, or nothing from the book (plain conversation).
         pre = after = ""
-        guard, max_tokens, ask_llm = None, CHAT_MAX_TOKENS, True
+        guard, max_tokens, ask_llm, act = None, CHAT_MAX_TOKENS, True, {}
         if self.host:
             act = self.host.turn(user)
             pre, after, guard = act.get("say", ""), act.get("after", ""), act.get("guard")
@@ -1082,11 +1093,19 @@ class App:
         if pre:
             t["pieces"] += self.speak(gen, pre, t, row)
             t.setdefault("ttft", time.time())
-        reply, kept, timings, msgs = "", "", {}, []
+        reply, kept, timings, msgs, invented = "", "", {}, [], False
         if ask_llm:
-            reply, kept, timings, msgs = self.stream_reply(gen, user_msg, row, t, max_tokens, guard)
+            reply, kept, timings, msgs, invented = self.stream_reply(
+                gen, user_msg, row, t, max_tokens, guard, act.get("sentences", 0) if self.host else 0,
+                book=bool(self.host))
         if gen != self.gen:
+            if pre:      # cut off by the player: the book's words were said, so they stay in the conversation
+                self.history += [{"role": "user", "content": user_msg}, {"role": "assistant", "content": pre}]
             return
+        if self.host and invented:     # the model started a puzzle of its own: give a real one instead
+            after = self.host.present(user, offered=self.host.offered or True).get("say", "")
+        elif self.host and ask_llm and act.get("offer") and "?" not in kept:
+            after = act["offer"]          # the model did not offer another itself
         if after:
             t["pieces"] += self.speak(gen, after, t, row)
         self.live = None
@@ -1098,8 +1117,9 @@ class App:
         self.last_reply = reply
         self.history += [{"role": "user", "content": user_msg}, {"role": "assistant", "content": raw_reply}]
         if self.host:
-            if ask_llm and puzzles.OFFER.search(kept):     # the model offered one: a "yes" now starts it
-                self.host.offered = True
+            offered = puzzles.offer_kind(kept) if ask_llm else None
+            if offered:     # the model offered one: a "yes" now starts that kind
+                self.host.offered = offered
             if not ask_llm:     # the model has not read this exchange: let it, while the book's words play
                 self.prime([{"role": "system", "content": SYSTEM_PROMPT}] + self.history, "chat")
         # wait for the audio to start so the metrics include it
@@ -1133,9 +1153,12 @@ class App:
                                    "model": MODEL_LABEL}) + "\n")
         self.log.flush()
 
-    def stream_reply(self, gen, user_msg, row, t, max_tokens, guard=None):
+    def stream_reply(self, gen, user_msg, row, t, max_tokens, guard=None, sentences=0, book=False):
         """Ask the model, speaking each sentence as it is written. guard: the open puzzle; a sentence that
-        names its answer is dropped, unspoken and out of the history. Returns (reply, kept, timings, msgs)."""
+        names its answer is dropped, unspoken and out of the history. sentences: stop after this many (the
+        rest is not generated). A sentence cut off by max_tokens is never spoken. book: ENIGMA; a sentence in
+        which the model starts making up a puzzle of its own ends the reply (the puzzle book takes over).
+        Returns (reply, kept, timings, msgs, invented)."""
         self.reread_note("chat", SYSTEM_PROMPT, self.history)
         self.history = self.fit(self.history, SYSTEM_PROMPT, user_msg, max_tokens)
         msgs = [{"role": "system", "content": SYSTEM_PROMPT}] + self.history + [{"role": "user", "content": user_msg}]
@@ -1143,15 +1166,25 @@ class App:
                 "max_tokens": max_tokens, "chat_template_kwargs": {"enable_thinking": False}}
         req = urllib.request.Request(LLM_URL + "/v1/chat/completions", json.dumps(body).encode(),
                                      {"Content-Type": "application/json"})
-        reply, kept, pending, first, timings = "", "", "", True, {}
+        reply, kept, pending, first, timings, finish = "", "", "", True, {}, None
+        state = {"done": False, "invented": False, "n": 0}
 
         def say(s):
             nonlocal kept
+            if state["done"]:
+                return
+            if book and puzzles.INVENTED.search(s):
+                self.ev(f"the model began a puzzle of its own; the book takes over: {s!r}")
+                state["done"] = state["invented"] = True
+                return
             if guard and puzzles.leaks(clean_for_speech(s), guard):
                 self.ev(f"dropped a sentence that gives the answer away: {s!r}")
                 return
             kept += s + " "
             t["pieces"] += self.speak(gen, s, t, row)
+            state["n"] += len(re.findall(r"[.!?…]+(?=\s|$)", s))
+            if sentences and state["n"] >= sentences:
+                state["done"] = True
 
         try:
             resp = urllib.request.urlopen(req, timeout=300)
@@ -1159,7 +1192,7 @@ class App:
             raise RuntimeError(self.llm_error(e.read())) from None
         with resp as r:
             for raw in r:
-                if gen != self.gen:
+                if gen != self.gen or state["done"]:
                     break  # closing the response makes llama-server stop generating
                 line = raw.decode(errors="replace").strip()
                 if not line.startswith("data: ") or line == "data: [DONE]":
@@ -1169,6 +1202,7 @@ class App:
                     raise RuntimeError(self.llm_error(line[6:]))
                 timings = ev.get("timings") or timings
                 for ch in ev.get("choices", []):
+                    finish = ch.get("finish_reason") or finish
                     piece = ch.get("delta", {}).get("content") or ""
                     if not piece:
                         continue
@@ -1180,9 +1214,13 @@ class App:
                     for s in sents:
                         say(s)
                         first = False
-        if gen == self.gen and pending.strip():
-            say(pending)
-        return reply, kept.strip(), timings, msgs
+        # the last piece: spoken if the model finished it, dropped if the token limit cut it off mid-sentence
+        if gen == self.gen and pending.strip() and not state["done"]:
+            if finish == "length" and not re.search(r"[.!?…][\"')\]]*\s*$", pending):
+                self.ev(f"dropped an unfinished sentence: {pending.strip()!r}")
+            else:
+                say(pending)
+        return reply, kept.strip(), timings, msgs, state["invented"]
 
     def llm_error(self, body):
         """The LLM server's error message; a context overflow also pins the meter at the size it asked for."""

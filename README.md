@@ -144,6 +144,10 @@ Start **Enigma Puzzles** from Ports (or set `RV_PERSONA=enigma`). Hold B and say
 - "Let's do a round." A themed set of six or seven quick ones with a worked example first, read
   back to back, with the score at the end.
 - "Give me a challenge." A two-step puzzle to chew on, like a listener challenge.
+- "Ten questions that get harder." The ladder: one puzzle at each level from 1 to 10, a different kind each
+  time, with the score at the end.
+- Levels: "make it harder", "a bit easier", "level seven", "an intermediate one" (easy 2, intermediate 5,
+  hard 7, expert 9). The status line shows the level. Topics: "a geography puzzle", "something about food".
 - While a puzzle is open: just say your answer ("is it melon?", or spell it), "hint" (up to three, each
   closer), "say that again", "I give up", "next one", "harder", "easier".
 
@@ -154,9 +158,11 @@ answers questions about puzzles. A sentence the model writes that would give awa
 spoken. The puzzles come from:
 
 - **generators**: letter operations (anagram, change / drop / add a letter, reversal, drop-and-rearrange,
-  two-step chains) between common words and 49 hand-checked category lists (fruits, countries, U.S.
-  states, instruments, presidents...). An answer is offered only if it is the one member of its category
-  the operation reaches; obscure members never are. About 10,000 such puzzles.
+  swapped first letters, consonyms, two-step chains) between common words and 49 hand-checked category lists
+  (fruits, countries, U.S. states, instruments, presidents...), plus category puzzles (length and end letters,
+  only two consonants, alphabetically between, acrostic rounds), two-letter prefixes and bonus puzzles. An
+  answer is offered only if it is the one member its clue allows; obscure members never are. About 16,000
+  puzzles, each rated 1-10.
 - **a written bank** (`app/puzzle/bank/`): 150 single puzzles, 24 rounds and 40 challenges,
   original, each with machine-checked claims (`test/test_puzzles.py` fails if an anagram is not one, a
   hidden word is not hidden...). The sound-based ones (homophones, rhymes, spoonerisms) are the only
@@ -165,7 +171,11 @@ spoken. The puzzles come from:
 The code grades answers. A homophone the speech recognizer writes still counts ("pair" for *pear*, by the
 CMU Pronouncing Dictionary, so "peer" does not), spelling an answer out works, any answer that satisfies the
 puzzle is accepted out loud, and a wrong guess can hear which rule it broke (wrong length, two letters changed). Clues, hints, verdicts and reveals are the puzzle book's own words and play at once;
-only the host's reactions wait for the model. The manner is a composite drawn from listening to two
+only the host's reactions wait for the model. The model's line after a solve is held to two finished
+sentences (a sentence cut off by the token limit is never spoken), and if it starts making up a puzzle of its
+own, which a small model does now and then despite its prompt, the puzzle book takes the turn and gives a real
+one. Speech that the recognizer labels as another language (a short "yes" came back as Portuguese "sim") is
+heard again with an English hint. The manner is a composite drawn from listening to two
 radio puzzle programs (`app/puzzle/STYLE.md`); it is not an impression of either host, and no audio,
 transcript or puzzle from them is in this repository.
 

@@ -38,6 +38,7 @@ print(f"bank: {len(bank)} entries ({sum(b.get('type') == 'round' for b in bank)}
 # generators
 book.warm()
 n = 0
+book.pool()
 for (op, cat), pairs in book._index.items():
     c = lex.cats[cat]
     rivals = {m for m in c["all"] if m.isalpha()}
@@ -54,6 +55,46 @@ for (op, cat), pairs in book._index.items():
             if s in lex.block or s not in lex.common:
                 bad(f"{op}/{cat}: source {s} is not a clean common word")
 print(f"generators: {n} (source, answer) pairs checked")
+
+# the other generated kinds: each claim holds and the answer is the only one in its list
+pool = book.pool()
+kinds = {}
+for e in pool:
+    rating, kind, c, ans, x = e
+    kinds[kind] = kinds.get(kind, 0) + 1
+    if not 1 <= rating <= 10:
+        bad(f"{kind} {ans}: rating {rating}")
+    if kind in P.OPS:
+        continue
+    cat = lex.cats.get(c)
+    members = sorted(m for m in cat["all"] if m.isalpha()) if cat else []
+    if kind == "startend":
+        rivals = [m for m in members if (len(m), m[0], m[-1]) == (len(ans), ans[0], ans[-1])]
+    elif kind == "consonants":
+        rivals = [m for m in members if set(P.skeleton(m)) == set(x)]
+        if set(P.skeleton(ans)) != set(x) or len(x) != 2:
+            bad(f"consonants: {ans} is not only {x}")
+    elif kind == "between":
+        rivals = [m for m in cat["all"] if x[0] < m < x[1]]
+    elif kind == "prefix2":
+        a_, b_ = x
+        rivals = [q for q in P.ONSETS if q + a_ in lex.common and q + b_ in lex.common]
+        ans_ = ans
+        if not (ans + a_ in lex.common and ans + b_ in lex.common):
+            bad(f"prefix2: {ans}+{a_}/{b_} are not words")
+        rivals = [ans] if rivals == [ans] else rivals
+    else:
+        bad(f"unknown kind {kind}")
+        continue
+    if rivals != [ans]:
+        bad(f"{kind}/{c}: {ans} is not the only answer: {rivals}")
+    it = book.build(e)
+    if P.leaks(it["clue"], it):
+        bad(f"{kind}: the clue gives away {ans}: {it['clue']}")
+print("pool:", len(pool), "rated puzzles,", ", ".join(f"{k} {v}" for k, v in sorted(kinds.items())))
+for lv in range(1, 11):
+    if not any(e[0] == lv for e in pool):
+        bad(f"no generated puzzle at level {lv}")
 
 # session
 s = P.Session(P.Puzzles(seed=3))
@@ -122,5 +163,45 @@ for line in ("Can you give me a puzzle?", "How about a round about fruit?"):
     q.cur = q.round = None
     if not q.turn(line).get("say"):
         bad(f"a request phrased as a question was not answered with a puzzle: {line}")
+# levels: asked for by number, by name, relatively; questions about hard puzzles don't count
+for line, lv, want in (("level six please", 4, 6), ("give me an intermediate one", 4, 5), ("make it harder", 4, 6),
+                       ("a little harder", 4, 5), ("too hard, easier please", 6, 4), ("something expert level", 4, 9),
+                       ("What's the hardest puzzle you've ever seen?", 4, None),
+                       ("ten questions that get harder", 4, None)):
+    if P.level_asked(line, lv) != want:
+        bad(f"level_asked({line!r}) = {P.level_asked(line, lv)}, want {want}")
+# the ladder: ten questions climbing from level one; the score sets the level at the end
+lad = P.Session(P.Puzzles(seed=14))
+r = lad.turn("let's do ten questions that get progressively harder")
+ratings = []
+for i in range(10):
+    if not lad.round or not lad.round.get("ladder"):
+        bad(f"the ladder ended early at {i}")
+        break
+    ratings.append(lad.cur.get("rating"))
+    last = lad.turn(" and ".join(lad.cur.get("parts") or [lad.cur["answer"]]) if i < 6 else "pass")
+if lad.round or "6 of 10" not in last.get("say", ""):
+    bad(f"ladder end: {last}")
+if any(abs((r or 0) - (i + 1)) > 1 for i, r in enumerate(ratings)):
+    bad(f"ladder ratings do not climb 1-10: {ratings}")
+if lad.level != 6:
+    bad(f"after 6 of 10 the level should be 6, is {lad.level}")
+# a topic picks categories; a model sentence inventing a puzzle is caught, praise is not
+if not set(book.category_for("a geography puzzle please") or []) >= {"country", "state"}:
+    bad("geography is not a topic")
+for line, want in (("Anagram: T R A P E Z E.", True), ("Here's a riddle for you: what has keys?", True),
+                   ("Take the letters of 'listen' and rearrange them to form a word that means to pay attention.", True),
+                   ("You're a master of anagrams.", False), ("Want another one?", False),
+                   ("Senator rearranged gives treason, what a twist.", False)):
+    if bool(P.INVENTED.search(line)) != want:
+        bad(f"INVENTED on {line!r} != {want}")
+for line, want in (("I'm here whenever you're ready for another challenge.", "challenge"),
+                   ("Would you like another round?", "round"), ("Want another?", True), ("I love puzzles.", None)):
+    if P.offer_kind(line) != want:
+        bad(f"offer_kind({line!r}) = {P.offer_kind(line)}, want {want}")
+# a misheard long answer counts unless the misheard word is a real word
+for spoken, ans, want in (("Sophia", "sofia", "right"), ("Venin", "benin", "right"), ("melon", "lemon", "wrong")):
+    if P.grade({"answer": ans}, spoken, lex) != want:
+        bad(f"fuzzy grade {spoken} for {ans} != {want}")
 print("FAILED" if fails else "OK", f"({fails} failures)")
 sys.exit(1 if fails else 0)

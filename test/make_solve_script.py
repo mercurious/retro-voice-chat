@@ -31,6 +31,10 @@ while s.round:
     else:
         say(f"{s.cur['answer']}!")
 say("That was fun. Who makes up your puzzles?")
+say("Let's do ten questions that get progressively harder.")
+while s.round:
+    pz = s.cur
+    say("pass" if s.ri in (4, 8) else " and ".join(pz.get("parts") or [pz["answer"]]) + ".")
 say("Give me a real challenge.")
 say("Can I have a hint?")
 say(" and ".join(s.cur.get("parts") or [s.cur["answer"]]) + "?")

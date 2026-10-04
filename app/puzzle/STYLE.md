@@ -59,9 +59,17 @@ several compounds; restricted letters (only certain consonants); palindromes and
 cover the letter operations. The written bank (`bank/`) covers charades, hidden words, initials, missing links,
 palindromes and the sound-based kinds.
 
-Seen on the shows but not yet built as generators, and checkable from the word list and categories:
-consonyms (the same consonants in order); adding the same two letters to the front of two words; dropping one
-letter from each of two words to get two members of a category; members with the same length and the same
-first and last letters; swapping the first two letters to get another member; a member that comes
-alphabetically between two others; a category acrostic; and a bonus puzzle after a solve (one more letter
-change from the answer).
+Since built as generators from that list, all checked by `test/test_puzzles.py`: consonyms (the same
+consonants in order); the same two letters in front of two words; one letter out of each of two words to get
+two members of a category; a member's length and first and last letters; its only two consonants; swapping its
+first two letters; the member alphabetically between two others (in complete lists only: states, countries,
+months...); a category acrostic round; and a bonus change-one-letter puzzle after a solve.
+
+## Levels
+
+Every puzzle has a difficulty from 1 to 10: the kind (a first-letter change is easy, drop-and-rearrange is
+hard), then longer answers, bigger categories and rarer words push it up. Written puzzles map from their level,
+challenges sit at 8-9. The player sets the level by number ("level six"), by name (easy 2, intermediate 5, hard
+7, expert 9) or relatively ("harder" +2, "a bit harder" +1); three clean solves in a row step it up by one.
+The ladder ("ten questions that get harder") climbs from level one to ten and leaves the player at the level
+they reached.

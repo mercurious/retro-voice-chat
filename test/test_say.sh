@@ -8,7 +8,8 @@
 V=$(cd "$(dirname "$0")/.." && pwd); cd "$V"; lab=${1:-test}; P=${2:-test/trivia.txt}
 export XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-/run/0-runtime-dir}
 mkdir -p logs
-[ -p /tmp/retrovoice.ctl ] && echo quit > /tmp/retrovoice.ctl
+ctl() { timeout 5 sh -c "echo \"\$1\" > /tmp/retrovoice.ctl" _ "$1"; }   # a FIFO with no reader would block forever
+[ -p /tmp/retrovoice.ctl ] && ctl quit
 i=0; while netstat -tln | grep -qE ":809[123] "; do i=$((i+1)); [ $i -gt 60 ] && { echo "ABORT: old instance still up"; exit 1; }; sleep 1; done
 NULLMOD=""
 if [ -n "${SILENT:-}" ]; then
@@ -24,7 +25,7 @@ echo "[$lab] ready after ${i}s  $(tail -n +$((e0 + 1)) logs/events.log | grep -a
 sleep 5
 while IFS= read -r line; do
   [ -z "$line" ] && continue
-  c0=$(cat logs/turns.jsonl | wc -l); echo "say $line" > /tmp/retrovoice.ctl
+  c0=$(cat logs/turns.jsonl | wc -l); ctl "say $line"
   i=0; until [ $(cat logs/turns.jsonl | wc -l) -gt $c0 ] || [ $i -gt 180 ]; do i=$((i+1)); sleep 1; done
   i=0; until tail -n 1 logs/events.log | grep -q "state -> READY" || [ $i -gt 90 ]; do i=$((i+1)); sleep 1; done; sleep 1
 done < "$P"
@@ -42,7 +43,7 @@ fi
 echo "  mem avail $(free -m | awk '/Mem/{print $7}') MB  swap used $(free -m | awk '/Swap/{print $3}') MB"
 echo "  new: gpu faults $(( $(dmesg | grep -c "gpu fault") - f0 )), gpu hangs $(( $(dmesg | grep -c "offending task") - h0 )), oom kills $(( $(dmesg | grep -c "Killed process") - k0 ))"
 if [ -n "${QUIT:-}${NULLMOD}" ]; then
-  [ -p /tmp/retrovoice.ctl ] && echo quit > /tmp/retrovoice.ctl
+  [ -p /tmp/retrovoice.ctl ] && ctl quit
   i=0; while netstat -tln | grep -qE ":809[123] "; do i=$((i+1)); [ $i -gt 60 ] && break; sleep 1; done
 fi
 [ -n "$NULLMOD" ] && pactl unload-module "$NULLMOD"

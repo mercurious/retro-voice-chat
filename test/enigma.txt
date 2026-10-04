@@ -1,10 +1,15 @@
 Hi Enigma, who are you?
+What puzzles do you play?
 Give me a puzzle.
 Can I have a hint?
 Is it banana?
+That was too easy. Make it harder.
 I give up.
 Yes please.
-I have no idea, what does that even mean?
+Can you give me an intermediate level question?
+Let's try another kind of puzzle.
+Pass.
+Yes, a geography puzzle.
 Skip this one.
 Let's do an on-air round.
 Pass.
@@ -15,7 +20,8 @@ Pass.
 Pass.
 Pass.
 Pass.
-What's the hardest puzzle you've ever seen?
+Not really.
+Sure.
 Give me a challenge.
 Hint please.
 I give up.
