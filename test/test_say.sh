@@ -2,7 +2,7 @@
 # Runs ON the handheld: headless content + latency test through the LLM and TTS (skips ASR): quits any
 # running retrovoice, launches with the caller's RV_* env, sends each line of <prompts.txt> with the
 # "say" hook, waiting for READY between turns, and prints reply, hidden answer key and timings.
-# Usage: RV_MODE=smart test/test_say.sh <label> <prompts.txt>
+# Usage: RV_MODE=smart test/test_say.sh <label> <prompts.txt>      (RV_START=<mode>: the mode to open in)
 #   SILENT=1  play into a null sink (nothing comes out of the speaker; timings are the same)
 #   QUIT=1    quit the app when done
 V=$(cd "$(dirname "$0")/.." && pwd); cd "$V"; lab=${1:-test}; P=${2:-test/trivia.txt}
@@ -33,9 +33,16 @@ tail -n +$((n0 + 1)) logs/turns.jsonl | python3 -c '
 import json, sys
 for l in sys.stdin:
     t = json.loads(l)
+    if "switch" in t:
+        print("  [%s] switch %s in %ss | Q: %s" % (t["mode"], t["switch"], t["switch_s"], t["user"]))
+        continue
+    if "cmds" in t:
+        print("  [%s] %s first-word %ss | Q: %s -> %s" % (t["mode"], "direct" if t["direct"] else "understand %ss" % t["llm_s"], t["first_audio_s"], t["user"], t["cmds"]))
+        print("      G: %s" % t["out"].replace(chr(10), " ")[:300])
+        continue
     p = t.get("tts") or []
     spd = sum(x[1] for x in p) / max(1e-6, sum(x[2] for x in p))
-    print("  think %.1fs first-word %ss %4.1f tok/s tts %.2fx stalls %s (%.1fs) ctx %s | Q: %s" % (t["ttft_s"], t["first_audio_s"], t["tok_s"] or 0, spd, t.get("gaps"), t.get("gap_s", 0), t.get("ctx", ["?"])[0], t["user"]))
+    print("  [%s] think %.1fs first-word %ss %4.1f tok/s tts %.2fx stalls %s (%.1fs) ctx %s | Q: %s" % (t.get("mode", "?"), t["ttft_s"], t["first_audio_s"], t["tok_s"] or 0, spd, t.get("gaps"), t.get("gap_s", 0), t.get("ctx", ["?"])[0], t["user"]))
     print("      A: %s" % t["raw"].replace(chr(10), " "))'
 # prompt reading speed per request, from the server log (turns.jsonl only has generation speed)
 grep -a "prompt eval time" logs/llm.log | awk '{for (i = 1; i <= NF; i++) if ($i == "tokens") {n = $(i-1); break}; print "  prompt " n " tok, " $(NF-3) " t/s"}' | tail -n 12

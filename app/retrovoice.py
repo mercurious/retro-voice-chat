@@ -7,12 +7,14 @@ The reply's text is shown word by word as its audio plays, never ahead of the vo
 
 Stdlib only. Servers are started by launch.sh. Test hooks: write commands to the control FIFO
 (default /tmp/retrovoice.ctl): ptt_down, ptt_up, inject <wav>, say <text>, stop, voice, repeat,
-new, quit.
+new, mode <id>, menu, btn <name>, quit.
+
+What the player's words mean depends on the mode (modes/: general chat, retro gaming, word puzzles, Zork...);
+SELECT opens the menu that switches between them.
 """
 import array, fcntl, io, json, math, os, queue, random, re, select, shutil, struct, subprocess, sys
-import textwrap, threading, time, unicodedata, urllib.error, urllib.request, uuid, wave
-from zgame import GAMES, GameOver, ZGame
-import puzzles
+import textwrap, threading, time, traceback, unicodedata, urllib.error, urllib.request, uuid, wave
+import modes
 
 VERSION = "0.0.1"
 ASR_URL = os.environ.get("RV_ASR_URL", "http://127.0.0.1:8091")
@@ -46,176 +48,26 @@ CTX_MODE = os.environ.get("RV_CONTEXT", "trim")
 CTX_TRIM = float(os.environ.get("RV_CTX_TRIM", "0.9"))
 CTX_KEEP = float(os.environ.get("RV_CTX_KEEP", "0.2"))
 PREFILL_TPS = 30.0
-CHAT_MAX_TOKENS, GAME_MAX_TOKENS = 200, 60
+# The LLM server has one slot, which holds one mode's prompt. With RV_SLOT_SAVE (launch.sh starts the server
+# with --slot-save-path), a switch saves that prompt to a file and loads the next mode's, if it was saved
+# before: going back to a mode reads a file instead of the whole prompt (ENIGMA's took 14 s on the rig).
+SLOT_SAVE = bool(os.environ.get("RV_SLOT_SAVE"))
+SLOT_DIR = os.path.join(LOG_DIR, "kv")
+# The models launch.sh can run ("fast", "smart"); the menu switches between them by asking launch.sh to
+# restart the LLM server (the file RESTART names the model) and opening the app again.
+MODEL_KIND = os.environ.get("RV_MODE", "fast")
+MODELS_AVAILABLE = os.environ.get("RV_MODELS_AVAILABLE", MODEL_KIND).split()
+RESTART = os.path.join(LOG_DIR, "restart")
+CHAT_MAX_TOKENS = 200
 CTX_FULL = re.compile(r"request \((\d+) tokens\) exceeds the available context size")
-
-# Zork (zgame.py): the game holds the world and writes every word of the story; the LLM only turns what
-# the player says into the game's commands, when the words are not a command already.
-GAME_DIR = os.environ.get("RV_GAME_DIR", os.path.join(os.path.dirname(os.path.abspath(__file__)), "games"))
-DFROTZ = os.environ.get("RV_DFROTZ", os.path.join(GAME_DIR, "dfrotz"))
-# spoken commands must start the sentence: "Let's play Zork two." starts it, "I used to play Zork" does not
-ASKING = r"^\W*(?:(?:ok|okay|alright|so|now|hey|trixy|trixie|enigma|please|let's|lets|let us|can we|could we|i want to|" \
-         r"i'd like to|i would like to|we should|time to)\W+)*"
-GAME_START = re.compile(ASKING + r"(play|start|launch|load|begin|resume|continue)\b.{0,20}?\bzork\b"
-                        r"(?:\s*(1|2|3|one|two|three|iii|ii|i)\b)?", re.I)
-GAME_EXIT = re.compile(ASKING + r"((stop|quit|exit|leave|end|close)\b.{0,16}?\b(game|zork)\b|stop playing\b)", re.I)
-GAME_NUM = {"1": "1", "one": "1", "i": "1", "2": "2", "two": "2", "ii": "2", "3": "3", "three": "3", "iii": "3"}
-GAME_SYSTEM = (
-    "You are the voice interface to {title}, an Infocom text adventure. The player speaks; you turn what they "
-    "say into commands for the game's parser. It understands short imperative commands: a verb and a noun, "
-    "sometimes a preposition and a second noun. Examples: north, up, enter house, open mailbox, take leaflet, "
-    "read leaflet, drop sword, put coffin in case, attack troll with sword, turn on lamp, examine rug, "
-    "move rug, open trap door, inventory, look, wait, again, score, save, restore.\n"
-    "Rules: use the nouns the game's own text used. A sentence with several actions becomes several commands, "
-    "in order. Directions are single words: north, south, east, west, northeast, northwest, southeast, "
-    "southwest, up, down, in, out. \"Look around\" is look; \"what am I carrying\" is inventory; \"check "
-    "the X\" is examine X; \"grab X\" or \"pick up X\" is take X. When the game asked a question, pass the "
-    "player's answer through (yes, no, a name). When the player is not asking for a game action at all, "
-    "return no commands.\n"
-    "Reply only with JSON: {{\"commands\": [\"...\"]}}")
-# Compact JSON forced from the first token. A response_format JSON schema lets Gemma 4 open a thinking block
-# first (llama.cpp's gemma4 grammar allows one): on the rig that took 3 of 5 requests in one context, two of
-# them used all 60 tokens and returned nothing. This grammar: 5 of 5, 5-16 tokens, 1.7-3.4 s.
-CMD_GRAMMAR = r'''root ::= "{\"commands\":[" ( cmd ( "," cmd ){0,3} )? "]}"
-cmd ::= "\"" [a-zA-Z0-9 ,.'-]{1,48} "\""'''
-# first words of a spoken line that is already a command ("Go north.", "Open the mailbox.")
-DIRECT_VERBS = set(
-    "north south east west northeast northwest southeast southwest up down in out enter exit n s e w ne nw se "
-    "sw u d look l examine x read take get drop put open close unlock lock turn move push pull climb go walk "
-    "attack kill hit throw give eat drink inventory i wait z again g score diagnose save restore restart quit pick "
-    "verbose brief superbrief light extinguish tie untie dig fill pour wave rub touch listen smell search board "
-    "launch pray inflate deflate ring wind knock kick break burn cut lower raise jump swim wake yes no y "
-    "odysseus ulysses echo xyzzy plugh hello".split())
-NOT_DIRECT = set("i'm we let's lets should could can maybe think want what where why how who you".split())
-# what the speech recognizer writes for the game's words: verb forms (British voices) and a few nouns
-HEARD = {"takes": "take", "took": "take", "opened": "open", "opens": "open", "drops": "drop", "dropped": "drop",
-         "puts": "put", "turns": "turn", "turned": "turn", "boy": "buoy", "pod": "pot"}
-FILLER = re.compile(r"^(?:okay|ok|alright|all right|now|and|then|so|um|uh|trixy|trixie)\b[,.]?\s*", re.I)
-
-
-def direct_command(text):
-    """The spoken line as a game command if it already is one, else None (the LLM translates it)."""
-    s = re.sub(r"\bplease\b", "", text.strip().lower())
-    while FILLER.match(s):
-        s = FILLER.sub("", s, count=1)
-    s = re.sub(r"[,.]?\s+then\s+", ". ", s)   # ASR writes "lamp. Then take" as often as "lamp, then take"
-    s = re.sub(r"\bsuper[\s-]+brief\b", "superbrief", s)   # ASR splits Zork's made-up word
-    words = [HEARD.get(w, w) for w in re.findall(r"[a-z0-9']+|\.", s)]
-    real = [w for w in words if w != "."]
-    if not real or real[0] not in DIRECT_VERBS or len(real) > 8 or NOT_DIRECT & set(real) \
-            or real[0] == "i" and len(real) > 1:
-        return None
-    return " ".join(words).replace(" .", ".").strip(". ")
-
 
 def msgs_chars(msgs):
     return sum(len(m.get("content", "")) + 12 for m in msgs)   # ~12 characters of chat template per message
 
-TRIXY_PROMPT = (
-    "You are TRIXY, a friendly retro computer voice living inside a Retroid Pocket handheld game console. "
-    "Everything you say is spoken aloud, so answer in one to three short sentences of plain conversational "
-    "English: no lists, no markdown, no emoji, no stage directions. Be warm, curious and a little playful, "
-    "like an 8-bit adventure companion.\n"
-    "Accuracy matters. When you know a fact, state it plainly and directly, including well-known records, "
-    "release years, sales leaders and who made a game. Never invent game titles, names, dates or numbers: "
-    "only when you genuinely do not know, say so briefly instead of guessing. For events after your "
-    "training, share what you know and mention you may be out of date.\n"
-    "Trivia: only quiz the player with questions the game system gives you in a Note; never make up quiz "
-    "questions yourself. Ask one at a time, and right after it write the correct answer in square brackets, "
-    "like [answer: Sonic the Hedgehog]; bracketed text is never spoken.\n"
-    "Messages may end with a [Note: ...] from the game system; the player cannot see it. Follow it, and "
-    "trust any verified fact it gives you.\n"
-    "If you did not understand what the player said, say so briefly.\n"
-    f"Today's date is {time.strftime('%B %d, %Y')}.")
-# ENIGMA (RV_PERSONA=enigma): a word-puzzle host. puzzles.py makes, checks, reads and scores every puzzle; the
-# model never invents or judges one (small models cannot see letters), it only hosts: reactions, praise, chat.
-# The manner is a composite of radio puzzle segments (see puzzle/STYLE.md), not an impression of anyone.
-ENIGMA_PROMPT = (
-    "You are ENIGMA, a word-puzzle master who lives inside a Retroid Pocket handheld. Everything you say is spoken "
-    "aloud, so answer in one to three short sentences of plain conversational English: no lists, no markdown, no "
-    "emoji, no stage directions.\n"
-    "Your manner is that of a beloved radio puzzle host: warm, brisk and exact, quietly delighted by words, curious "
-    "about the player. You praise a good solve simply and sincerely, tease gently, enjoy a pun, give credit "
-    "generously, and never show off. You know crosswords, anagrams, palindromes, spoonerisms and the history of "
-    "puzzles. React in one breath, then move on. Praise a clever wrong guess, admit when a puzzle was hard, and "
-    "end a round with one pun on an answer. Be curious about the player: ask what they like to solve. The sound "
-    "of you: \"There you go! Pains into Spain. No pain, no gain.\" \"Take your time; the aha always comes just "
-    "after you stop pushing.\" \"Zero for six, but you went down swinging. Another round?\"\n"
-    "The puzzle book: the app makes and checks every puzzle, reads each clue aloud, gives the hints and keeps the "
-    "score. So never make up a puzzle, riddle, anagram, clue or hint yourself, never read out a clue, and never say "
-    "whether an answer is right unless a Note tells you. What the book offers: a single puzzle (anagrams, letter "
-    "changes, hidden words, charades, sound-alikes, consonants, alphabet puzzles), a round of six or seven on one "
-    "theme, a two-step challenge, or ten questions that climb from level one to ten. The player can name a topic "
-    "(geography, food, animals, music, science...) and a level from 1 to 10, or just say harder or easier. When "
-    "they want a puzzle, invite them to ask for one; the book will give it.\n"
-    "Messages may end with a [Note: ...] from the puzzle book; the player cannot see it. Follow it exactly, and keep "
-    "your reply short: the next clue may follow right after you.\n"
-    "If you did not understand what the player said, say so briefly.\n"
-    f"Today's date is {time.strftime('%B %d, %Y')}.")
-# Who is talking. name: on screen; said: how TTS should say it (and how the ASR spells it back).
-PERSONAS = {
-    "trixy": {"name": "TRIXY", "said": "Trixie", "title": " ▓▒░ T R I X Y ░▒▓", "subtitle": "   retro voice chat",
-              "system": TRIXY_PROMPT, "games": True, "trivia": True, "puzzles": False,
-              "greet": "I'm ready. Hold the B button or R1 and talk to me.",
-              "fresh": "Fresh start. What's on your mind?",
-              "colors": ("\033[38;5;46m", "\033[38;5;28m", "\033[38;5;214m", "\033[38;5;44m")},
-    "enigma": {"name": "ENIGMA", "said": "Enigma", "title": " ░▒▓ E N I G M A ▓▒░", "subtitle": "   word puzzles",
-               "system": ENIGMA_PROMPT, "games": False, "trivia": False, "puzzles": True,
-               "greet": "Hello there, I'm Enigma, and I've got a puzzle with your name on it. Hold B and ask me for "
-                        "a puzzle, a round, or a real challenge.",
-               "fresh": "Clean slate. Shall I give you a puzzle?",
-               "colors": ("\033[38;5;222m", "\033[38;5;137m", "\033[38;5;117m", "\033[38;5;180m")},
-}
-PERSONA = PERSONAS.get(os.environ.get("RV_PERSONA", "trixy").lower(), PERSONAS["trixy"])
-SYSTEM_PROMPT = os.environ.get("RV_SYSTEM", PERSONA["system"])
 TEMPERATURE = float(os.environ.get("RV_TEMP", "0.4"))
+# Old launchers chose a persona or a game at startup; they now pick the mode the app opens in.
+LEGACY_START = {"trixy": "retro", "enigma": "enigma"}
 
-# Verified trivia bank: the app, not the model, picks questions and holds the answers, so a quiz never
-# rests on a fact the model made up. A request attaches a hidden card to the player's message; the
-# player's next turn gets a hidden grading note with the true answer.
-TRIVIA_PATH = os.environ.get("RV_TRIVIA", os.path.join(os.path.dirname(os.path.abspath(__file__)), "trivia.json"))
-TRIVIA_ASK = re.compile(r"\b(trivia|quiz|another (one|question)|next (one|question)|ask me (a|another|one)|"
-                        r"(hard|harder|tough|tougher|difficult) (one|question))\b", re.I)
-
-
-STOP = set("the a an of in on to for and or is was what which who whom how did does do year game games video "
-           "all time your you me my it its that this with from by first original called name named".split())
-
-
-def keywords(text):
-    return {w for w in re.findall(r"[a-z0-9]+", text.lower()) if len(w) > 2 and w not in STOP}
-
-
-def lookup_fact(bank, text):
-    """Bank entry that covers most of the player's content words, sharing at least one name or number
-    (tiny local retrieval), or None."""
-    words, best, score = keywords(text), None, 0.0
-    if not words:
-        return None
-    for q in bank:
-        k = keywords(q["q"])
-        names = {w.lower() for w in re.findall(r"\b(?:[A-Z][a-zA-Z0-9]+|\d{4})\b", q["q"])}
-        shared = words & k
-        if not shared or not (shared & names or "best" in shared):
-            continue
-        s = len(shared) / len(words) + 0.5 * len(shared) / len(k)   # tie-break: closest whole question
-        if s > score:
-            best, score = q, s
-    return best if score >= 0.6 else None
-
-
-QUESTION = re.compile(r"\s*(who|what|when|where|why|how|which|whose|can you|could you|do you|did you|have you|"
-                      r"tell me|name)\b", re.I)
-
-
-def load_trivia():
-    import random
-    try:
-        bank = json.load(open(TRIVIA_PATH))
-    except (OSError, ValueError):
-        return []
-    random.shuffle(bank)
-    return bank
 
 # ---------------------------------------------------------------------------------------------- input
 
@@ -512,7 +364,21 @@ class Player:
     def _spawn(self):
         self.proc = subprocess.Popen(["pacat", "--raw", "--format=s16le", f"--rate={TTS_RATE}", "--channels=1",
                                       "--latency-msec=120", "--client-name=retrovoice"],
-                                     stdin=subprocess.PIPE, stderr=subprocess.DEVNULL)
+                                     stdin=subprocess.PIPE, stderr=subprocess.DEVNULL, bufsize=0)
+
+    @staticmethod
+    def _retire(proc):
+        """Stop a pacat that is being replaced. Unbuffered and closed here, its pipe has nothing left to write
+        when it is collected (a buffered one printed "BrokenPipeError" on screen after every interrupt)."""
+        try:
+            proc.kill()
+        except OSError:
+            pass
+        try:
+            proc.stdin.close()
+        except OSError:
+            pass
+        threading.Thread(target=proc.wait, daemon=True).start()
 
     def _feed(self):
         while True:
@@ -521,11 +387,13 @@ class Player:
             if epoch != self.epoch:
                 continue            # queued before a flush
             try:
-                proc.stdin.write(pcm)
-                proc.stdin.flush()
+                mv = memoryview(pcm)
+                while mv:                   # unbuffered: a write may take only part of it
+                    mv = mv[proc.stdin.write(mv) or 0:]
             except (OSError, ValueError):
                 with self.lock:
                     if epoch == self.epoch and proc is self.proc:   # pacat died on its own
+                        self._retire(proc)
                         self._spawn()
 
     def write(self, pcm):
@@ -541,10 +409,7 @@ class Player:
     def flush(self):
         with self.lock:
             self.epoch += 1
-            try:
-                self.proc.kill()
-            except OSError:
-                pass
+            self._retire(self.proc)
             self._spawn()
             self.until = 0.0
             if self.limiter:
@@ -555,10 +420,7 @@ class Player:
 
     def close(self):
         self.epoch += 1            # so the feeder does not respawn pacat
-        try:
-            self.proc.kill()
-        except OSError:
-            pass
+        self._retire(self.proc)
 
 # ---------------------------------------------------------------------------------------------- servers
 
@@ -659,12 +521,9 @@ def transcribe(wav_bytes, language=None):
     return text.strip()
 
 
-# The assistant's name is written TRIXY and said "Trixie", which is how the ASR spells it back; ENIGMA is said
-# "Enigma" (written in capitals, TTS would spell it out).
-ASR_FIXES = [(r"\btri(?:xie|xi|xey|cksy|cksie|ksy|ksie)\b", "Trixy"),
-             (r"\bzor(?:c|g|ch|ck|ke)\b", "Zork"),
-             (r"\b(?:a|an|in)[\s-]?nigma\b|\benigmas?\b", "Enigma")]
-SAY_NAME = re.compile(r"\b" + PERSONA["name"] + r"\b", re.I)
+# How the ASR writes the hosts' names and the modes' words, and how speech should say a name written in capitals
+# (TTS would spell ENIGMA out); both are filled in from the modes when the app starts.
+ASR_FIXES, SAY_NAMES = [], []
 
 
 HIDDEN = re.compile(r"\[[^\]]*(\]|$)")   # [answer: ...] notes, including an unterminated one mid-stream
@@ -694,7 +553,8 @@ PATTERN = re.compile(r"(pattern is )([^.]*)")
 
 
 def tts_text(text):
-    text = SAY_NAME.sub(PERSONA["said"], text)
+    for pat, said in SAY_NAMES:
+        text = pat.sub(said, text)
     text = SPELLED.sub(lambda m: ", ".join("double-you" if c == "W" else c for c in m.group(0).split("-")), text)
     text = ONE_LETTER.sub(lambda m: f"{m.group(1)} {LETTER_NAMES[m.group(2)]}", text)
     return PATTERN.sub(lambda m: m.group(1) + re.sub(r"\b[A-Z]\b", lambda c: LETTER_NAMES[c.group(0)], m.group(2)),
@@ -736,10 +596,14 @@ def split_sentences(buf, first):
 
 
 class App:
+    # the current mode's transcript ([who, text] rows), conversation, and tokens it fills in the context window
+    lines = property(lambda s: s.mode.lines, lambda s, v: setattr(s.mode, "lines", v))
+    history = property(lambda s: s.mode.history, lambda s, v: setattr(s.mode, "history", v))
+    ctx_used = property(lambda s: s.mode.ctx_used, lambda s, v: setattr(s.mode, "ctx_used", v))
+
     def __init__(self):
         self.q = queue.Queue()
         self.state, self.note = "BOOT", "warming up"
-        self.lines = []            # (who, text)
         self.live = None           # index of the reply being streamed
         self.level = 0.0
         self.rec_start = 0.0
@@ -747,23 +611,41 @@ class App:
         self.prefs = load_prefs()
         self.voices, self.voice = ["alba"], "alba"
         self.voice_pref = os.environ.get("RV_VOICE") or self.prefs.get("voice") or "random"   # a name, or "random"
-        self.history = []
-        self.trivia, self.trivia_active = (load_trivia() if PERSONA["trivia"] else []), None
-        self.book = puzzles.Puzzles(os.environ.get("RV_PUZZLE_SEED")) if PERSONA["puzzles"] else None   # generators, bank
-        self.host = puzzles.Session(self.book) if self.book else None   # the puzzle being played, the score
+        # The modes. Each keeps its own transcript, conversation and context use (the lines, history and
+        # ctx_used properties below are the current mode's).
+        self.modes = {c.id: c(self) for c in modes.discover()}
+        self.names = sorted({re.escape(n.lower()) for m in self.modes.values() for n in (m.name, m.said or m.name)})
+        for m in self.modes.values():
+            ASR_FIXES.extend(m.heard)
+            SAY_NAMES.append((re.compile(r"\b" + re.escape(m.name) + r"\b", re.I), m.said or m.name))
+            m.setup()
+        ids = "|".join(re.escape(a) for m in self.modes.values() for a in m.aliases)
+        self.switch_re = re.compile(modes.base.asking(self.names) + r"(?:(?:switch|change|go|get|take me|move)"
+                                    r"(?: back)?(?: over)?|back) (?:in)?to (?:the )?(" + ids + r")(?: mode)?\W*$", re.I)
+        start = os.environ.get("RV_START") or ("zork" if os.environ.get("RV_START_GAME") else "") or \
+            LEGACY_START.get(os.environ.get("RV_PERSONA", "").lower()) or self.prefs.get("mode") or "chat"
+        self.mode = self.modes.get(start) or next(iter(self.modes.values()))
+        if not self.mode.available():
+            self.mode = self.modes.get("chat") or next(iter(self.modes.values()))
+        if os.environ.get("RV_START_GAME") and "zork" in self.modes:
+            self.modes["zork"].num = os.environ["RV_START_GAME"]
+        if os.environ.get("RV_SYSTEM"):
+            self.mode.sys = os.environ["RV_SYSTEM"]
+        self.prev = None           # the mode before this one
+        self.menu = None           # SELECT menu: the highlighted row, or None when closed
+        self.select_alone = False  # SELECT is down and nothing else was pressed with it
+        self.theme_due = False     # the terminal's colours are to be set at the next frame
+        self.quit_when_quiet = 0.0     # when set: quit once the last words are spoken (a model switch)
         self.metrics = ""
         self.n_ctx = 0             # the LLM's context window (tokens), from /props
-        self.ctx_used = 0          # tokens the conversation fills: prompt + reply of the last turn
-        self.ctx_base = 0          # system prompt alone, for a new chat
         self.bat_dir = find_battery()
         self.bat_pct, self.bat_status, self.bat_w = None, "", None   # watts: smoothed over ~15 s
         self.bat_t = 0.0
         self.tpc = 0.3             # LLM tokens per character of conversation, learned from each request
-        self.kv_mode = "chat"      # whose prompt the LLM server holds: "chat" or "game"
-        self.ctx_saved = 0         # the other mode's context use
-        self.game = None           # ZGame while playing
-        self.game_lock = threading.Lock()
-        self.game_title, self.game_system, self.game_history, self.game_last = "", "", [], ""
+        self.kv_mode = ""          # whose prompt the LLM server holds (a mode's kv)
+        self.priming = 0           # prime requests in flight
+        self.sent_kv = ""          # the kv of the last request sent: what the server's slot will hold
+        self.kv_lock = threading.Lock()
         self.gen = 0               # bumps on every interrupt; stale work checks it
         self.held = set()
         self.source, self.source_desc = None, "?"
@@ -841,8 +723,8 @@ class App:
         self.voice = self.voice_pref if self.voice_pref in self.voices else random.choice(self.voices)
         self.player = Player()
         self.set_state("BOOT", "warming up the model")
-        if self.book:      # the generator index (~2 s on the rig) is built while the model warms up
-            threading.Thread(target=self.book.warm, daemon=True).start()
+        for m in self.modes.values():      # their data (the puzzle book's index, ~1 s) loads while the model warms up
+            threading.Thread(target=m.warm, daemon=True).start()
         self.warm_llm()
         say(system_load())
         say(f"voice: {self.voice_label()}")
@@ -852,12 +734,12 @@ class App:
         while not self.q.empty():
             time.sleep(0.05)
         time.sleep(0.2)
-        greet = PERSONA["greet"] if self.source else \
-            "I'm ready, but I can't find a microphone. Plug in a headset with a mic and I'll hear you."
-        self.speak_now(greet, self.add("host", ""))
+        if self.source:
+            self.work_q.put((self.gen, "enter", None))       # the mode's greeting, or Zork's opening
+        else:
+            self.speak_now("I'm ready, but I can't find a microphone. Plug in a headset with a mic and I'll hear you.",
+                           self.add("host", ""))
         self.set_state("READY", self.source_desc)
-        if os.environ.get("RV_START_GAME"):
-            self.work_q.put((self.gen, "game", os.environ["RV_START_GAME"]))
         return True
 
     def warm_llm(self):
@@ -865,14 +747,18 @@ class App:
         t0 = time.time()
         try:
             self.n_ctx = http_json(LLM_URL + "/props", timeout=10)["default_generation_settings"]["n_ctx"]
+            system = self.mode.system()      # Zork's is written when a game starts: then this only loads the weights
+            msgs = ([{"role": "system", "content": system}] if system else []) + [{"role": "user", "content": "hi"}]
             r = http_json(LLM_URL + "/v1/chat/completions",
-                          {"messages": [{"role": "system", "content": SYSTEM_PROMPT}, {"role": "user", "content": "hi"}],
-                           "max_tokens": 1, "chat_template_kwargs": {"enable_thinking": False}}, timeout=300)
+                          {"messages": msgs, "max_tokens": 1, "chat_template_kwargs": {"enable_thinking": False}},
+                          timeout=300)
             tm = r.get("timings") or {}
-            self.ctx_base = tm.get("cache_n", 0) + tm.get("prompt_n", 0)
-            self.ctx_used = self.ctx_used or self.ctx_base
+            if system:
+                self.mode.ctx_base = tm.get("cache_n", 0) + tm.get("prompt_n", 0)
+                self.ctx_used = self.ctx_used or self.mode.ctx_base
+                self.kv_mode = self.sent_kv = self.mode.kv
             self.dirty = True
-            self.ev(f"llm warm-up {time.time() - t0:.1f}s, context {self.ctx_base}/{self.n_ctx}")
+            self.ev(f"llm warm-up {time.time() - t0:.1f}s, context {self.mode.ctx_base}/{self.n_ctx}")
         except Exception as e:
             self.ev(f"llm warm-up failed: {e!r}")
 
@@ -946,33 +832,6 @@ class App:
                 self.dirty = True
 
     # -- workers
-    def trivia_notes(self, user):
-        """Hidden notes appended to the player's words: grade an open question, deal a new card."""
-        notes = []
-        asking = bool(TRIVIA_ASK.search(user)) and bool(self.trivia)
-        # "Who made Choplifter?" mid-quiz is a new question, not an answer ("Is it Sega?" still is one)
-        side_question = bool(QUESTION.match(user)) and not asking
-        grading = self.trivia_active is not None and not side_question
-        if grading:
-            q = self.trivia_active
-            alts = (" (also accept: " + ", ".join(q["alt"]) + ")") if q["alt"] else ""
-            notes.append(f"[Note: the answer to your last trivia question is {q['a']}{alts}. Tell the player "
-                         f"honestly whether they got it; if not, tell them the correct answer.]")
-            self.trivia_active = None
-        if not asking and not grading:
-            fact = lookup_fact(self.trivia, user)
-            if fact:
-                notes.append(f"[Note: verified fact to use in your answer. {fact['q']} {fact['a']}.]")
-                self.ev(f"fact note: {fact['a']}")
-        if asking:
-            card = self.trivia.pop(0)
-            self.trivia.append(card)
-            self.trivia_active = card
-            notes.append(f"[Note: ask this trivia question in your own words, then add [answer: {card['a']}]. "
-                         f"Question: {card['q']}]")
-            self.ev(f"trivia card: {card['q']}")
-        return user + ("\n\n" + " ".join(notes) if notes else "")
-
     def speaker_loop(self):
         preroll = int(PREROLL_S * TTS_RATE) * 2
         while self.running:
@@ -1066,28 +925,154 @@ class App:
                 self.add("sys", "(didn't catch that, try again)")
                 self.set_state("READY", self.source_desc)
                 return
-        elif kind == "game":
-            return self.start_game(gen, payload, t)
+        elif kind in ("enter", "mode"):      # at boot, or the menu / the control FIFO picked a mode
+            t["asr"] = t["t0"]
+            return self.enter_mode(gen, payload or self.mode.id, None, t)
         else:
             user = payload
             t["asr"] = t["t0"]
+        target, claimed = self.switch_target(user)
+        if target:
+            return self.enter_mode(gen, target.id, user, t, claimed=claimed)
         self.add("you", user)
         self.set_state("THINKING", "")
-        if self.game or PERSONA["games"] and GAME_START.search(user):
-            return self.game_turn(gen, user, t)
-        # ENIGMA: the puzzle book answers first. Its words (clues, hints, verdicts) are spoken as written; the
-        # model is asked only when there is a note for it, or nothing from the book (plain conversation).
-        pre = after = ""
-        guard, max_tokens, ask_llm, act = None, CHAT_MAX_TOKENS, True, {}
-        if self.host:
-            act = self.host.turn(user)
-            pre, after, guard = act.get("say", ""), act.get("after", ""), act.get("guard")
-            max_tokens = act.get("tokens", CHAT_MAX_TOKENS)
-            ask_llm = bool(act.get("note")) or not pre
-            user_msg = user + ("\n\n" + act["note"] if act.get("note") else "")
-            self.ev(f"puzzle [{self.host.status()}] say={pre[:70]!r} note={bool(act.get('note'))}")
+        if not self.mode.turn(gen, user, t):
+            self.chat_turn(gen, user, t)
+
+    # -- modes
+    def switch_target(self, user):
+        """(mode, claimed) when the player's words ask for another mode: "switch to puzzles" by name, or a request
+        only another mode can answer ("let's play Zork", "give me a puzzle": claimed). Else (None, False)."""
+        m = self.switch_re.search(user)
+        if m:
+            alias = m.group(1).lower()
+            mode = next(x for x in self.modes.values() if alias in x.aliases)
+            if mode is not self.mode and mode.available():
+                return mode, False
+        for mode in self.modes.values():
+            if mode is not self.mode and mode.available() and mode.claims(user):
+                return mode, True
+        return None, False
+
+    def enter_mode(self, gen, mid, user, t, claimed=False, quiet=False):
+        """Switch to a mode (or start in it). The old one is left as it is (Zork saves its game); the new one
+        greets, or answers what the player asked for. quiet: no greeting, just the switch."""
+        new, switched = self.modes[mid], None
+        if new is not self.mode:
+            old = self.mode
+            switched = f"{old.id} -> {new.id}"
+            old.leave()
+            self.prev, self.mode = old, new
+            self.scroll, self.metrics = 0, ""
+            self.apply_theme()
+            self.prefs["mode"] = new.id
+            self.ev(f"mode: {old.id} -> {new.id}")
+        if user:
+            self.add("you", user)
+        self.set_state("THINKING", "")
+        if quiet:
+            new.entered = True
+            self.prime_mode()
         else:
-            user_msg = self.trivia_notes(user)
+            new.enter(gen, t, user, claimed)
+        save_prefs(self.prefs)
+        if gen == self.gen and self.state == "THINKING":
+            self.set_state("READY", self.source_desc)
+        self.dirty = True
+        if switched:
+            self.log_turn({"user": user or "", "switch": switched, "claimed": claimed,
+                           "switch_s": round(time.time() - t["t0"], 2)})
+
+    def prime_mode(self):
+        """Have the model read the current mode's prompt and conversation while its greeting plays: the server
+        holds one prompt at a time, so a switch means it reads this mode's again."""
+        if (self.kv_mode != self.mode.kv or self.priming) and self.mode.system():
+            self.prime([{"role": "system", "content": self.mode.system()}] + self.history +
+                       [{"role": "user", "content": ""}], self.mode.kv)
+
+    def apply_theme(self):
+        """The terminal's own background and text colours (OSC 11 and 10, foot), so the whole screen changes
+        with the mode, not just the text that is drawn."""
+        self.theme_due = self.dirty = True     # written by render(), the only thread that draws
+
+    def theme_codes(self):
+        m = self.modes.get(self.menu_rows()[self.menu]) if self.menu is not None else None   # the menu previews
+        m = m or self.mode
+        return f"\033]11;#{m.bg}\033\\\033]10;#{m.fg}\033\\"
+
+    def menu_rows(self):
+        return [m.id for m in self.modes.values()] + ["voice"] + (["model"] if len(MODELS_AVAILABLE) > 1 else [])
+
+    def other_model(self):
+        i = MODELS_AVAILABLE.index(MODEL_KIND) if MODEL_KIND in MODELS_AVAILABLE else -1
+        return MODELS_AVAILABLE[(i + 1) % len(MODELS_AVAILABLE)]
+
+    def switch_model(self):
+        """Ask launch.sh for the other model: it restarts the LLM server and opens the app again, in this mode."""
+        pick = self.other_model()
+        self.prefs["model"] = pick
+        save_prefs(self.prefs)
+        try:
+            with open(RESTART, "w") as f:
+                f.write(pick + "\n")
+        except OSError as e:
+            self.add("sys", f"could not switch the model: {e}")
+            return
+        self.ev(f"model: {MODEL_KIND} -> {pick}, restarting")
+        self.close_menu()
+        self.interrupt()
+        self.speak_now(f"Switching to the {pick} model. Back in a moment.")
+        self.quit_when_quiet = time.time()
+
+    def open_menu(self):
+        self.interrupt()
+        rows = self.menu_rows()
+        self.menu = rows.index(self.mode.id)
+        self.speak_now("Choose a mode.")
+        self.dirty = True
+
+    def close_menu(self):
+        self.menu = None
+        self.apply_theme()
+
+    def menu_button(self, name):
+        rows = self.menu_rows()
+        if name in ("up", "down"):
+            self.menu = (self.menu + (-1 if name == "up" else 1)) % len(rows)
+            self.apply_theme()
+            row = rows[self.menu]
+            self.interrupt()
+            self.speak_now(self.modes[row].label if row in self.modes else
+                           f"Voice. {self.voice_label()}." if row == "voice" else f"Model. {MODEL_KIND}.")
+        elif name == "east":           # A: pick
+            row = rows[self.menu]
+            if row == "voice":
+                self.cycle_voice()
+                return
+            if row == "model":
+                self.switch_model()
+                return
+            mode = self.modes[row]
+            if not mode.available():
+                self.interrupt()
+                self.speak_now(f"{mode.label} is not installed.")
+                return
+            self.close_menu()
+            if mode is not self.mode:
+                self.interrupt()
+                self.work_q.put((self.gen, "mode", mode.id))
+        elif name == "south":          # B: back
+            self.close_menu()
+
+    def chat_turn(self, gen, user, t):
+        """A turn of conversation. The mode answers first (before): its own words (the puzzle book's clues,
+        hints, verdicts) are spoken as written; the model is asked only when there is a note for it, or nothing
+        from the mode (plain conversation)."""
+        mode = self.mode
+        act = mode.before(user)
+        pre, max_tokens = act.get("say", ""), act.get("tokens", CHAT_MAX_TOKENS)
+        ask_llm = bool(act.get("note")) or not pre
+        user_msg = user + ("\n\n" + act["note"] if act.get("note") else "")
         row = self.live = self.add("host", "")   # filled in by captions_tick as the words are heard
         t["pieces"] = 0
         if pre:
@@ -1095,41 +1080,25 @@ class App:
             t.setdefault("ttft", time.time())
         reply, kept, timings, msgs, invented = "", "", {}, [], False
         if ask_llm:
-            reply, kept, timings, msgs, invented = self.stream_reply(
-                gen, user_msg, row, t, max_tokens, guard, act.get("sentences", 0) if self.host else 0,
-                book=bool(self.host))
+            reply, kept, timings, msgs, invented = self.stream_reply(gen, user_msg, row, t, max_tokens, act)
         if gen != self.gen:
             if pre:      # cut off by the player: the book's words were said, so they stay in the conversation
                 self.history += [{"role": "user", "content": user_msg}, {"role": "assistant", "content": pre}]
             return
-        if self.host and invented:     # the model started a puzzle of its own: give a real one instead
-            after = self.host.present(user, offered=self.host.offered or True).get("say", "")
-        elif self.host and ask_llm and act.get("offer") and "?" not in kept:
-            after = act["offer"]          # the model did not offer another itself
+        after = mode.after(user, act, kept, ask_llm, invented)
         if after:
             t["pieces"] += self.speak(gen, after, t, row)
         self.live = None
         if msgs:
-            self.take_timings(timings, msgs, reply, "chat")
+            self.take_timings(timings, msgs, reply, mode.kv)
         # the raw reply keeps any hidden [answer: ...] so the next turn can grade against it
         raw_reply = " ".join(x.strip() for x in (pre, kept, after) if x.strip())
         reply = clean_for_speech(raw_reply)
         self.last_reply = reply
         self.history += [{"role": "user", "content": user_msg}, {"role": "assistant", "content": raw_reply}]
-        if self.host:
-            offered = puzzles.offer_kind(kept) if ask_llm else None
-            if offered:     # the model offered one: a "yes" now starts that kind
-                self.host.offered = offered
-            if not ask_llm:     # the model has not read this exchange: let it, while the book's words play
-                self.prime([{"role": "system", "content": SYSTEM_PROMPT}] + self.history, "chat")
-        # wait for the audio to start so the metrics include it
-        for _ in range(200):
-            if "first_audio" in t or gen != self.gen:
-                break
-            time.sleep(0.05)
-        if gen == self.gen and "first_audio" not in t:   # nothing voiced (TTS failed, or nothing speakable)
-            self.lines[row][1] = reply
-            self.set_state("READY", self.source_desc)
+        if not ask_llm:     # the model has not read this exchange: let it, while the book's words play
+            self.prime([{"role": "system", "content": mode.system()}] + self.history, mode.kv)
+        self.wait_first_word(gen, t, row, reply)
         asr_s = t["asr"] - t["t0"]
         ttft_s = t.get("ttft", time.time()) - t["asr"]
         fa = t.get("first_audio")
@@ -1140,30 +1109,67 @@ class App:
         # log once the whole reply has been voiced (or cut off), so every stall is in it
         while gen == self.gen and len(t.get("tts", [])) < t["pieces"]:
             time.sleep(0.1)
-        self.log.write(json.dumps({"time": time.strftime("%F %T"), "user": user, "reply": reply,
-                                   "raw": raw_reply.strip(), "gaps": t.get("gaps", 0),
-                                   "gap_s": round(t.get("gap_s", 0.0), 2), "gap_at": t.get("gap_at", []),
-                                   "tts": t.get("tts", []), "preroll_s": PREROLL_S,
-                                   "asr_s": round(asr_s, 2), "ttft_s": round(ttft_s, 2),
-                                   "first_audio_s": round(fa - t["t0"], 2) if fa else None,
-                                   "tok_s": timings.get("predicted_per_second"), "ctx": [self.ctx_used, self.n_ctx],
+        self.log_turn({"user": user, "reply": reply, "raw": raw_reply.strip(), "gaps": t.get("gaps", 0),
+                       "gap_s": round(t.get("gap_s", 0.0), 2), "gap_at": t.get("gap_at", []),
+                       "tts": t.get("tts", []), "preroll_s": PREROLL_S,
+                       "asr_s": round(asr_s, 2), "ttft_s": round(ttft_s, 2),
+                       "first_audio_s": round(fa - t["t0"], 2) if fa else None,
+                       "tok_s": timings.get("predicted_per_second"), "llm": ask_llm, "status": mode.status() or None})
+
+    def wait_first_word(self, gen, t, row=None, text=""):
+        """Wait for the audio to start, so the metrics include it; if nothing was voiced (TTS failed, or nothing
+        speakable), show the words and go back to READY."""
+        for _ in range(200):
+            if "first_audio" in t or gen != self.gen or not t.get("pieces"):
+                break
+            time.sleep(0.05)
+        if gen == self.gen and "first_audio" not in t:
+            if row is not None:
+                self.lines[row][1] = text
+            self.set_state("READY", self.source_desc)
+
+    def log_turn(self, rec):
+        self.log.write(json.dumps({"time": time.strftime("%F %T"), "mode": self.mode.id, **rec,
+                                   "ctx": [self.ctx_used, self.n_ctx],
                                    "bat": [self.bat_pct, round(self.bat_w, 2) if self.bat_w is not None else None],
-                                   "voice": self.voice, "llm": ask_llm,
-                                   "puzzle": self.host.status() if self.host else None,
-                                   "model": MODEL_LABEL}) + "\n")
+                                   "voice": self.voice, "model": MODEL_LABEL}) + "\n")
         self.log.flush()
 
-    def stream_reply(self, gen, user_msg, row, t, max_tokens, guard=None, sentences=0, book=False):
-        """Ask the model, speaking each sentence as it is written. guard: the open puzzle; a sentence that
-        names its answer is dropped, unspoken and out of the history. sentences: stop after this many (the
-        rest is not generated). A sentence cut off by max_tokens is never spoken. book: ENIGMA; a sentence in
-        which the model starts making up a puzzle of its own ends the reply (the puzzle book takes over).
-        Returns (reply, kept, timings, msgs, invented)."""
-        self.reread_note("chat", SYSTEM_PROMPT, self.history)
-        self.history = self.fit(self.history, SYSTEM_PROMPT, user_msg, max_tokens)
-        msgs = [{"role": "system", "content": SYSTEM_PROMPT}] + self.history + [{"role": "user", "content": user_msg}]
+    def speak_text(self, gen, text, t, who="host"):
+        """Speak a block of text sentence by sentence on a new transcript line, which fills in as it is heard."""
+        row = self.live = self.add(who, "")
+        chunks, rest = split_sentences(text + "\n", True)
+        if rest.strip():
+            chunks.append(rest.strip())
+        n = sum(self.speak(gen, c, t, row) for c in chunks)
+        t["pieces"] = t.get("pieces", 0) + n
+        self.live = None
+        self.last_reply = clean_for_speech(text)
+        if not n:
+            self.lines[row][1] = text
+
+    def complete(self, body, kv):
+        """One non-streamed request to the model."""
+        self.use_kv(kv)
+        try:
+            return http_json(LLM_URL + "/v1/chat/completions", body, timeout=300)
+        except urllib.error.HTTPError as e:
+            raise RuntimeError(self.llm_error(e.read())) from None
+
+    def stream_reply(self, gen, user_msg, row, t, max_tokens, act):
+        """Ask the model, speaking each sentence as it is written. The mode screens each sentence first: ENIGMA
+        drops one that names the open puzzle's answer (unspoken and out of the history) and ends the reply at
+        one where the model starts making up a puzzle of its own (invented: the puzzle book takes over).
+        act["sentences"]: stop after this many (the rest is not generated). A sentence cut off by max_tokens is
+        never spoken. Returns (reply, kept, timings, msgs, invented)."""
+        mode, sentences = self.mode, act.get("sentences", 0)
+        system = mode.system()
+        self.reread_note(mode.kv, system, self.history)
+        self.history = self.fit(self.history, system, user_msg, max_tokens)
+        msgs = [{"role": "system", "content": system}] + self.history + [{"role": "user", "content": user_msg}]
         body = {"messages": msgs, "stream": True, "temperature": TEMPERATURE, "top_p": 0.9,
                 "max_tokens": max_tokens, "chat_template_kwargs": {"enable_thinking": False}}
+        self.use_kv(mode.kv)
         req = urllib.request.Request(LLM_URL + "/v1/chat/completions", json.dumps(body).encode(),
                                      {"Content-Type": "application/json"})
         reply, kept, pending, first, timings, finish = "", "", "", True, {}, None
@@ -1173,12 +1179,11 @@ class App:
             nonlocal kept
             if state["done"]:
                 return
-            if book and puzzles.INVENTED.search(s):
-                self.ev(f"the model began a puzzle of its own; the book takes over: {s!r}")
+            verdict = mode.screen(s, clean_for_speech(s), act)
+            if verdict == "stop":
                 state["done"] = state["invented"] = True
                 return
-            if guard and puzzles.leaks(clean_for_speech(s), guard):
-                self.ev(f"dropped a sentence that gives the answer away: {s!r}")
+            if verdict == "drop":
                 return
             kept += s + " "
             t["pieces"] += self.speak(gen, s, t, row)
@@ -1235,12 +1240,15 @@ class App:
         return msg
 
     # -- context budget
-    def take_timings(self, tm, msgs, reply, mode):
+    def take_timings(self, tm, msgs, reply, kv):
         """After a request: the tokens now in the window, and the tokens-per-character rate for estimates."""
         used = tm.get("cache_n", 0) + tm.get("prompt_n", 0) + tm.get("predicted_n", 0)
-        self.kv_mode = mode
+        self.kv_mode = kv
         if used:
-            self.ctx_used, self.dirty = used, True
+            for m in self.modes.values():      # the meter shows the current mode's; each mode keeps its own
+                if m.kv == kv:
+                    m.ctx_used = used
+            self.dirty = True
             self.tpc = min(0.6, max(0.15, used / (msgs_chars(msgs) + len(reply))))
 
     def fit(self, history, system, new_msg, max_tokens, background=False):
@@ -1266,182 +1274,55 @@ class App:
             self.set_state("THINKING", f"re-reading memory (~{tokens / PREFILL_TPS:.0f} s)")
         return kept
 
-    def reread_note(self, mode, system, history):
-        """Switching between chat and game: the server holds the other mode's prompt and reads this one again."""
-        if self.kv_mode != mode and history:
+    def use_kv(self, kv):
+        """Before a request for kv: if the slot holds another mode's prompt, save it and load kv's (see
+        SLOT_SAVE). The server runs these after whatever it is doing, in order."""
+        with self.kv_lock:
+            held, self.sent_kv = self.sent_kv, kv
+            if not SLOT_SAVE or not held or held == kv:
+                return
+            self.slot("save", held)
+            if os.path.exists(os.path.join(SLOT_DIR, f"{kv}.bin")) and self.slot("restore", kv):
+                self.kv_mode = kv
+
+    def slot(self, action, kv):
+        t0 = time.time()
+        try:
+            r = http_json(f"{LLM_URL}/slots/0?action={action}", {"filename": f"{kv}.bin"}, timeout=300)
+            self.ev(f"slot {action} {kv}: {r.get('n_saved', r.get('n_restored'))} tokens, "
+                    f"{r.get('n_written', r.get('n_read', 0)) / 1e6:.1f} MB in {time.time() - t0:.2f}s")
+            return True
+        except urllib.error.HTTPError as e:     # restore: nothing saved for this mode yet
+            self.ev(f"slot {action} {kv}: {e.code} {e.read()[:120]!r}")
+        except Exception as e:
+            self.ev(f"slot {action} {kv} failed: {e!r}")
+        return False
+
+    def reread_note(self, kv, system, history):
+        """After a switch the server holds another prompt and reads this one again: say so if it takes a while."""
+        if self.kv_mode != kv and history:
             s = msgs_chars([{"content": system}] + history) * self.tpc / PREFILL_TPS
             if s > 3:
-                self.set_state("THINKING", f"re-reading {'our conversation' if mode == 'chat' else 'the game'} "
+                self.set_state("THINKING", f"re-reading {'the game' if kv == 'zork' else 'our conversation'} "
                                            f"(~{s:.0f} s)")
 
-    def prime(self, msgs, mode):
+    def prime(self, msgs, kv):
         """Read a prompt ahead, while the answer is being spoken, so the next request only reads the player's
         new words (single slot: this replaces whatever the server held)."""
         def run():
             try:
+                self.use_kv(kv)
                 r = http_json(LLM_URL + "/v1/chat/completions", {"messages": msgs, "max_tokens": 1,
                               "chat_template_kwargs": {"enable_thinking": False}}, timeout=300)
                 tm = r.get("timings") or {}
-                if (mode == "game") == (self.game is not None):
-                    self.take_timings(tm, msgs, "", mode)
-                self.ev(f"primed {mode}: {tm.get('prompt_n', 0)} new tokens in {tm.get('prompt_ms', 0) / 1000:.1f}s")
+                self.take_timings(tm, msgs, "", kv)
+                self.ev(f"primed {kv}: {tm.get('prompt_n', 0)} new tokens in {tm.get('prompt_ms', 0) / 1000:.1f}s")
             except Exception as e:
-                self.ev(f"prime {mode} failed: {e!r}")
+                self.ev(f"prime {kv} failed: {e!r}")
+            finally:
+                self.priming -= 1
+        self.priming += 1
         threading.Thread(target=run, daemon=True).start()
-
-    # -- Zork
-    def start_game(self, gen, num, t):
-        name, title = GAMES.get(num, GAMES["1"])
-        story = os.path.join(GAME_DIR, name + ".z3")
-        if not os.path.exists(story) or not os.access(DFROTZ, os.X_OK):
-            self.add("sys", f"{title} is not installed ({story}, {DFROTZ})")
-            self.set_state("READY", self.source_desc)
-            return
-        if self.game:
-            self.leave_game(None)
-        with self.game_lock:
-            self.game = ZGame(story, DFROTZ, os.path.join(GAME_DIR, "saves"))
-        self.game_title, self.game_last, self.game_history = title, self.game.intro, []
-        self.game_system = GAME_SYSTEM.format(title=title)
-        self.ctx_saved, self.ctx_used, self.metrics = self.ctx_used, 0, ""
-        self.ev(f"game: started {title}")
-        self.speak_game(gen, self.game.intro, t)
-        if os.path.exists(os.path.join(GAME_DIR, "saves", name + ".qzl")):
-            t["pieces"] += self.speak(gen, "You have a saved game. Say restore to pick it up.", t,
-                                      self.add("host", ""))
-        self.prime_game()
-
-    def leave_game(self, msg, save=True):
-        """Back to chat; the game is saved first (Zork's own save file, "restore" brings it back)."""
-        with self.game_lock:
-            g, self.game = self.game, None
-            if g and save and g.alive():
-                try:
-                    g.send("save")
-                except GameOver:
-                    pass
-            if g:
-                g.close()
-        self.ev(f"game: left {self.game_title}")
-        self.ctx_used, self.ctx_saved = self.ctx_saved, 0
-        self.game_history, self.game_last = [], ""
-        self.dirty = True
-        if msg:
-            self.speak_now(msg, self.add("host", ""))
-        if self.history:
-            self.prime([{"role": "system", "content": SYSTEM_PROMPT}] + self.history +
-                       [{"role": "user", "content": ""}], "chat")
-
-    def game_send(self, cmd):
-        with self.game_lock:
-            if not self.game:
-                raise GameOver()
-            return self.game.send(cmd)
-
-    def prime_game(self):
-        self.game_history = self.fit(self.game_history, self.game_system, f"Game:\n{self.game_last}\n\nPlayer:",
-                                     GAME_MAX_TOKENS, background=True)
-        self.prime([{"role": "system", "content": self.game_system}] + self.game_history +
-                   [{"role": "user", "content": f"Game:\n{self.game_last}\n\nPlayer:"}], "game")
-
-    def translate(self, gen, user):
-        """The player's words as game commands, by the LLM ({"commands": [...]}, see CMD_GRAMMAR)."""
-        msg = f"Game:\n{self.game_last}\n\nPlayer: {user}"
-        self.reread_note("game", self.game_system, self.game_history)
-        self.game_history = self.fit(self.game_history, self.game_system, msg, GAME_MAX_TOKENS)
-        msgs = [{"role": "system", "content": self.game_system}] + self.game_history + \
-               [{"role": "user", "content": msg}]
-        body = {"messages": msgs, "temperature": 0.2, "max_tokens": GAME_MAX_TOKENS, "grammar": CMD_GRAMMAR,
-                "chat_template_kwargs": {"enable_thinking": False}}
-        try:
-            r = http_json(LLM_URL + "/v1/chat/completions", body, timeout=300)
-        except urllib.error.HTTPError as e:
-            raise RuntimeError(self.llm_error(e.read())) from None
-        content = r["choices"][0]["message"].get("content") or ""
-        self.take_timings(r.get("timings") or {}, msgs, content, "game")
-        try:
-            cmds = json.loads(content)["commands"]
-        except (ValueError, KeyError, TypeError):
-            cmds = []
-        cmds = [re.sub(r"\s+", " ", c).strip() for c in cmds if isinstance(c, str) and re.search(r"[a-z]", c, re.I)][:4]
-        self.ev(f"game: LLM {user!r} -> {cmds}")
-        return cmds
-
-    def speak_game(self, gen, text, t):
-        """Read the game's words aloud; the transcript line fills in as they are heard."""
-        speech = ZGame.speech(text)
-        row = self.live = self.add("game", "")
-        chunks, rest = split_sentences(speech + "\n", True)
-        if rest.strip():
-            chunks.append(rest.strip())
-        t["pieces"] = t.get("pieces", 0) + sum(self.speak(gen, c, t, row) for c in chunks)
-        self.live = None
-        self.last_reply = clean_for_speech(speech)
-        if not t["pieces"]:
-            self.lines[row][1] = speech
-
-    def game_turn(self, gen, user, t):
-        if not self.game:
-            m = GAME_START.search(user)
-            return self.start_game(gen, GAME_NUM.get((m.group(2) or "1").lower(), "1"), t)
-        if GAME_EXIT.search(user):
-            self.leave_game(f"{self.game_title} saved. Say play Zork to pick up where you left off.")
-            return
-        cmd, cmds, out, t_llm, ended = direct_command(user), [], "", None, False
-        try:
-            if cmd:
-                out = self.game_send(cmd)
-                if ZGame.parser_failed(out):
-                    self.ev(f"game: {cmd!r} -> {out!r}, asking the LLM")
-                else:
-                    cmds = [cmd]
-            if not cmds:
-                t1 = time.time()
-                cmds = self.translate(gen, user)
-                t_llm = time.time() - t1
-                if gen != self.gen:
-                    return
-                out = "\n\n".join(self.game_send(c) for c in cmds)
-        except GameOver:
-            ended = True
-        t["pieces"] = 0
-        if cmds:
-            self.add("sys", "> " + ". ".join(cmds))
-            self.game_history += [{"role": "user", "content": f"Game:\n{self.game_last}\n\nPlayer: {user}"},
-                                  {"role": "assistant", "content": json.dumps({"commands": cmds})}]
-            self.game_last = out
-            if out:
-                self.speak_game(gen, out, t)
-        elif not ended:
-            t["pieces"] = self.speak(gen, "I didn't hear a move there. Try things like look around, go north, or "
-                                          "take the lamp.", t, self.add("host", ""))
-        if ended or not (self.game and self.game.alive()):
-            self.leave_game(f"The game is over. Say play Zork to start again.", save=False)
-        elif cmds:
-            self.prime_game()
-        for _ in range(200):   # the metrics include the first word heard
-            if "first_audio" in t or gen != self.gen or not t["pieces"]:
-                break
-            time.sleep(0.05)
-        if gen == self.gen and t["pieces"] and "first_audio" not in t:
-            self.set_state("READY", self.source_desc)
-        elif not t["pieces"]:
-            self.set_state("READY", self.source_desc)
-        fa = t.get("first_audio")
-        asr_s = t["asr"] - t["t0"]
-        self.metrics = (f"hear {asr_s:.1f}s · " + (f"understand {t_llm:.1f}s" if t_llm is not None else "direct") +
-                        (f" · first word {fa - t['t0']:.1f}s" if fa else ""))
-        self.dirty = True
-        self.log.write(json.dumps({"time": time.strftime("%F %T"), "mode": "game", "game": self.game_title,
-                                   "user": user, "direct": t_llm is None, "cmds": cmds, "out": out,
-                                   "room": self.game.room if self.game else "",
-                                   "score": self.game.score if self.game else "",
-                                   "asr_s": round(asr_s, 2), "llm_s": round(t_llm, 2) if t_llm is not None else None,
-                                   "first_audio_s": round(fa - t["t0"], 2) if fa else None,
-                                   "ctx": [self.ctx_used, self.n_ctx],
-                                   "bat": [self.bat_pct, round(self.bat_w, 2) if self.bat_w is not None else None],
-                                   "voice": self.voice, "model": MODEL_LABEL}) + "\n")
-        self.log.flush()
 
     def poll_battery(self):
         d = self.bat_dir
@@ -1523,6 +1404,18 @@ class App:
         if kind == "btn":
             name, val = ev[1], ev[2]
             (self.held.add if val else self.held.discard)(name)
+            if name == "select":       # pressed and let go on its own: the mode menu (with START it quits)
+                if val:
+                    self.select_alone = True
+                elif self.select_alone and self.state != "LISTENING":
+                    self.close_menu() if self.menu is not None else self.open_menu()
+                return
+            if val:
+                self.select_alone = False
+            if self.menu is not None and name not in ("start", "home"):
+                if val:
+                    self.menu_button(name)
+                return
             if name in ("south", "r1"):
                 if val:
                     if self.state not in ("LISTENING", "HEARING", "THINKING") and len({"south", "r1"} & self.held) == 1:
@@ -1573,6 +1466,15 @@ class App:
             self.speak_now(self.last_reply)
         elif cmd == "new":
             self.new_chat()
+        elif cmd == "mode" and arg in self.modes:
+            self.menu = None
+            self.interrupt()
+            self.work_q.put((self.gen, "mode", arg))
+        elif cmd == "menu":
+            self.close_menu() if self.menu is not None else self.open_menu()
+        elif cmd == "btn" and arg:        # a press and release, as if from the pad
+            self.q.put(("btn", arg, 1))
+            self.q.put(("btn", arg, 0))
         elif cmd == "quit":
             self.running = False
 
@@ -1604,44 +1506,47 @@ class App:
 
     def new_chat(self):
         self.interrupt()
-        if self.game:
-            self.leave_game(None)
+        self.mode.reset()           # Zork saves and closes its game
         self.history, self.lines, self.last_reply = [], [], ""
-        self.ctx_used = self.ctx_base
-        self.trivia_active = None
-        if self.host:
-            self.host = puzzles.Session(self.book)
-            self.host.offered = True        # "Shall I give you a puzzle?" - a yes starts one
-        self.speak_now(PERSONA["fresh"], self.add("host", ""))
+        self.ctx_used = self.mode.ctx_base or int(msgs_chars([{"content": self.mode.system()}]) * self.tpc)
+        self.speak_now(self.mode.fresh, self.add("host", ""))
         self.set_state("READY", self.source_desc)
 
     # -- UI
-    (G, DIM, AMB, CYN), RED, RST = PERSONA["colors"], "\033[38;5;203m", "\033[0m"
+    # the current mode's colours: host and title, rules and hints, the player, status lines
+    G, DIM, AMB, CYN = (property(lambda s, i=i: s.mode.ansi[i]) for i in range(4))
+    RED, RST = "\033[38;5;203m", "\033[0m"
 
     def render(self):
         cols, rows = shutil.get_terminal_size((100, 30))
         out = ["\033[H\033[2J\033[?25l"]
-        title = PERSONA["title"] + PERSONA["subtitle"]
+        if self.theme_due:
+            self.theme_due = False
+            out.insert(0, self.theme_codes())
+        mode = self.mode
+        title = mode.title + mode.subtitle
         right = f"voice: {self.voice_label()}  ·  {MODEL_LABEL} "
         if self.bat_pct is not None and cols - len(title) - len(right) - 3 < 28:   # narrow: the meter wins
-            title = PERSONA["title"]
+            title = mode.title
         bat, bat_len = self.battery_meter(cols - len(title) - len(right) - 3)
         out.append(self.G + "\033[1m" + title + self.RST + self.DIM +
                    right.rjust(max(0, cols - len(title) - bat_len)) + self.RST + bat + "\n")
         out.append(self.DIM + "─" * cols + self.RST + "\n")
         body_h = rows - 9
         wrapped = []
+        tw = max(4, len(mode.name))     # the speaker tags line up
         for n, (who, text) in enumerate(self.lines):
-            color, tag = {"you": (self.AMB, "YOU" + "›".rjust(len(PERSONA["name"]) - 2)),
-                          "host": (self.G, PERSONA["name"] + "›"), "game": (self.G, "ZORK" + "›".rjust(len(PERSONA["name"]) - 3)),
-                          "sys": (self.CYN, "  ·" + " " * (len(PERSONA["name"]) - 3))}[who]
+            color, tag = {"you": (self.AMB, "YOU" + "›".rjust(tw - 2)),
+                          "host": (self.G, mode.name + "›".rjust(tw - len(mode.name) + 1)),
+                          "game": (self.G, "ZORK" + "›".rjust(tw - 3)),
+                          "sys": (self.CYN, "  ·" + " " * (tw - 3))}[who]
             tag += " "
             for i, w in enumerate(textwrap.wrap(text or "…", max(20, cols - 8)) or [""]):
                 wrapped.append(color + (tag if i == 0 else " " * len(tag)) + w + self.RST)
             if not (who == "sys" and n + 1 < len(self.lines) and self.lines[n + 1][0] == "sys"):
                 wrapped.append("")      # status lines sit together
         end = max(0, len(wrapped) - self.scroll)
-        view = wrapped[max(0, end - body_h): end]
+        view = wrapped[max(0, end - body_h): end] if self.menu is None else self.menu_view(body_h)
         out.append("\n".join(view) + "\n" * (body_h - len(view) + 1))
         out.append(self.DIM + "─" * cols + self.RST + "\n")
         spin = "◐◓◑◒"[int(time.time() * 6) % 4]
@@ -1657,24 +1562,56 @@ class App:
             st = f"{self.G}{spin} BOOTING{self.RST} {self.note}"
         elif self.state == "ERROR":
             st = f"{self.RED}✖ {self.note}{self.RST}"
-        elif self.game:
-            st = f"{self.G}▶ {self.game_title}{self.RST}  {self.game.room}   {self.DIM}{self.game.score}{self.RST}" \
-                 f"   hold [B] to talk"
+        elif self.menu is not None:
+            st = f"{self.G}☰ MODES{self.RST}   [▲▼] choose   [A] select   [B] or [SELECT] back"
         else:
-            mic = self.note if self.note else self.source_desc
-            ask = "hold [B] or [R1] to talk   " if self.source else ""      # no mic: nothing to hold a button for
-            st = f"{self.G}▶ READY{self.RST}   {ask}{self.DIM}{mic}{self.RST}"
-            if self.host and self.host.status():
-                st = f"{self.G}▶ {self.host.status()}{self.RST}   {ask}{self.DIM}{mic}{self.RST}"
-        hints = "[B]/[R1] hold: talk   [A] stop   [X] voice   [Y] repeat   [START] new chat   [SELECT+START] quit"
-        if self.state in ("BOOT", "ERROR"):
-            hints = "[SELECT+START] quit"       # nothing else works before the model is loaded
+            st = mode.ready_line(self.note if self.note else self.source_desc)
+        if self.state in ("BOOT", "ERROR") or self.menu is not None:
+            hints = "[SELECT+START] quit"       # before the model is loaded nothing else works
+        else:
+            hints = self.fit_hints(cols)
         out.append(st + "\n\n")
         out.append(self.DIM + hints + self.RST + "\n\n")
         out.append(self.bottom_line(cols))
         sys.stdout.write("".join(out))
         sys.stdout.flush()
         self.dirty = False
+
+    # the button hints, in priority order (the least needed are left out on a narrow screen), and the order
+    # they are shown in. X (next voice) still works; the menu has it too.
+    HINTS = [(0, "[B]/[R1] hold: talk"), (2, "[A] stop"), (5, "[Y] repeat"), (4, "[START] new chat"),
+             (1, "[SELECT] menu"), (3, "[SELECT+START] quit")]
+
+    def fit_hints(self, cols):
+        keep = sorted(self.HINTS)
+        if not self.source:     # no mic: nothing to hold a button for
+            keep = keep[1:]
+        while keep and len("  ".join(h for _, h in keep)) > cols - 1:
+            keep.pop()
+        return "  ".join(h for _, h in sorted(keep, key=lambda x: self.HINTS.index(x)))
+
+    def menu_view(self, height):
+        """The SELECT menu, in place of the transcript: each mode in its own colours, the current one marked."""
+        out = ["", f"{self.G}\033[1m   M O D E S{self.RST}", ""]
+        for i, row in enumerate(self.menu_rows()):
+            here = i == self.menu
+            ptr = "▶" if here else " "
+            if row in self.modes:
+                m = self.modes[row]
+                g, d = m.ansi[0], m.ansi[1]
+                cur = "●" if m is self.mode else " "
+                label = f" {m.label:<16} "
+                note = m.blurb if m.available() else "not installed"
+                out.append(f"  {g}{ptr} {cur} " + (f"\033[7m\033[1m{label}\033[0m" if here else f"{g}{label}") +
+                           f"  {d}{note}{self.RST}")
+            else:
+                name, value, act = ("Voice", self.voice_label(), "[A] next voice") if row == "voice" else \
+                    ("Model", MODEL_LABEL, f"[A] switch to {self.other_model()} (restarts the model)")
+                label = f" {name:<16} "
+                out.append(f"  {self.G}{ptr}   " + (f"\033[7m{label}\033[0m" if here else label) +
+                           f"  {self.DIM}{value}   {act}{self.RST}")
+            out.append("")
+        return out[:height]
 
     def battery_meter(self, room):
         """Battery meter for the top right corner, as (text, visible length); fits in `room` columns."""
@@ -1711,6 +1648,19 @@ class App:
         return self.DIM + left + self.RST + " " * pad + meter
 
     def main(self):
+        if not HEADLESS:
+            # anything written to stderr (a warning, a thread's traceback) would flash on screen until the next
+            # frame: it goes to a log instead, and a thread that dies is also noted in events.log
+            try:
+                fd = os.open(os.path.join(LOG_DIR, "stderr.log"), os.O_WRONLY | os.O_CREAT | os.O_APPEND, 0o644)
+                os.dup2(fd, 2)
+            except OSError:
+                pass
+        threading.excepthook = lambda a: self.ev(
+            f"thread {a.thread.name if a.thread else '?'} died: " +
+            "".join(traceback.format_exception(a.exc_type, a.exc_value, a.exc_traceback)).replace("\n", " | "))
+        self.ev(f"screen {shutil.get_terminal_size((0, 0))}")
+        self.apply_theme()
         self.add("sys", f"v{VERSION} brought to you by mercurious assisted by claude")
         InputThread(self.q).start()
         threading.Thread(target=self.speaker_loop, daemon=True).start()
@@ -1733,6 +1683,9 @@ class App:
                 except queue.Empty:
                     pass
                 self.captions_tick()
+                if self.quit_when_quiet and time.time() - self.quit_when_quiet > 1 and self.player \
+                        and not self.player.speaking() and self.tts_q.empty() and not self.tts_busy:
+                    self.running = False
                 if self.state == "SPEAKING" and self.live is None and self.player and not self.player.speaking() \
                         and self.tts_q.empty() and not self.tts_busy:
                     self.set_state("READY", self.source_desc)
@@ -1749,13 +1702,13 @@ class App:
                     last = now
         finally:
             self.running = False
-            if self.game:
-                self.leave_game(None)
+            for m in self.modes.values():
+                m.close()
             if self.player:
                 self.player.close()
             self.mic.close()
             if not HEADLESS:
-                sys.stdout.write("\033[0m\033[?25h\033[H\033[2J")
+                sys.stdout.write("\033]110\033\\\033]111\033\\\033[0m\033[?25h\033[H\033[2J")
                 sys.stdout.flush()
 
 

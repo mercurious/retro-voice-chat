@@ -2,20 +2,23 @@
 # Retro Voice Chat installer. Runs ON the handheld, from the unpacked release directory (put it where
 # there is room: the models are 4.4 GB, 9.2 GB with --smart).
 #   ./install.sh [--smart] [--jack-mic] [--no-models]      ./install.sh --uninstall
-#   --smart      also download gemma-4-E4B for smart mode and add its Ports entry
+#   --smart      also download gemma-4-E4B for smart mode (then offered in the app's SELECT menu)
 #   --jack-mic   install the capture format pin the Flip 2's 3.5 mm headset mic needs (see README)
 #   --no-models  skip the downloads (RV_MODELS already has them)
 # Env: RV_MODELS (default ./models), RV_PORTS (default /storage/roms/ports).
 set -u
 H=$(cd "$(dirname "$0")" && pwd); M=${RV_MODELS:-$H/models}; P=${RV_PORTS:-/storage/roms/ports}
 WP=${HOME:-/storage}/.config/wireplumber/wireplumber.conf.d
-ENTRIES="Retro Voice Chat.sh|Retro Voice Chat (smart).sh|Retro Voice Zork.sh|Enigma Puzzles.sh|Enigma Puzzles (smart).sh"
+ENTRIES="Retro Voice Chat.sh"
+# earlier releases had an entry per persona and per model; they are now one app (SELECT switches both)
+OLD="Retro Voice Chat (smart).sh|Retro Voice Zork.sh|Enigma Puzzles.sh|Enigma Puzzles (smart).sh"
 SMART=""; JACK=""; MODELS=1
 for a in "$@"; do
   case $a in
     --smart) SMART=1 ;; --jack-mic) JACK=1 ;; --no-models) MODELS="" ;;
     --uninstall)
       echo "$ENTRIES" | tr '|' '\n' | while read -r e; do rm -f "$P/$e"; done
+      echo "$OLD" | tr '|' '\n' | while read -r e; do grep -qs "$H/launch.sh" "$P/$e" && rm -f "$P/$e"; done
       rm -f "$WP/51-retro-voice-capture-s16.conf"
       echo "Removed the Ports entries and the capture pin. The models and this directory are still here:"
       echo "  $M"; echo "  $H"; exit 0 ;;
@@ -46,8 +49,10 @@ if [ -n "$MODELS" ]; then
 fi
 
 mkdir -p "$P"
+echo "$OLD" | tr '|' '\n' | while read -r e; do
+  grep -qs "$H/launch.sh" "$P/$e" && rm -f "$P/$e" && echo "removed the old entry $P/$e"   # only this install's
+done
 echo "$ENTRIES" | tr '|' '\n' | while read -r e; do
-  case $e in *smart*) [ -z "$SMART" ] && [ ! -f "$M/gemma-4-E4B_q4_0-it.gguf" ] && continue ;; esac
   sed -e "s|@RV_HOME@|$H|g" -e "s|@RV_MODELS@|$M|g" "$H/ports/$e" > "$P/$e" && chmod +x "$P/$e" && echo "port $P/$e"
 done
 
