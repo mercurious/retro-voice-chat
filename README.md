@@ -55,8 +55,8 @@ keep TRIXY from inventing trivia, but do not rely on it for facts.
 - An aarch64 handheld running ROCKNIX with the sway session (the UI runs in `foot`), PipeWire, and
   Python 3. Tested only on the Flip 2 with ROCKNIX 20260901. Other SM8250 devices (Retroid Pocket 5,
   Mini) are likely to work and are untested; other chips need different core numbers (`RV_*_CPUS`).
-- 8 GB of RAM for fast mode. Smart mode fits in 8 GB with little to spare.
-- Storage: 4.4 GB for the models (9.2 GB with smart mode), about 17 MB for the programs.
+- 8 GB of RAM. Smart mode fits in 8 GB with little to spare (`RV_SMART=0` hides it).
+- Storage: 4.4 GB for the models (9.2 GB with smart mode, `install.sh --no-smart` to skip it), about 17 MB for the programs.
 - **A microphone.** This is the part most likely to trip you up on a Flip 2:
 
 | microphone | on stock ROCKNIX |

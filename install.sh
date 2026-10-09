@@ -1,10 +1,8 @@
 #!/bin/sh
 # Retro Voice Chat installer. Runs ON the handheld, from the unpacked release directory (put it where
-# there is room: the models are 4.4 GB, 9.2 GB with --smart).
-#   ./install.sh [--smart] [--jack-mic] [--no-models]      ./install.sh --uninstall
-#   --smart      download gemma-4-E4B for smart mode (then offered in the app's SELECT menu). Automatic on a
-#                device with 10 GB of RAM or more (12 GB Flip 2); skipped on 8 GB, where launch.sh would not
-#                offer it anyway. --no-smart skips it everywhere.
+# there is room: the models are 9.2 GB, 4.4 GB with --no-smart).
+#   ./install.sh [--no-smart] [--jack-mic] [--no-models]      ./install.sh --uninstall
+#   --no-smart   skip gemma-4-E4B, the smart mode model (otherwise downloaded, and offered in SELECT)
 #   --jack-mic   install the capture format pin the Flip 2's 3.5 mm headset mic needs (see README)
 #   --no-models  skip the downloads (RV_MODELS already has them)
 # Env: RV_MODELS (default ./models), RV_PORTS (default /storage/roms/ports).
@@ -16,9 +14,7 @@ ENTRIES="Retro Voice Chat.sh"
 OLD="Retro Voice Chat (smart).sh|Retro Voice Zork.sh|Enigma Puzzles.sh|Enigma Puzzles (smart).sh"
 # prototype launchers from the ollamadreno kit and the dev copies: matched by what they exec, not by name
 STALE_RE="ollamadreno/voice/launch.sh|enigma-dev/launch.sh|rvc-dev/launch.sh"
-# smart mode (E4B, ~5.5 GB resident) needs the headroom of a 12 GB device; an 8 GB one runs fast mode only
-RAM_MB=$(awk '/^MemTotal:/ {print int($2 / 1024)}' /proc/meminfo 2>/dev/null)
-SMART=""; [ "${RAM_MB:-0}" -ge 10000 ] && SMART=1
+SMART=1
 JACK=""; MODELS=1
 for a in "$@"; do
   case $a in
@@ -40,7 +36,6 @@ done
 
 if [ -n "$MODELS" ]; then
   mkdir -p "$M" && cd "$M" || exit 1
-  echo "RAM ${RAM_MB:-?} MB: $([ -n "$SMART" ] && echo 'fast and smart modes' || echo 'fast mode only (smart needs a 12 GB device; --smart forces it)')"
   need=5; [ -n "$SMART" ] && need=10
   free=$(df -Pk . | awk 'NR==2 {print int($4 / 1048576)}')
   [ "$free" -lt "$need" ] && echo "warning: $free GB free in $M, the downloads need about $need GB"
