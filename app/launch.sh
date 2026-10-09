@@ -32,7 +32,11 @@ PREFS=${RV_PREFS:-$V/prefs.json}
 pref_model() { python3 -c 'import json, sys; print(json.load(open(sys.argv[1])).get("model", ""))' "$PREFS" 2>/dev/null; }
 RV_MODE=${RV_MODE:-$(pref_model)}
 ENV_MODEL=${RV_LLM_MODEL:-}; ENV_DRAFT=${RV_LLM_DRAFT:-}; ENV_LABEL=${RV_MODEL_LABEL:-}
-AVAIL=fast; [ -f "$M/gemma-4-E4B_q4_0-it.gguf" ] && AVAIL="fast smart"
+# smart (E4B, ~5.5 GB resident) is offered only where it leaves headroom: 10 GB of RAM or more (the 12 GB
+# Flip 2 reports ~11.2 GB, the 8 GB one ~7.4 GB, where it was getting OOM-killed). RV_SMART=1|0 overrides.
+RAM_MB=$(awk '/^MemTotal:/ {print int($2 / 1024)}' /proc/meminfo 2>/dev/null)
+case ${RV_SMART:-} in 1) SMART_OK=1 ;; 0) SMART_OK="" ;; *) [ "${RAM_MB:-0}" -ge 10000 ] && SMART_OK=1 || SMART_OK="" ;; esac
+AVAIL=fast; [ -n "$SMART_OK" ] && [ -f "$M/gemma-4-E4B_q4_0-it.gguf" ] && AVAIL="fast smart"
 export RV_MODELS_AVAILABLE="$AVAIL"     # the menu offers these
 OCL=${RV_OCL_DIR:-}
 ASR_CPUS=${RV_ASR_CPUS:-4-7}; TTS_CPUS=${RV_TTS_CPUS:-6-7}
