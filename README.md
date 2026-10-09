@@ -1,11 +1,19 @@
 # Retro Voice Chat
 
-Push-to-talk voice chat with a local language model on a retro handheld. Hold a button, talk, and a
-character called TRIXY (say "Trixie") answers out loud. Everything runs on the device: no cloud, no account, no network
-once the models are downloaded. It can also play Zork I, II and III with you by voice.
+Push-to-talk voice chat with a local language model on a retro handheld. Hold a button, talk, and it answers
+out loud. Everything runs on the device: no cloud, no account, no network once the models are downloaded.
 
-A second persona, **ENIGMA**, is a word-puzzle host in the manner of a radio puzzle segment: ask for a
-puzzle, a round or a challenge, answer out loud, ask for hints. See [ENIGMA](#enigma-word-puzzles).
+One app, several modes; **SELECT** switches between them, and each has its own host, screen colours and
+conversation:
+
+| mode | what it is |
+|---|---|
+| **General Chat** | the model as itself, named after its family ("Gemma", or "Qwen" for a Qwen model) |
+| **Retro Gaming** | TRIXY (say "Trixie"), a retro computer companion with a bank of checked trivia |
+| **Enigma Puzzles** | ENIGMA, a word-puzzle host: puzzles, rounds and challenges. See [ENIGMA](#enigma-word-puzzles) |
+| **Voice Zork** | Infocom's Zork I, II and III, played by voice. See [Zork](#zork) |
+
+More can be added: see [Modes](#modes).
 
 Built and tested on a **Retroid Pocket Flip 2** (Snapdragon 865 / SM8250, 8 GB) running **ROCKNIX**.
 
@@ -72,7 +80,9 @@ tar xzf retro-voice-chat-aarch64.tar.gz && cd retro-voice-chat
 ./install.sh --smart          # optional: also the larger model, 4.8 GB more
 ```
 
-Then refresh the game lists in EmulationStation and start **Retro Voice Chat** (or **Enigma Puzzles**) from Ports.
+Then refresh the game lists in EmulationStation and start **Retro Voice Chat** from Ports: one entry for every
+mode and both models. Installing over an earlier release removes its separate **(smart)**, **Enigma Puzzles**
+and **Retro Voice Zork** entries.
 `./install.sh --uninstall` removes the Ports entries and the mic fix; delete the directory to remove the
 rest.
 
@@ -90,7 +100,8 @@ The buttons are named by position, with the Flip 2's own letters.
 | A (right face) | stop / interrupt |
 | X (top face) | next voice (27 Pocket TTS voices, then "random") |
 | Y (left face) | repeat the last reply |
-| Start | new conversation |
+| Start | new conversation (in this mode) |
+| Select | the menu: modes, voice and model. D-pad to choose, A to pick, B or Select to close |
 | Select+Start, or Home | quit |
 | D-pad up/down | scroll the transcript |
 
@@ -104,7 +115,7 @@ it is random.
 
 ## The boot screen
 
-While the models load, the screen shows what is running. The button hints and TRIXY's greeting appear
+While the models load, the screen shows what is running. The button hints and the mode's greeting appear
 only once the model is ready, so nothing asks you to press a button that does not work yet.
 
 ```
@@ -116,7 +127,7 @@ only once the model is ready, so nothing asks you to press a button that does no
   ·   load: CPU 6% · GPU off · RAM 44% of 7.4 GB
   ·   voice: javert (random)
 
-TRIXY› I'm ready. Hold the B button or R1 and talk to me.
+GEMMA› Hi, I'm Gemma. Hold the B button or R1 and talk to me. Press select for other modes.
 ```
 
 With the GPU option on, the driver line is what the driver reports about itself, for example
@@ -125,19 +136,43 @@ what the GPU is doing, not a percentage: this kernel exposes no GPU busy figure.
 
 ## Zork
 
-Say "let's play Zork" (or "play Zork two", "Zork three"), or start **Retro Voice Zork** from Ports. The
-games are Infocom's own story files, run by Frotz. The game writes every word of the story and keeps all
+Choose **Voice Zork** in the SELECT menu, or say "let's play Zork" (or "play Zork two", "Zork three") in any
+mode. The games are Infocom's own story files, run by Frotz. The game writes every word of the story and keeps all
 of its state; the language model never narrates.
 
 - A line that already is a command ("Go north.", "Open the mailbox.") goes straight to the game. Anything
   else ("grab the leaflet and read it") goes to the language model, which turns it into game commands.
 - Several moves fit in one line: "North, then take the egg, then up."
 - The game's text is read aloud. "Save" and "restore" are the game's own; "quit the game" saves and goes
-  back to chat.
+  back to the mode you came from. Switching modes saves the game too; coming back starts the last game
+  played, and "restore" picks it up.
+
+## Modes
+
+**Switching.** SELECT opens the menu; the screen takes on each mode's colours as you move through it, and
+A switches. You can also say it: "switch to puzzles", "go to retro gaming", "back to chat". A request only
+another mode can answer moves there and is answered: "give me a puzzle" goes to ENIGMA, "let's play Zork two"
+to Zork. Each mode keeps its own conversation and transcript, so going back picks up where you left off.
+The app opens in the last mode used.
+
+**Fast or smart.** The menu's **Model** row (shown when the smart model is installed) switches between fast
+(Gemma 4 E2B) and smart (E4B). The model server restarts with the other model, which takes about as long as
+starting the app; speech recognition and speech keep running, the conversation starts fresh, and the app
+comes back in the same mode. The choice is kept for the next start.
+
+**What it costs.** The model server holds one conversation at a time, so after a switch it reads the new
+mode's prompt (and its conversation so far) again. The new mode's greeting is spoken at once while that
+happens; a long conversation can take some seconds more before the first reply.
+
+**Writing a mode.** A mode is one file in `app/modes/` with a subclass of `Mode` (`app/modes/base.py`) that
+sets an `id`; it appears in the menu at its `order`. It names its host, prompt, greeting and colours, and
+can hook into each turn: add hidden notes for the model (`before`, as Retro Gaming does with trivia), say
+its own words with no model call (ENIGMA's puzzle book), screen what the model writes (`screen`), or take
+the whole turn (`turn`, as Zork does). `chat.py` is the smallest example.
 
 ## ENIGMA: word puzzles
 
-Start **Enigma Puzzles** from Ports (or set `RV_PERSONA=enigma`). Hold B and say what you'd like:
+Choose **Enigma Puzzles** in the SELECT menu (or start with `RV_START=enigma`). Hold B and say what you'd like:
 
 - "Give me a puzzle." One puzzle: an anagram, a letter change, a hidden word, a charade, a sound-alike...
   "A puzzle about birds" picks the category.
@@ -204,17 +239,18 @@ Environment variables for `launch.sh` (set them in a Ports entry):
 
 | variable | meaning |
 |---|---|
-| `RV_MODE` | `fast` (default) or `smart` |
+| `RV_MODE` | `fast` or `smart` for this launch (default: the menu's last choice, else fast) |
 | `RV_MODELS` | the models directory |
 | `RV_VOICE` | voice for this session, overriding the saved choice |
 | `RV_SOURCE` | force a PipeWire source by name |
 | `RV_GAIN_DB`, `RV_CEIL_DB` | voice level, see Volume |
 | `RV_CONTEXT` | `trim` (default: forgets the oldest exchanges when memory fills) or `endurance` (never forgets) |
-| `RV_SYSTEM`, `RV_TEMP`, `RV_TRIVIA` | persona prompt, temperature, trivia bank |
+| `RV_START` | the mode to open in: `chat`, `retro`, `enigma` or `zork` (default: the last one used) |
+| `RV_SYSTEM`, `RV_TEMP`, `RV_TRIVIA` | the opening mode's prompt, temperature, trivia bank |
 | `RV_LLM_MODEL`, `RV_LLM_DRAFT`, `RV_LLM_CPUS`, `RV_LLM_T`, `RV_LLM_TB` | another model, MTP draft head, core pinning and threads |
 | `RV_ASR_CPUS`, `RV_TTS_CPUS` | cores for speech recognition and synthesis |
 | `RV_START_GAME` | `1`-`3`: start in that Zork |
-| `RV_PERSONA` | `trixy` (default) or `enigma`, the word-puzzle host |
+| `RV_PERSONA` | `trixy` or `enigma`: open in Retro Gaming or Enigma Puzzles (older name for `RV_START`) |
 | `RV_PUZZLE_SEED` | fix ENIGMA's puzzle choices (for repeatable tests) |
 | `RV_FONT` | UI font size |
 | `RV_LLM_GPU`, `RV_OCL_DIR` | run the language model on the Adreno GPU, see below |
@@ -233,12 +269,13 @@ here depends on it.
 `test/test_say.sh <label> <prompts.txt>` runs typed turns through the language model and speech
 synthesis and prints timings; `SILENT=1` plays into a null sink. Commands can also be written to the
 FIFO `/tmp/retrovoice.ctl`: `ptt_down`, `ptt_up`, `inject <wav>`, `say <text>`, `stop`, `voice [name]`,
-`repeat`, `new`, `quit`. Per-turn metrics go to `logs/turns.jsonl`.
+`repeat`, `new`, `mode <id>`, `menu`, `btn <name>` (a press and release: `up`, `down`, `east` for A,
+`south` for B, `select`...), `quit`. Each turn in `logs/turns.jsonl` names its mode. Per-turn metrics go to `logs/turns.jsonl`.
 
 ENIGMA: `python3 test/test_puzzles.py` checks the whole puzzle book on any machine (every bank claim, every
 generated puzzle's uniqueness, grading and the session logic). `test/enigma.txt` is a typed session;
 `python3 test/make_solve_script.py 7 > test/enigma_solve.txt` writes one in which the player solves
-puzzles, to run with `RV_PERSONA=enigma RV_PUZZLE_SEED=7 test/test_say.sh <label> test/enigma_solve.txt`.
+puzzles, to run with `RV_START=enigma RV_PUZZLE_SEED=7 test/test_say.sh <label> test/enigma_solve.txt`.
 
 ## Status
 

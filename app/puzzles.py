@@ -1,4 +1,4 @@
-"""Word puzzles for ENIGMA (retrovoice.py, RV_PERSONA=enigma).
+"""Word puzzles for ENIGMA (modes/enigma.py, the Enigma Puzzles mode of retrovoice.py).
 
 A small language model cannot be trusted to invent a letter puzzle: it reads words in chunks, not letters,
 so its anagrams drop letters and its "change one letter" answers change two. Here the code makes and checks

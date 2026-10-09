@@ -1,3 +1,4 @@
 #!/bin/sh
-# Retro Voice Chat, fast mode (gemma-4-E2B). Written by install.sh.
-RV_MODELS="@RV_MODELS@" RV_MODE=fast exec "@RV_HOME@/launch.sh"
+# Retro Voice Chat: general chat, retro gaming, word puzzles and Zork in one app; SELECT switches modes and
+# the model (fast or smart). Written by install.sh.
+RV_MODELS="@RV_MODELS@" exec "@RV_HOME@/launch.sh"
