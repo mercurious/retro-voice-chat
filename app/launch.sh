@@ -6,14 +6,16 @@
 #   LLM  gemma-4-E2B (fast)        cores 4-5  |  gemma-4-E4B (smart): 4-7 prompt, 4-5 generate   :8092
 #   TTS  Pocket TTS                cores 6-7 (2 threads, nice -10)                      :8093
 # The core numbers are the SM8250's (0-3 little, 4-7 big).
-# Env: RV_MODE=fast|smart (default: the menu's last choice) RV_MODELS=<dir> RV_LLM_MODEL=<gguf basename> RV_LLM_DRAFT=<mtp gguf|none>
+# Env: RV_MODE=fast|smart (default: the menu's last choice) RV_MODELS=<dir> (default: llamatalk's shared one) RV_LLM_MODEL=<gguf basename> RV_LLM_DRAFT=<mtp gguf|none>
 #      RV_LLM_CPUS/RV_LLM_T/RV_LLM_TB RV_ASR_CPUS RV_TTS_CPUS RV_VOICE=<name> RV_SOURCE=<pulse source>
 #      RV_FONT=<pt> RV_LLM_GPU=1 with RV_OCL_DIR=<llamadreno install> (LLM on the Adreno, OpenCL)
 #      RV_START=chat|retro|enigma|zork (the mode to open in; default: the last one used)
 #      RV_PERSONA=trixy|enigma and RV_START_GAME=1|2|3 (older launchers: open in that mode)
 
 [ -f /etc/profile ] && . /etc/profile >/dev/null 2>&1
-V=$(cd "$(dirname "$0")" && pwd); B=$V/bin; M=${RV_MODELS:-$V/models}; L=${RV_LOG_DIR:-$V/logs}
+V=$(cd "$(dirname "$0")" && pwd); B=$V/llamatalk/bin; L=${RV_LOG_DIR:-$V/logs}
+# the models: RV_MODELS, else llamatalk's shared models directory (install.sh sets it up), else ./models
+M=${RV_MODELS:-$("$V/llamatalk/models.sh" path 2>/dev/null)}; M=${M:-$V/models}
 mkdir -p "$L"
 export RV_LOG_DIR="$L" XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR:-/run/0-runtime-dir} HOME=${HOME:-/storage}
 export WAYLAND_DISPLAY=${WAYLAND_DISPLAY:-wayland-1}
@@ -129,7 +131,7 @@ if [ -n "${RV_LLM_GPU:-}" ]; then
 else
   VER=$($B/llama-server --version 2>&1 | sed -n 's/^version: //p')
   export RV_INFO_DRIVER="none in use: the model runs on the CPU"
-  export RV_INFO_LLAMA="${VER:-version not read}, unpatched, CPU backend"
+  export RV_INFO_LLAMA="${VER:-version not read}, unpatched (llamatalk $(cat "$V/llamatalk/VERSION" 2>/dev/null)), CPU backend"
   export RV_INFO_TUNING="LLM cores $LLM_CPUS x$LLM_T (prompt x$LLM_TB)${DRAFT:+, MTP draft head} · $SPEECH"
 fi
 rm -rf "$KV"; mkdir -p "$KV"     # saved prompts belong to the model that wrote them
