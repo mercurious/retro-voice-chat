@@ -73,7 +73,15 @@ keep TRIXY from inventing trivia, but do not rely on it for facts.
 
 ## Install
 
-Download `retro-voice-chat-aarch64.tar.gz` from the latest
+**Without ssh:** download [`Install-Retro-Voice-Chat.sh`](https://github.com/mercurious/retro-voice-chat/releases/latest/download/Install-Retro-Voice-Chat.sh)
+and put it in the handheld's ports folder (`roms/ports`, over the network share or on the SD card). Refresh the game
+list in EmulationStation and start **Install-Retro-Voice-Chat** from Ports, with WiFi on and the handheld on its charger. It
+downloads the latest release, checks it, installs it next to the models of other llamatalk apps (or where there is
+the most room) and downloads the models, full screen; a button closes it at the end. It then becomes
+**Update-Retro-Voice-Chat**: start that to update. The 3.5 mm headset mic fix is
+not part of it (see `--jack-mic` below).
+
+**Over ssh:** download `retro-voice-chat-aarch64.tar.gz` from the latest
 [release](https://github.com/mercurious/retro-voice-chat/releases/latest) (`sha256sum -c retro-voice-chat-aarch64.tar.gz.sha256`
 checks it). Then, on the handheld (over ssh), in a directory with enough room, for example on the SD card (the models go to
 `./models` unless another llamatalk app already has a shared models directory on the device; `RV_MODELS=DIR
