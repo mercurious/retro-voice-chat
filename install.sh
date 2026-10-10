@@ -1,13 +1,15 @@
 #!/bin/sh
-# Retro Voice Chat installer. Runs ON the handheld, from the unpacked release directory (put it where
-# there is room: the models are 9.2 GB, 4.4 GB with --no-smart).
+# Retro Voice Chat installer. Runs ON the handheld, from the unpacked release directory.
 #   ./install.sh [--no-smart] [--jack-mic] [--no-models]      ./install.sh --uninstall
 #   --no-smart   skip gemma-4-E4B, the smart mode model (otherwise downloaded, and offered in SELECT)
 #   --jack-mic   install the capture format pin the Flip 2's 3.5 mm headset mic needs (see README)
-#   --no-models  skip the downloads (RV_MODELS already has them)
-# Env: RV_MODELS (default ./models), RV_PORTS (default /storage/roms/ports).
+#   --no-models  skip the downloads (the models directory already has them)
+# The models (9.2 GB, 4.4 GB with --no-smart) go to llamatalk's shared models directory, which every app that
+# bundles llamatalk uses: models already there are not downloaded again. Which directory: RV_MODELS if set, else the
+# shared one if this device has it, else the one an earlier install's Ports entry used, else ./models.
+# Env: RV_MODELS, RV_PORTS (default /storage/roms/ports).
 set -u
-H=$(cd "$(dirname "$0")" && pwd); M=${RV_MODELS:-$H/models}; P=${RV_PORTS:-/storage/roms/ports}
+H=$(cd "$(dirname "$0")" && pwd); P=${RV_PORTS:-/storage/roms/ports}; LTM=$H/llamatalk/models.sh
 WP=${HOME:-/storage}/.config/wireplumber/wireplumber.conf.d
 ENTRIES="Retro Voice Chat.sh"
 # earlier releases had an entry per persona and per model; they are now one app (SELECT switches both)
@@ -23,32 +25,34 @@ for a in "$@"; do
       echo "$ENTRIES" | tr '|' '\n' | while read -r e; do rm -f "$P/$e"; done
       echo "$OLD" | tr '|' '\n' | while read -r e; do grep -qs "$H/launch.sh" "$P/$e" && rm -f "$P/$e"; done
       rm -f "$WP/51-retro-voice-capture-s16.conf"
-      echo "Removed the Ports entries and the capture pin. The models and this directory are still here:"
-      echo "  $M"; echo "  $H"; exit 0 ;;
+      echo "Removed the Ports entries and the capture pin. This directory and the models (shared with other"
+      echo "llamatalk apps) are still here:"; echo "  $H"; echo "  $("$LTM" path 2>/dev/null || echo "$H/models")"; exit 0 ;;
     *) echo "unknown option: $a" >&2; exit 2 ;;
   esac
 done
 
-chmod +x "$H/launch.sh" "$H"/bin/* "$H/games/dfrotz" "$H"/test/*.sh 2>/dev/null
-for f in bin/llama-server bin/tts-server retrovoice.py launch.sh; do
+chmod +x "$H/launch.sh" "$H"/llamatalk/bin/* "$LTM" "$H/games/dfrotz" "$H"/test/*.sh 2>/dev/null
+for f in llamatalk/bin/llama-server llamatalk/bin/tts-server llamatalk/models.sh retrovoice.py launch.sh; do
   [ -e "$H/$f" ] || { echo "missing $H/$f: this is not an unpacked release (see build/build.sh)" >&2; exit 1; }
 done
+# releases before llamatalk kept the servers in bin/ and the model list here
+rm -f "$H/bin/llama-server" "$H/bin/tts-server" "$H/models.txt"; rmdir "$H/bin" 2>/dev/null
 
+# the models directory (see the top)
+M=${RV_MODELS:-}
+[ -n "$M" ] || M=$("$LTM" path 2>/dev/null) || M=""
+if [ -z "$M" ]; then
+  O=$(sed -n 's/^RV_MODELS="\(.*\)" exec .*/\1/p' "$P/$ENTRIES" 2>/dev/null | head -1)
+  [ -n "$O" ] && [ -d "$O" ] && M=$O
+fi
+[ -n "$M" ] || M=$H/models
+SETS="asr e2b tts"; [ -n "$SMART" ] && SETS="$SETS e4b"
 if [ -n "$MODELS" ]; then
-  mkdir -p "$M" && cd "$M" || exit 1
-  need=5; [ -n "$SMART" ] && need=10
-  free=$(df -Pk . | awk 'NR==2 {print int($4 / 1048576)}')
-  [ "$free" -lt "$need" ] && echo "warning: $free GB free in $M, the downloads need about $need GB"
-  grep -v '^#' "$H/models.txt" | while read -r set repo file as; do
-    [ -z "$set" ] && continue
-    [ "$set" = smart ] && [ -z "$SMART" ] && continue
-    as=${as:-$file}
-    [ -f "$as" ] && { echo "have $as"; continue; }
-    echo "get  $as"
-    curl -fL --retry 5 -C - -o "$as.part" "https://huggingface.co/$repo/resolve/main/$file" && mv "$as.part" "$as" \
-      || echo "FAILED $as (run install.sh again to resume)"
-  done
-  cd "$H" || exit 1
+  "$LTM" fetch --dir "$M" $SETS
+elif [ -d "$M" ]; then
+  "$LTM" use "$M"; "$LTM" check $SETS >/dev/null || echo "warning: $M still misses: $("$LTM" check $SETS | tr '\n' ' ')"
+else
+  echo "warning: no models directory yet ($M); run install.sh without --no-models"
 fi
 
 mkdir -p "$P"
@@ -59,7 +63,7 @@ echo "$OLD" | tr '|' '\n' | while read -r e; do
   grep -qs "$H/launch.sh" "$P/$e" && rm -f "$P/$e" && echo "removed the old entry $P/$e"   # only this install's
 done
 echo "$ENTRIES" | tr '|' '\n' | while read -r e; do
-  sed -e "s|@RV_HOME@|$H|g" -e "s|@RV_MODELS@|$M|g" "$H/ports/$e" > "$P/$e" && chmod +x "$P/$e" && echo "port $P/$e"
+  sed -e "s|@RV_HOME@|$H|g" "$H/ports/$e" > "$P/$e" && chmod +x "$P/$e" && echo "port $P/$e"
 done
 
 if [ -n "$JACK" ]; then

@@ -57,6 +57,8 @@ keep TRIXY from inventing trivia, but do not rely on it for facts.
   Mini) are likely to work and are untested; other chips need different core numbers (`RV_*_CPUS`).
 - 8 GB of RAM. Smart mode fits in 8 GB with little to spare (`RV_SMART=0` hides it).
 - Storage: 4.4 GB for the models (9.2 GB with smart mode, `install.sh --no-smart` to skip it), about 17 MB for the programs.
+  The models go to [llamatalk](https://github.com/mercurious/llamatalk)'s shared models directory, so other apps
+  that bundle llamatalk (such as autogamer) use the same files instead of downloading them again.
 - **A microphone.** This is the part most likely to trip you up on a Flip 2:
 
 | microphone | on stock ROCKNIX |
@@ -71,7 +73,9 @@ keep TRIXY from inventing trivia, but do not rely on it for facts.
 
 ## Install
 
-On the handheld (over ssh), in a directory with enough room, for example on the SD card:
+On the handheld (over ssh), in a directory with enough room, for example on the SD card (the models go to
+`./models` unless another llamatalk app already has a shared models directory on the device; `RV_MODELS=DIR
+./install.sh` picks one):
 
 ```sh
 tar xzf retro-voice-chat-aarch64.tar.gz && cd retro-voice-chat
@@ -82,13 +86,14 @@ tar xzf retro-voice-chat-aarch64.tar.gz && cd retro-voice-chat
 
 Then refresh the game lists in EmulationStation and start **Retro Voice Chat** from Ports: one entry for every
 mode and both models. Installing over an earlier release removes its separate **(smart)**, **Enigma Puzzles**
-and **Retro Voice Zork** entries.
+and **Retro Voice Zork** entries, and keeps using the models directory it had (that directory becomes the
+shared one).
 `./install.sh --uninstall` removes the Ports entries and the mic fix; delete the directory to remove the
-rest.
+rest. The models stay: other apps may use them (`llamatalk/models.sh path` says where they are).
 
 There is no release tarball yet. To make one, run `build/build.sh` on an arm64 Linux machine with podman:
-it fetches llama.cpp, pockettts.cpp, Frotz and the Zork story files at pinned commits and builds
-`dist/retro-voice-chat-aarch64.tar.gz`.
+it fetches llamatalk (llama.cpp and Pocket TTS servers, and the model downloader), Frotz and the Zork story
+files at pinned commits and builds `dist/retro-voice-chat-aarch64.tar.gz`.
 
 ## Controls
 
@@ -122,7 +127,7 @@ only once the model is ready, so nothing asks you to press a button that does no
   ·   v0.0.1 brought to you by mercurious assisted by claude
   ·   controller: built-in pad (via InputPlumber)
   ·   driver: none in use: the model runs on the CPU
-  ·   llama.cpp: 0.5.0-dev (build 1, commit 6c7a87f), unpatched, CPU backend
+  ·   llama.cpp: 0.5.0-dev (build 1, commit 6c7a87f), unpatched (llamatalk 0.1.0), CPU backend
   ·   tuning: LLM cores 4-5 x2 (prompt x2) · TTS cores 6-7 x2 (nice -10) · ASR cores 4-7 x4
   ·   load: CPU 6% · GPU off · RAM 44% of 7.4 GB
   ·   voice: javert (random)
@@ -240,7 +245,7 @@ Environment variables for `launch.sh` (set them in a Ports entry):
 | variable | meaning |
 |---|---|
 | `RV_MODE` | `fast` or `smart` for this launch (default: the menu's last choice, else fast) |
-| `RV_MODELS` | the models directory |
+| `RV_MODELS` | the models directory (default: llamatalk's shared one) |
 | `RV_VOICE` | voice for this session, overriding the saved choice |
 | `RV_SOURCE` | force a PipeWire source by name |
 | `RV_GAIN_DB`, `RV_CEIL_DB` | voice level, see Volume |
