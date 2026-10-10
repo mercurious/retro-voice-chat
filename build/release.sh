@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Makes a draft GitHub release v<VERSION> of what is on origin/main: builds it (build/build.sh), checks the tarball,
-# and uploads it with its SHA-256. The release stays a draft until someone publishes it on GitHub; the tag is made then.
+# Makes a draft GitHub release v<VERSION> of what is on origin/main: builds it from scratch (build/build.sh), checks the
+# tarball, and uploads it with its SHA-256. The release stays a draft until someone publishes it on GitHub; the tag is
+# made then.
 # Needs what build/build.sh needs, plus gh with write access to the repo (GH_TOKEN works).
 # Env: as build/build.sh; DRY=1 builds and checks the current commit without uploading (any branch).
 set -euo pipefail
@@ -16,6 +17,7 @@ if [ -z "${DRY:-}" ]; then
   gh release view "$TAG" -R $REPO >/dev/null 2>&1 && die "$TAG already exists (raise VERSION)"
 fi
 
+rm -rf build/work   # a release compiles everything from the pinned sources, nothing from an earlier build
 build/build.sh
 LIST=$(tar -tzf "$TGZ")
 BAD=$(echo "$LIST" | grep -E '__pycache__|/logs/|/state/|/models/|prefs\.json|\.(zip|7z|nes|a26|gguf|state[0-9]*|srm|core)$' || true)
