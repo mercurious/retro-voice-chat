@@ -6,11 +6,13 @@
 #   Frotz          -> games/dfrotz       the text-only interpreter (GPL-2.0-or-later), in build/Containerfile
 #   Zork I-III     -> games/zorkN.z3     Infocom's compiled story files, MIT-licensed historicalsource repos
 # Env: JOBS (default 3), MEM / MEMSWAP (container memory cap, default 3g / 8g),
-#   LLAMATALK_SRC=<a llamatalk checkout at LLAMATALK_COMMIT> builds from it (and its build cache) instead of a fetch.
+#   LLAMATALK_SRC=<a llamatalk checkout at LLAMATALK_COMMIT> builds from it (and its build cache) instead of a fetch,
+#   ENGINE (podman, default, or docker: docker runs the containers as this user, so build/work stays ours).
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 W="$ROOT/build/work"; OUT="$ROOT/dist/retro-voice-chat"; IMAGE=retro-voice-chat-build; VER=$(cat "$ROOT/VERSION")
-LLAMATALK=https://github.com/mercurious/llamatalk    LLAMATALK_COMMIT=091fd0054909ac0e9a67473b7642f89f725ce854
+ENGINE=${ENGINE:-podman}; RUNAS=; [ "$ENGINE" = docker ] && RUNAS="--user $(id -u):$(id -g)"
+LLAMATALK=https://github.com/mercurious/llamatalk    LLAMATALK_COMMIT=d422c0b36c2ec7cd9359c9250a0bd8cb88f71111
 FROTZ=https://gitlab.com/DavidGriffith/frotz.git      FROTZ_COMMIT=042d7bcadc1e2a8090cf737c841d8b7fc14b6eff
 ZORK1_COMMIT=97b7b3d68c075dd9af7da499c3e9690ada3471fd
 ZORK2_COMMIT=3da9661098809788a99cef00f00c865c6c204f96
@@ -29,14 +31,14 @@ if [ -n "${LLAMATALK_SRC:-}" ]; then
   [ "$(git -C "$LT" rev-parse HEAD)" = $LLAMATALK_COMMIT ] && [ -z "$(git -C "$LT" status --porcelain)" ] \
     || { echo "LLAMATALK_SRC must be a clean checkout of llamatalk $LLAMATALK_COMMIT" >&2; exit 1; }
 else fetch $LLAMATALK $LLAMATALK_COMMIT "$LT"; fi
-JOBS=${JOBS:-3} "$LT/build/build.sh"
+JOBS=${JOBS:-3} ENGINE=${ENGINE:-podman} "$LT/build/build.sh"
 fetch $FROTZ $FROTZ_COMMIT "$W/frotz"
 fetch https://github.com/historicalsource/zork1 $ZORK1_COMMIT "$W/zork1"
 fetch https://github.com/historicalsource/zork2 $ZORK2_COMMIT "$W/zork2"
 fetch https://github.com/historicalsource/zork3 $ZORK3_COMMIT "$W/zork3"
 
-podman image exists $IMAGE || podman build -q -t $IMAGE "$ROOT/build"
-podman run --rm --memory "${MEM:-3g}" --memory-swap "${MEMSWAP:-8g}" -e JOBS="${JOBS:-3}" -v "$W":/w:Z -w /w $IMAGE bash -c '
+$ENGINE image inspect $IMAGE >/dev/null 2>&1 || $ENGINE build -q -t $IMAGE -f "$ROOT/build/Containerfile" "$ROOT/build"
+$ENGINE run --rm $RUNAS --memory "${MEM:-3g}" --memory-swap "${MEMSWAP:-8g}" -e JOBS="${JOBS:-3}" -v "$W":/w:Z -w /w $IMAGE bash -c '
   set -e
   make -C frotz -s -j$JOBS dumb >/dev/null
   strip frotz/dfrotz
@@ -48,7 +50,7 @@ cp "$W/frotz/dfrotz" "$OUT/games/"
 for g in zork1 zork2 zork3; do cp "$W/$g/COMPILED/$g.z3" "$OUT/games/"; done
 cp "$ROOT"/app/launch.sh "$ROOT"/app/retrovoice.py "$ROOT"/app/zgame.py "$ROOT"/app/trivia.json "$ROOT"/app/puzzles.py \
    "$ROOT"/install.sh "$ROOT"/README.md "$ROOT"/LICENSE "$ROOT"/THIRD_PARTY.md "$ROOT"/VERSION "$OUT/"
-{ echo "retro-voice-chat $VER ($(git -C "$ROOT" rev-parse --short HEAD))"; cat "$LT/dist/llamatalk/BUILD.txt"
+{ echo "retro-voice-chat $VER $(git -C "$ROOT" rev-parse HEAD)"; cat "$LT/dist/llamatalk/BUILD.txt"
   echo "Frotz $FROTZ_COMMIT"; echo "Zork I-III $ZORK1_COMMIT $ZORK2_COMMIT $ZORK3_COMMIT"; } > "$OUT/BUILD.txt"
 cp -r "$ROOT/ports" "$ROOT/extras" "$ROOT/test" "$ROOT/app/puzzle" "$ROOT/app/modes" "$OUT/"
 rm -rf "$OUT/modes/__pycache__"

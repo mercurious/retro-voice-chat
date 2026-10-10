@@ -96,7 +96,8 @@ rest. The models stay: other apps may use them (`llamatalk/models.sh path` says 
 To build a release, run `build/build.sh` on an arm64 Linux machine with podman: it fetches llamatalk (llama.cpp and
 Pocket TTS servers, and the model downloader), Frotz and the Zork story files at pinned commits and builds
 `dist/retro-voice-chat-aarch64.tar.gz`. `build/release.sh` builds what is on `main`, checks the tarball and uploads it
-as a draft GitHub release `v<VERSION>` (`DRY=1` builds and checks without uploading).
+as a draft GitHub release `v<VERSION>` (`DRY=1` builds and checks without uploading; `ENGINE=docker` builds with docker; `PREBUILT=1` uploads a tarball
+built by `DRY=1` on a build server from the same commit).
 
 ## Controls
 
