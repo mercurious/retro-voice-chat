@@ -9,7 +9,7 @@
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"; cd "$ROOT"
 NAME=retro-voice-chat; REPO=mercurious/$NAME; VER=$(cat VERSION); TAG=v$VER
-TGZ=dist/$NAME-aarch64.tar.gz
+TGZ=dist/$NAME-aarch64.tar.gz; INST="installer/Install-Retro-Voice-Chat.sh"   # the one-file Ports installer, attached as is
 die() { echo "release: $*" >&2; exit 1; }
 
 [ -z "$(git status --porcelain)" ] || die "the tree has uncommitted changes"
@@ -24,6 +24,7 @@ if [ -z "${PREBUILT:-}" ]; then
   build/build.sh
 fi
 [ -f "$TGZ" ] || die "no $TGZ"
+sh -n "$INST" || die "$INST does not parse"
 BUILT=$(tar -xzOf "$TGZ" $NAME/BUILD.txt)
 [ "$(echo "$BUILT" | head -1)" = "$NAME $VER $(git rev-parse HEAD)" ] || die "$TGZ is not $NAME $VER from this commit"
 LIST=$(tar -tzf "$TGZ")
@@ -38,4 +39,4 @@ NOTES=$(printf '%s\n' "$NAME $VER for aarch64 ROCKNIX handhelds, built and teste
   "Install: see the README, section Install. Check the download with \`sha256sum -c $(basename "$TGZ").sha256\`." "" \
   '```' "$BUILT" '```')
 gh release create "$TAG" -R $REPO --draft --target "$(git rev-parse HEAD)" --title "$NAME $VER" --notes "$NOTES" \
-  "$TGZ" "$TGZ.sha256"
+  "$TGZ" "$TGZ.sha256" "$INST"
