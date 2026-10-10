@@ -73,7 +73,9 @@ keep TRIXY from inventing trivia, but do not rely on it for facts.
 
 ## Install
 
-On the handheld (over ssh), in a directory with enough room, for example on the SD card (the models go to
+Download `retro-voice-chat-aarch64.tar.gz` from the latest
+[release](https://github.com/mercurious/retro-voice-chat/releases/latest) (`sha256sum -c retro-voice-chat-aarch64.tar.gz.sha256`
+checks it). Then, on the handheld (over ssh), in a directory with enough room, for example on the SD card (the models go to
 `./models` unless another llamatalk app already has a shared models directory on the device; `RV_MODELS=DIR
 ./install.sh` picks one):
 
@@ -91,9 +93,10 @@ shared one).
 `./install.sh --uninstall` removes the Ports entries and the mic fix; delete the directory to remove the
 rest. The models stay: other apps may use them (`llamatalk/models.sh path` says where they are).
 
-There is no release tarball yet. To make one, run `build/build.sh` on an arm64 Linux machine with podman:
-it fetches llamatalk (llama.cpp and Pocket TTS servers, and the model downloader), Frotz and the Zork story
-files at pinned commits and builds `dist/retro-voice-chat-aarch64.tar.gz`.
+To build a release, run `build/build.sh` on an arm64 Linux machine with podman: it fetches llamatalk (llama.cpp and
+Pocket TTS servers, and the model downloader), Frotz and the Zork story files at pinned commits and builds
+`dist/retro-voice-chat-aarch64.tar.gz`. `build/release.sh` builds what is on `main`, checks the tarball and uploads it
+as a draft GitHub release `v<VERSION>` (`DRY=1` builds and checks without uploading).
 
 ## Controls
 

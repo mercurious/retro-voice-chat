@@ -9,7 +9,7 @@
 #   LLAMATALK_SRC=<a llamatalk checkout at LLAMATALK_COMMIT> builds from it (and its build cache) instead of a fetch.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-W="$ROOT/build/work"; OUT="$ROOT/dist/retro-voice-chat"; IMAGE=retro-voice-chat-build
+W="$ROOT/build/work"; OUT="$ROOT/dist/retro-voice-chat"; IMAGE=retro-voice-chat-build; VER=$(cat "$ROOT/VERSION")
 LLAMATALK=https://github.com/mercurious/llamatalk    LLAMATALK_COMMIT=091fd0054909ac0e9a67473b7642f89f725ce854
 FROTZ=https://gitlab.com/DavidGriffith/frotz.git      FROTZ_COMMIT=042d7bcadc1e2a8090cf737c841d8b7fc14b6eff
 ZORK1_COMMIT=97b7b3d68c075dd9af7da499c3e9690ada3471fd
@@ -47,7 +47,9 @@ cp -r "$LT/dist/llamatalk" "$OUT/"
 cp "$W/frotz/dfrotz" "$OUT/games/"
 for g in zork1 zork2 zork3; do cp "$W/$g/COMPILED/$g.z3" "$OUT/games/"; done
 cp "$ROOT"/app/launch.sh "$ROOT"/app/retrovoice.py "$ROOT"/app/zgame.py "$ROOT"/app/trivia.json "$ROOT"/app/puzzles.py \
-   "$ROOT"/install.sh "$ROOT"/README.md "$ROOT"/LICENSE "$ROOT"/THIRD_PARTY.md "$OUT/"
+   "$ROOT"/install.sh "$ROOT"/README.md "$ROOT"/LICENSE "$ROOT"/THIRD_PARTY.md "$ROOT"/VERSION "$OUT/"
+{ echo "retro-voice-chat $VER ($(git -C "$ROOT" rev-parse --short HEAD))"; cat "$LT/dist/llamatalk/BUILD.txt"
+  echo "Frotz $FROTZ_COMMIT"; echo "Zork I-III $ZORK1_COMMIT $ZORK2_COMMIT $ZORK3_COMMIT"; } > "$OUT/BUILD.txt"
 cp -r "$ROOT/ports" "$ROOT/extras" "$ROOT/test" "$ROOT/app/puzzle" "$ROOT/app/modes" "$OUT/"
 rm -rf "$OUT/modes/__pycache__"
 chmod +x "$OUT"/launch.sh "$OUT"/install.sh "$OUT"/test/*.sh "$OUT"/games/dfrotz
