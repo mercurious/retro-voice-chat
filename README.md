@@ -59,17 +59,20 @@ keep TRIXY from inventing trivia, but do not rely on it for facts.
 - Storage: 4.4 GB for the models (9.2 GB with smart mode, `install.sh --no-smart` to skip it), about 17 MB for the programs.
   The models go to [llamatalk](https://github.com/mercurious/llamatalk)'s shared models directory, so other apps
   that bundle llamatalk (such as autogamer) use the same files instead of downloading them again.
-- **A microphone.** This is the part most likely to trip you up on a Flip 2:
+- **A microphone.** On a Flip 2, what works depends on the ROCKNIX release:
 
-| microphone | on stock ROCKNIX |
-|---|---|
-| USB-C or Bluetooth headset | used first when present |
-| 3.5 mm headset (TRRS) | records white noise until capture is pinned to 16-bit: `install.sh --jack-mic` (the pin ETK installs; not yet tested on its own) |
-| built-in mic | not powered by the stock device tree; the app shows "no mic" |
+| microphone | ROCKNIX 20261201 and later | earlier releases |
+|---|---|---|
+| USB-C or Bluetooth headset | used first when present | used first when present |
+| 3.5 mm headset (TRRS) | works; ROCKNIX pins capture to 16-bit itself | records white noise until capture is pinned to 16-bit: `install.sh --jack-mic` (not yet tested on its own) |
+| built-in mic | works | not powered by the device tree; the app shows "no mic" |
 
-  The built-in mic needs a device tree that routes and powers it. The author's
-  [ETK](https://github.com/mercurious/etk) kit does that on its own kernel entries; stock ROCKNIX does
-  not yet. Headphones without a mic therefore leave the app with nothing to listen with.
+  From 20261201, ROCKNIX powers the Flip 2's built-in mic and pins the headset mic's capture format
+  ([ROCKNIX/distribution#3596](https://github.com/ROCKNIX/distribution/pull/3596)), so a stock install needs
+  nothing more. On an earlier release, update ROCKNIX, or use a headset; the author's
+  [ETK](https://github.com/mercurious/etk) kit also powers the built-in mic there. With a headset plugged
+  into the jack, its mic is the one in use; headphones without a mic then leave the app with nothing to
+  listen with.
 
 ## Install
 
@@ -78,8 +81,8 @@ and put it in the handheld's ports folder (`roms/ports`, over the network share 
 list in EmulationStation and start **Install-Retro-Voice-Chat** from Ports, with WiFi on and the handheld on its charger. It
 downloads the latest release, checks it, installs it next to the models of other llamatalk apps (or where there is
 the most room) and downloads the models, full screen; a button closes it at the end. It then becomes
-**Update-Retro-Voice-Chat**: start that to update. The 3.5 mm headset mic fix is
-not part of it (see `--jack-mic` below).
+**Update-Retro-Voice-Chat**: start that to update. The 3.5 mm headset mic fix for ROCKNIX releases
+before 20261201 is not part of it (see `--jack-mic` below).
 
 **Over ssh:** download `retro-voice-chat-aarch64.tar.gz` from the latest
 [release](https://github.com/mercurious/retro-voice-chat/releases/latest) (`sha256sum -c retro-voice-chat-aarch64.tar.gz.sha256`
@@ -90,7 +93,7 @@ checks it). Then, on the handheld (over ssh), in a directory with enough room, f
 ```sh
 tar xzf retro-voice-chat-aarch64.tar.gz && cd retro-voice-chat
 ./install.sh                  # downloads the models (4.4 GB), adds the Ports entries
-./install.sh --jack-mic       # optional: the 3.5 mm headset mic fix; reboot afterwards
+./install.sh --jack-mic       # only before ROCKNIX 20261201: the 3.5 mm headset mic fix; reboot afterwards
 ./install.sh --smart          # optional: also the larger model, 4.8 GB more
 ```
 
@@ -296,8 +299,8 @@ puzzles, to run with `RV_START=enigma RV_PUZZLE_SEED=7 test/test_say.sh <label> 
 
 ## Status
 
-Works on the author's Flip 2. Not yet tested: a ROCKNIX install without the author's ETK kit, the
-20261001 ROCKNIX release, USB-C microphones on the current build, any other handheld. Reports from other
+Works on the author's Flip 2. Not yet tested: a ROCKNIX install without the author's ETK kit
+(including the built-in mic on stock ROCKNIX 20261201), the 20261001 ROCKNIX release, USB-C microphones on the current build, any other handheld. Reports from other
 devices are welcome; please say what hardware and ROCKNIX version you ran it on.
 
 ## Licence
