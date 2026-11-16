@@ -16,6 +16,7 @@ ENTRIES="Retro Voice Chat.sh"
 OLD="Retro Voice Chat (smart).sh|Retro Voice Zork.sh|Enigma Puzzles.sh|Enigma Puzzles (smart).sh"
 # prototype launchers from the ollamadreno kit and the dev copies: matched by what they exec, not by name
 STALE_RE="ollamadreno/voice/launch.sh|enigma-dev/launch.sh|rvc-dev/launch.sh"
+ART="retro-voice-chat-image.png retro-voice-chat-icon.png"     # ports/images, drawn by build/es-art.py
 SMART=1
 JACK=""; MODELS=1
 for a in "$@"; do
@@ -25,6 +26,8 @@ for a in "$@"; do
       echo "$ENTRIES" | tr '|' '\n' | while read -r e; do rm -f "$P/$e"; done
       echo "$OLD" | tr '|' '\n' | while read -r e; do grep -qs "$H/launch.sh" "$P/$e" && rm -f "$P/$e"; done
       rm -f "$WP/51-retro-voice-capture-s16.conf"
+      for f in $ART; do rm -f "$P/images/$f"; done
+      python3 "$H/ports/gamelist.py" "$P/gamelist.xml" "./$ENTRIES" --remove 2>/dev/null
       echo "Removed the Ports entries and the capture pin. This directory and the models (shared with other"
       echo "llamatalk apps) are still here:"; echo "  $H"; echo "  $("$LTM" path 2>/dev/null || echo "$H/models")"; exit 0 ;;
     *) echo "unknown option: $a" >&2; exit 2 ;;
@@ -65,6 +68,15 @@ done
 echo "$ENTRIES" | tr '|' '\n' | while read -r e; do
   sed -e "s|@RV_HOME@|$H|g" "$H/ports/$e" > "$P/$e" && chmod +x "$P/$e" && echo "port $P/$e"
 done
+
+# the Ports menu's artwork: the header image, and the icon as its marquee (logo); EmulationStation reads them
+# from gamelist.xml (the entry keeps its play count and play time)
+if mkdir -p "$P/images" && (cd "$H/ports/images" && cp -f $ART "$P/images/"); then
+  python3 "$H/ports/gamelist.py" "$P/gamelist.xml" "./$ENTRIES" "Retro Voice Chat" \
+    "Push-to-talk voice chat with local language models, all on the handheld: general chat, TRIXY for retro gaming, ENIGMA's word puzzles and Infocom's Zork played by voice. Hold B or R1 to talk; SELECT switches hosts. Needs a microphone." \
+    mercurious ./images/retro-voice-chat-image.png ./images/retro-voice-chat-icon.png \
+    && echo "artwork in $P/images, entry in $P/gamelist.xml" || echo "warning: $P/gamelist.xml not updated" >&2
+fi
 
 if [ -n "$JACK" ]; then
   mkdir -p "$WP" && cp "$H/extras/51-retro-voice-capture-s16.conf" "$WP/" \

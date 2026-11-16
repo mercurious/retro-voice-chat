@@ -95,10 +95,11 @@ tar xzf retro-voice-chat-aarch64.tar.gz && cd retro-voice-chat
 ```
 
 Then refresh the game lists in EmulationStation and start **Retro Voice Chat** from Ports: one entry for every
-mode and both models. Installing over an earlier release removes its separate **(smart)**, **Enigma Puzzles**
-and **Retro Voice Zork** entries, and keeps using the models directory it had (that directory becomes the
-shared one).
-`./install.sh --uninstall` removes the Ports entries and the mic fix; delete the directory to remove the
+mode and both models. The entry gets its artwork (a header image and the app's icon as its logo) and a
+description in the Ports `gamelist.xml`; its play count and play time are kept. Installing over an earlier
+release removes its separate **(smart)**, **Enigma Puzzles** and **Retro Voice Zork** entries, and keeps using
+the models directory it had (that directory becomes the shared one).
+`./install.sh --uninstall` removes the Ports entries, their artwork and the mic fix; delete the directory to remove the
 rest. The models stay: other apps may use them (`llamatalk/models.sh path` says where they are).
 
 To build a release, run `build/build.sh` on an arm64 Linux machine with podman: it fetches llamatalk (llama.cpp and
@@ -122,29 +123,69 @@ The buttons are named by position, with the Flip 2's own letters.
 | Select+Start, or Home | quit |
 | D-pad up/down | scroll the transcript |
 
-The top right corner shows the battery, the lower right how full the model's memory (context window) is.
-The status line says which microphone is in use; plugging or pulling a headset updates it within about
-two seconds.
-
 **Voice.** X steps through the voices; after the last one comes **random**, a different voice each
 session. Your choice is saved (`prefs.json` next to the app) and used the next time; until you choose,
 it is random.
 
-## The boot screen
-
-While the models load, the screen shows what is running. The button hints and the mode's greeting appear
-only once the model is ready, so nothing asks you to press a button that does not work yet.
+## The screen
 
 ```
-  ·   v0.0.1 brought to you by mercurious assisted by claude
+ RETRO VOICE CHAT          │ ▓▒░ T R I X Y ░▒▓   retro gaming                           voice alba
+  HOSTS ─────────────────  │ ───────────────────────────────────────────────────────────────────
+    ■ GEMMA          chat  │  TRIXY› Pac-Man reached Japanese arcades in 1980. Namco called it
+  ▶ ■ TRIXY        gaming  │         Puck Man there, and the name changed for the American release.
+    ■ ENIGMA      puzzles  │         ━━━━━━━━━━━━━━  hear 1.2  think 1.4  speak 0.8           3.4s
+    ■ ZORK      adventure  │
+  LAST TURN ─────────────  │    YOU› Who made Choplifter?
+    3.4 s (pixel digits)   │
+  BEST TURNS ────────────  │
+   1ST  TRIXY       3.0s   │ ───────────────────────────────────────────────────────────────────
+   2ND  GEMMA       3.2s   │ ▶ READY   USB/BT mic
+  MACHINE ───────────────  │
+   gemma-4-E2B      fast   │ (B)/(R1) hold: talk   (A) stop   (SELECT) hosts   (SELECT)+(START) quit
+   speed      10.2 tok/s   │
+   context ▮▮▯▯▯▯▯▯  22%   │
+    1,840 / 8,192 tokens   │
+   memory    3.5 GB free   │
+   battery     71% 4.2 W   │
+◆ > ROCKNIX > Flip 2 > USB/BT mic > voice alba ──────────────────────────────────── cpu 12% · servers ✓
+```
+
+- **The rail** on the left is in the host's own colour. It lists every host (▶ marks the one you are
+  talking to) and shows the last turn's time to the first spoken word in large digits. **BEST TURNS** holds
+  the session's four fastest turns, and a new entry is highlighted for three seconds. **MACHINE** shows the
+  model, its speed, how full its memory (the context window) is, free RAM and the battery.
+- **The header** shows the host's name between its shaded blocks. They throb while the host works:
+  they swell with your voice while it listens, ripple outward while it hears and thinks, and pulse while
+  it speaks.
+- **Each reply** is followed by its timing bar. Hearing (speech recognition) is cyan, thinking (the model's
+  first word) is gold and speaking (until the first sound) is white. Each part is as long as it took, at one
+  cell per quarter second.
+- **The status bar** at the bottom says which microphone is in use. Plugging or pulling a headset updates it
+  within about two seconds. On the right it shows the CPU load and whether the servers answer (`✖ TTS` in
+  red when one stops).
+- On a screen narrower than 80 columns the rail is left out, and the bar shows the last turn's time, the
+  battery, context, speed, memory and CPU instead.
+
+## The title screen
+
+While the models load, the title screen shows each server's state as it comes up, over a slowly pulsing pattern
+of squares (one of three, a different one each launch): speech recognition, the model, speech, then the model
+reading the host's prompt. Under them is one line, "local language models powered by llamatalk runtime"; the
+driver, llama.cpp and tuning details go to the transcript. The credit is typed under the status bar. The main
+screen and the mode's greeting appear only once the model is ready, so nothing asks you to press a button that
+does not work yet. Until then only Select+Start (quit) works. If a server does not start, its line turns red and
+the screen stays up.
+
+The boot lines also stay at the top of the transcript:
+
+```
   ·   controller: built-in pad (via InputPlumber)
   ·   driver: none in use: the model runs on the CPU
   ·   llama.cpp: 0.5.0-dev (build 1, commit 6c7a87f), unpatched (llamatalk 0.1.0), CPU backend
   ·   tuning: LLM cores 4-5 x2 (prompt x2) · TTS cores 6-7 x2 (nice -10) · ASR cores 4-7 x4
   ·   load: CPU 6% · GPU off · RAM 44% of 7.4 GB
   ·   voice: javert (random)
-
-GEMMA› Hi, I'm Gemma. Hold the B button or R1 and talk to me. Press select for other modes.
 ```
 
 With the GPU option on, the driver line is what the driver reports about itself, for example
@@ -166,7 +207,7 @@ of its state; the language model never narrates.
 
 ## Modes
 
-**Switching.** SELECT opens the menu; the screen takes on each mode's colours as you move through it, and
+**Switching.** SELECT opens the menu in the rail; the screen takes on each mode's colours as you move through it, and
 A switches. You can also say it: "switch to puzzles", "go to retro gaming", "back to chat". A request only
 another mode can answer moves there and is answered: "give me a puzzle" goes to ENIGMA, "let's play Zork two"
 to Zork. Each mode keeps its own conversation and transcript, so going back picks up where you left off.
@@ -182,7 +223,8 @@ mode's prompt (and its conversation so far) again. The new mode's greeting is sp
 happens; a long conversation can take some seconds more before the first reply.
 
 **Writing a mode.** A mode is one file in `app/modes/` with a subclass of `Mode` (`app/modes/base.py`) that
-sets an `id`; it appears in the menu at its `order`. It names its host, prompt, greeting and colours, and
+sets an `id`; it appears in the menu at its `order`. It names its host, prompt, greeting and colours (`bg`/`fg`
+for the terminal, `colors` for its text, `marquee` for the rail), and
 can hook into each turn: add hidden notes for the model (`before`, as Retro Gaming does with trivia), say
 its own words with no model call (ENIGMA's puzzle book), screen what the model writes (`screen`), or take
 the whole turn (`turn`, as Zork does). `chat.py` is the smallest example.
@@ -270,6 +312,7 @@ Environment variables for `launch.sh` (set them in a Ports entry):
 | `RV_PERSONA` | `trixy` or `enigma`: open in Retro Gaming or Enigma Puzzles (older name for `RV_START`) |
 | `RV_PUZZLE_SEED` | fix ENIGMA's puzzle choices (for repeatable tests) |
 | `RV_FONT` | UI font size |
+| `RV_BACKDROP` | the title screen's background: `ripple`, `breathe` or `sweep` (default: the next one each launch) |
 | `RV_LLM_GPU`, `RV_OCL_DIR` | run the language model on the Adreno GPU, see below |
 
 ## The GPU option

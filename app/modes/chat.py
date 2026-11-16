@@ -18,6 +18,7 @@ class Chat(Mode):
     subtitle = "   general chat"
     bg, fg = "0b1020", "d8e2f6"         # night sky
     colors = (111, 60, 223, 73)
+    marquee = ("#1d3270", "#e8eeff", "#a9b8e6")    # cobalt
     back = "Back to our chat. What's on your mind?"
     fresh = "Fresh start. What's on your mind?"
 

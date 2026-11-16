@@ -177,14 +177,17 @@ fi
 PRIOR_WS=$(swaymsg -t get_workspaces -r 2>/dev/null | python3 -c \
   'import json,sys; print(next((w["name"] for w in json.load(sys.stdin) if w.get("focused")), ""))' 2>/dev/null)
 swaymsg "workspace 97:voice" >/dev/null 2>&1
+# foot 1.26 renamed [colors] to [colors-dark] and warns about the old name (1.28 drops it); older foot only
+# knows [colors]. -d error: foot's other notices (C locale, sway has no xdg-toplevel-icon) are harmless.
+FC=colors; foot --version 2>/dev/null | awk '{split($3, v, "."); exit !(v[1] > 1 || v[2] >= 26)}' && FC=colors-dark
 while :; do
   ( for i in 1 2 3 4 5 6 7 8 9 10; do
       sleep 0.5; swaymsg '[app_id="retrovoice"] fullscreen enable' >/dev/null 2>&1 && break
     done ) &
   # each mode sets its own colours as it opens (modes/*.py); this is only the first frame
   BG=000000; FG=e0e0e0
-  foot --app-id=retrovoice -f "monospace:size=${RV_FONT:-22}" \
-    -o colors.background=$BG -o colors.foreground=$FG -o colors.alpha=1.0 \
+  foot -d error --app-id=retrovoice -f "monospace:size=${RV_FONT:-22}" \
+    -o $FC.background=$BG -o $FC.foreground=$FG -o $FC.alpha=1.0 \
     env -u OMP_PROC_BIND -u OMP_PLACES python3 $V/retrovoice.py
   next_model || break
 done

@@ -16,6 +16,7 @@ class Enigma(Mode):
     title, subtitle = " ░▒▓ E N I G M A ▓▒░", "   word puzzles"
     bg, fg = "0e0b1a", "f2e3c0"         # ink and newsprint
     colors = (222, 137, 117, 180)
+    marquee = ("#45285e", "#f6ead0", "#c6b1d6")    # plum
     greet = ("Hello there, I'm Enigma, and I've got a puzzle with your name on it. Hold B and ask me for "
              "a puzzle, a round, or a real challenge.")
     back = "Enigma here. Shall I give you a puzzle?"

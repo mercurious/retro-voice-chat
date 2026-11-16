@@ -37,9 +37,9 @@ PTT span → MicStream (parec ring buffer) → transcribe() → ASR llama-server
 | `app/` | Runtime: `retrovoice.py`, `puzzles.py`, `zgame.py`, `launch.sh`, `trivia.json` |
 | `app/modes/` | One file per mode (`chat.py` is the minimal example) |
 | `app/puzzle/` | Word lists (SCOWL, trimmed CMU dict), `categories.json`, curated `bank/{singles,challenges,rounds}.json`, `STYLE.md` |
-| `build/` | `Containerfile` (ubuntu:24.04), `build.sh` (cross-build), `release.sh` (draft GitHub release); `build/work/` is scratch |
+| `build/` | `Containerfile` (ubuntu:24.04), `build.sh` (cross-build), `release.sh` (draft GitHub release), `es-art.py` (redraws `ports/images/`, needs Pillow); `build/work/` is scratch |
 | `installer/` | One-file on-device Ports installer/updater |
-| `ports/` | Ports entry template (`@RV_HOME@` substituted by `install.sh`) |
+| `ports/` | Ports entry template (`@RV_HOME@` substituted by `install.sh`), its ES artwork in `images/` (header `<image>`, icon `<marquee>`) and `gamelist.py`, which `install.sh` uses to upsert the `gamelist.xml` entry |
 | `extras/` | WirePlumber S16LE capture pin for the 3.5 mm mic (`--jack-mic`) |
 | `test/` | Puzzle checks, installer sandbox test, on-device prompt driver and scripts |
 | `dist/`, `research/`, `logs/`, `prefs.json` | Gitignored; never commit (`research/` holds podcast audio and must stay local) |

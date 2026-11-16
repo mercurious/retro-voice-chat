@@ -48,7 +48,7 @@ rm -rf "$OUT"; mkdir -p "$OUT/games"
 cp -r "$LT/dist/llamatalk" "$OUT/"
 cp "$W/frotz/dfrotz" "$OUT/games/"
 for g in zork1 zork2 zork3; do cp "$W/$g/COMPILED/$g.z3" "$OUT/games/"; done
-cp "$ROOT"/app/launch.sh "$ROOT"/app/retrovoice.py "$ROOT"/app/zgame.py "$ROOT"/app/trivia.json "$ROOT"/app/puzzles.py \
+cp "$ROOT"/app/launch.sh "$ROOT"/app/retrovoice.py "$ROOT"/app/screen.py "$ROOT"/app/zgame.py "$ROOT"/app/trivia.json "$ROOT"/app/puzzles.py \
    "$ROOT"/install.sh "$ROOT"/README.md "$ROOT"/LICENSE "$ROOT"/THIRD_PARTY.md "$ROOT"/VERSION "$OUT/"
 { echo "retro-voice-chat $VER $(git -C "$ROOT" rev-parse HEAD)"; cat "$LT/dist/llamatalk/BUILD.txt"
   echo "Frotz $FROTZ_COMMIT"; echo "Zork I-III $ZORK1_COMMIT $ZORK2_COMMIT $ZORK3_COMMIT"; } > "$OUT/BUILD.txt"

@@ -52,6 +52,7 @@ class Zork(Mode):
     title, subtitle = " ▒▒ Z O R K ▒▒", "   voice adventure"
     bg, fg = "0c0800", "ffb000"         # amber terminal
     colors = (214, 94, 230, 172)
+    marquee = ("#4d2c00", "#ffe2a8", "#d9ab62")    # burnt amber
     fresh = "Game saved. Say play Zork, or Zork two or three."
 
     def __init__(self, app):
@@ -86,10 +87,10 @@ class Zork(Mode):
         return g.room if g else ""
 
     def ready_line(self, mic):
-        app, g = self.app, self.game
+        g, (c, dim) = self.game, self.colors[:2]
         if not g:
-            return f"{app.G}▶ VOICE ZORK{app.RST}   {app.DIM}say play Zork, Zork two or three{app.RST}"
-        return f"{app.G}▶ {self.title}{app.RST}  {g.room}   {app.DIM}{g.score}{app.RST}"
+            return [("▶ VOICE ZORK", c, True), ("   say play Zork, Zork two or three", dim, False)]
+        return [(f"▶ {self.title}", c, True), (f"  {g.room}", None, False), (f"   {g.score}", dim, False)]
 
     # -- switching
     def enter(self, gen, t, user=None, claimed=False):
@@ -140,7 +141,7 @@ class Zork(Mode):
         self.title, self.game_last, self.history, self.num = title, self.game.intro, [], num
         app.prefs["zork"] = num
         self.game_system = GAME_SYSTEM.format(title=title)
-        app.ctx_used, app.metrics = 0, ""
+        app.ctx_used = 0
         app.ev(f"game: started {title}")
         app.speak_text(gen, ZGame.speech(self.game.intro), t, "game")
         if os.path.exists(os.path.join(GAME_DIR, "saves", name + ".qzl")):
@@ -248,9 +249,7 @@ class Zork(Mode):
         app.wait_first_word(gen, t)
         fa = t.get("first_audio")
         asr_s = t["asr"] - t["t0"]
-        app.metrics = (f"hear {asr_s:.1f}s · " + (f"understand {t_llm:.1f}s" if t_llm is not None else "direct") +
-                       (f" · first word {fa - t['t0']:.1f}s" if fa else ""))
-        app.dirty = True
+        app.post_turn(asr_s, t_llm or 0.0, fa - t["t0"] if fa else None, "parser" if t_llm is None else "")
         g = self.game
         app.log_turn({"game": self.title, "user": user, "direct": t_llm is None, "cmds": cmds, "out": out,
                       "room": g.room if g else "", "score": g.score if g else "",

@@ -1,0 +1,1032 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-16T04:50:42+00:00",
+  "title": "Design System: Retro Voice Chat",
+  "extensions": {
+    "colorMeta": {
+      "bar-ground": {
+        "role": "neutral",
+        "displayName": "Bar Ground",
+        "canonical": "#0f1216",
+        "tonalRamp": [
+          "#0a0b0d",
+          "#222427",
+          "#3d4044",
+          "#5a5e63",
+          "#7a7e83",
+          "#9b9fa3",
+          "#c1c4c8",
+          "#eceff2"
+        ]
+      },
+      "rule-slate": {
+        "role": "neutral",
+        "displayName": "Rule Slate",
+        "canonical": "#2a3038",
+        "tonalRamp": [
+          "#090b0f",
+          "#212429",
+          "#3b4047",
+          "#585e66",
+          "#777e87",
+          "#999fa7",
+          "#bfc5cb",
+          "#ebeff4"
+        ]
+      },
+      "muted-steel": {
+        "role": "neutral",
+        "displayName": "Muted Steel",
+        "canonical": "#9ca3b0",
+        "tonalRamp": [
+          "#090b0f",
+          "#21242a",
+          "#3b4048",
+          "#585e69",
+          "#777d89",
+          "#999fa9",
+          "#bfc4cd",
+          "#ebeff5"
+        ]
+      },
+      "bright-neutral": {
+        "role": "tertiary",
+        "displayName": "Bright Neutral",
+        "canonical": "#e8eaf0",
+        "tonalRamp": [
+          "#0a0b0d",
+          "#232427",
+          "#3e4043",
+          "#5c5d62",
+          "#7b7d82",
+          "#9d9ea3",
+          "#c3c4c8",
+          "#edeef1"
+        ]
+      },
+      "signal-cyan": {
+        "role": "neutral",
+        "displayName": "Signal Cyan",
+        "canonical": "#00dbe4",
+        "tonalRamp": [
+          "#000e0f",
+          "#042a2c",
+          "#09494c",
+          "#146a6f",
+          "#1e8e93",
+          "#27b3ba",
+          "#77d6db",
+          "#c2fbfe"
+        ]
+      },
+      "crumb-pink": {
+        "role": "neutral",
+        "displayName": "Crumb Pink",
+        "canonical": "#ff4fd8",
+        "tonalRamp": [
+          "#1a0014",
+          "#430036",
+          "#6d0c5a",
+          "#9c1982",
+          "#ce23ad",
+          "#ea62c9",
+          "#fe9fe3",
+          "#fee7f6"
+        ]
+      },
+      "alarm-red": {
+        "role": "neutral",
+        "displayName": "Alarm Red",
+        "canonical": "#ff5f5f",
+        "tonalRamp": [
+          "#1e0102",
+          "#4b0108",
+          "#780e18",
+          "#ab1a27",
+          "#d54044",
+          "#f1716e",
+          "#feaba5",
+          "#fee9e7"
+        ]
+      },
+      "warn-amber": {
+        "role": "neutral",
+        "displayName": "Warn Amber",
+        "canonical": "#ffb000",
+        "tonalRamp": [
+          "#120900",
+          "#322003",
+          "#553a07",
+          "#7b5510",
+          "#a47218",
+          "#ce9121",
+          "#edba6d",
+          "#feecd2"
+        ]
+      },
+      "ok-green": {
+        "role": "neutral",
+        "displayName": "OK Green",
+        "canonical": "#4ade80",
+        "tonalRamp": [
+          "#001004",
+          "#042c13",
+          "#094d25",
+          "#14703a",
+          "#1d954f",
+          "#49b86f",
+          "#86da9d",
+          "#cafed6"
+        ]
+      },
+      "hear-cyan": {
+        "role": "tertiary",
+        "displayName": "Hear Cyan",
+        "canonical": "#5fd7ff",
+        "tonalRamp": [
+          "#000e14",
+          "#032934",
+          "#064759",
+          "#0f6881",
+          "#178aab",
+          "#50accb",
+          "#8ad0ea",
+          "#d8f4ff"
+        ]
+      },
+      "think-gold": {
+        "role": "tertiary",
+        "displayName": "Think Gold",
+        "canonical": "#ffd75f",
+        "tonalRamp": [
+          "#100a00",
+          "#2d2302",
+          "#4e3e04",
+          "#725b0c",
+          "#977a13",
+          "#ba9b3e",
+          "#dbc27b",
+          "#ffeebd"
+        ]
+      },
+      "rank-coral": {
+        "role": "tertiary",
+        "displayName": "Rank Coral",
+        "canonical": "#ff8f6b",
+        "tonalRamp": [
+          "#1b0400",
+          "#441000",
+          "#6e2408",
+          "#993c1d",
+          "#c05c3b",
+          "#dc8467",
+          "#faaf97",
+          "#fee9e3"
+        ]
+      },
+      "rank-violet": {
+        "role": "tertiary",
+        "displayName": "Rank Violet",
+        "canonical": "#d7a1ff",
+        "tonalRamp": [
+          "#140120",
+          "#311443",
+          "#512c6a",
+          "#734593",
+          "#9564b8",
+          "#b48ad3",
+          "#d6b4f1",
+          "#f5e9fe"
+        ]
+      },
+      "pad-b-red": {
+        "role": "neutral",
+        "displayName": "Pad B Red",
+        "canonical": "#ff5a6e",
+        "tonalRamp": [
+          "#1e0003",
+          "#480412",
+          "#790823",
+          "#ac1336",
+          "#d63c53",
+          "#f26e7a",
+          "#fbabae",
+          "#fee9e9"
+        ]
+      },
+      "pad-x-blue": {
+        "role": "neutral",
+        "displayName": "Pad X Blue",
+        "canonical": "#5aa9ff",
+        "tonalRamp": [
+          "#000b1d",
+          "#032446",
+          "#084075",
+          "#125ea7",
+          "#3580ce",
+          "#65a2e7",
+          "#9ac8fd",
+          "#e4f0fe"
+        ]
+      },
+      "pad-system-sand": {
+        "role": "neutral",
+        "displayName": "Pad System Sand",
+        "canonical": "#d4c090",
+        "tonalRamp": [
+          "#100a00",
+          "#2d2309",
+          "#4b3e1d",
+          "#6c5c33",
+          "#8d7b50",
+          "#ad9d78",
+          "#d0c3a4",
+          "#f8eed6"
+        ]
+      },
+      "pill-ink": {
+        "role": "neutral",
+        "displayName": "Pill Ink",
+        "canonical": "#05060a",
+        "tonalRamp": [
+          "#0a0b0d",
+          "#232427",
+          "#3e4044",
+          "#5b5d63",
+          "#7b7d84",
+          "#9c9ea4",
+          "#c2c4c9",
+          "#edeef2"
+        ]
+      },
+      "chat-ground": {
+        "role": "neutral",
+        "displayName": "Night Sky (chat)",
+        "canonical": "#0b1020",
+        "tonalRamp": [
+          "#080b12",
+          "#20242f",
+          "#3a3f4e",
+          "#565d70",
+          "#757d91",
+          "#979eb0",
+          "#bec4d3",
+          "#eaeefa"
+        ]
+      },
+      "chat-text": {
+        "role": "neutral",
+        "displayName": "Starlight (chat)",
+        "canonical": "#d8e2f6",
+        "tonalRamp": [
+          "#080b11",
+          "#20242d",
+          "#3a404c",
+          "#565e6d",
+          "#757d8e",
+          "#979fae",
+          "#bec4d1",
+          "#eaeff9"
+        ]
+      },
+      "chat-host": {
+        "role": "secondary",
+        "displayName": "Periwinkle (chat)",
+        "canonical": "xterm-256 index 111",
+        "tonalRamp": [
+          "#010824",
+          "#0f2149",
+          "#243d72",
+          "#3b5b9d",
+          "#587bc3",
+          "#7e9edd",
+          "#a9c4fa",
+          "#e7effe"
+        ]
+      },
+      "chat-dim": {
+        "role": "secondary",
+        "displayName": "Dusk Slate (chat)",
+        "canonical": "xterm-256 index 60",
+        "tonalRamp": [
+          "#0a0918",
+          "#222137",
+          "#3c3c59",
+          "#59597d",
+          "#7879a0",
+          "#9a9bbe",
+          "#c0c1df",
+          "#ecedff"
+        ]
+      },
+      "chat-player": {
+        "role": "secondary",
+        "displayName": "Peach (chat)",
+        "canonical": "xterm-256 index 223",
+        "tonalRamp": [
+          "#140800",
+          "#32200b",
+          "#533a20",
+          "#765736",
+          "#987653",
+          "#b7987a",
+          "#d9bfa6",
+          "#ffebd7"
+        ]
+      },
+      "chat-status": {
+        "role": "secondary",
+        "displayName": "Teal (chat)",
+        "canonical": "xterm-256 index 73",
+        "tonalRamp": [
+          "#000e0f",
+          "#032a2a",
+          "#06494a",
+          "#1e6a6a",
+          "#3f8b8b",
+          "#6dabab",
+          "#9dcfcf",
+          "#d2f7f7"
+        ]
+      },
+      "chat-field": {
+        "role": "primary",
+        "displayName": "Cobalt (chat)",
+        "canonical": "#1d3270",
+        "tonalRamp": [
+          "#030922",
+          "#142145",
+          "#2b3d6d",
+          "#435b96",
+          "#607bbc",
+          "#859dd7",
+          "#aec4f4",
+          "#e7efff"
+        ]
+      },
+      "chat-ink": {
+        "role": "primary",
+        "displayName": "Ice (chat)",
+        "canonical": "#e8eeff",
+        "tonalRamp": [
+          "#090b10",
+          "#21242b",
+          "#3c3f4a",
+          "#595d6a",
+          "#787d8b",
+          "#9a9eab",
+          "#c0c4cf",
+          "#ebeef7"
+        ]
+      },
+      "chat-quiet": {
+        "role": "primary",
+        "displayName": "Haze (chat)",
+        "canonical": "#a9b8e6",
+        "tonalRamp": [
+          "#060a19",
+          "#1c2339",
+          "#353e5c",
+          "#505c81",
+          "#6f7ca4",
+          "#919dc1",
+          "#b9c3e2",
+          "#e9eefe"
+        ]
+      },
+      "retro-ground": {
+        "role": "neutral",
+        "displayName": "Phosphor Black (retro)",
+        "canonical": "#030a03",
+        "tonalRamp": [
+          "#080d08",
+          "#20261f",
+          "#3a4339",
+          "#566156",
+          "#758175",
+          "#97a297",
+          "#bec7be",
+          "#eaf1e9"
+        ]
+      },
+      "retro-text": {
+        "role": "neutral",
+        "displayName": "Phosphor Green (retro)",
+        "canonical": "#33ff66",
+        "tonalRamp": [
+          "#001002",
+          "#032d0b",
+          "#064e19",
+          "#0f7128",
+          "#179638",
+          "#1ebe48",
+          "#75e082",
+          "#ccfecf"
+        ]
+      },
+      "retro-host": {
+        "role": "secondary",
+        "displayName": "Pure Green (retro)",
+        "canonical": "xterm-256 index 46",
+        "tonalRamp": [
+          "#001000",
+          "#002e00",
+          "#0b4e09",
+          "#017301",
+          "#019801",
+          "#2cbe27",
+          "#6fe368",
+          "#cdfec8"
+        ]
+      },
+      "retro-dim": {
+        "role": "secondary",
+        "displayName": "Shadow Green (retro)",
+        "canonical": "xterm-256 index 28",
+        "tonalRamp": [
+          "#001000",
+          "#032d03",
+          "#074e06",
+          "#12720f",
+          "#2c9628",
+          "#62b55c",
+          "#95d88f",
+          "#ccffc7"
+        ]
+      },
+      "retro-player": {
+        "role": "secondary",
+        "displayName": "Amber (retro)",
+        "canonical": "xterm-256 index 214",
+        "tonalRamp": [
+          "#120900",
+          "#322003",
+          "#563907",
+          "#7c5510",
+          "#a47219",
+          "#cf9121",
+          "#eeba6d",
+          "#feecd2"
+        ]
+      },
+      "retro-status": {
+        "role": "secondary",
+        "displayName": "Cyan (retro)",
+        "canonical": "xterm-256 index 44",
+        "tonalRamp": [
+          "#000e0e",
+          "#002a2a",
+          "#0c4949",
+          "#016c6c",
+          "#028f8f",
+          "#2db3b3",
+          "#79d7d6",
+          "#bafdfc"
+        ]
+      },
+      "retro-field": {
+        "role": "primary",
+        "displayName": "Deep Phosphor (retro)",
+        "canonical": "#0d4a1e",
+        "tonalRamp": [
+          "#001003",
+          "#0b2c12",
+          "#214a29",
+          "#386b41",
+          "#568c5f",
+          "#7eac84",
+          "#aad0ae",
+          "#daf8dd"
+        ]
+      },
+      "retro-ink": {
+        "role": "primary",
+        "displayName": "Mint (retro)",
+        "canonical": "#d2ffdc",
+        "tonalRamp": [
+          "#020f05",
+          "#142a1a",
+          "#2b4732",
+          "#43674d",
+          "#61886b",
+          "#87a88e",
+          "#b0cdb6",
+          "#e0f5e4"
+        ]
+      },
+      "retro-quiet": {
+        "role": "primary",
+        "displayName": "Sage (retro)",
+        "canonical": "#86d39b",
+        "tonalRamp": [
+          "#001004",
+          "#042c13",
+          "#124c28",
+          "#286d40",
+          "#488f5e",
+          "#73af83",
+          "#a2d2ad",
+          "#d5fadd"
+        ]
+      },
+      "enigma-ground": {
+        "role": "neutral",
+        "displayName": "Ink (enigma)",
+        "canonical": "#0e0b1a",
+        "tonalRamp": [
+          "#0b0a11",
+          "#24222d",
+          "#403e4c",
+          "#5d5b6d",
+          "#7d7a8e",
+          "#9e9cad",
+          "#c4c2d1",
+          "#eeedf8"
+        ]
+      },
+      "enigma-text": {
+        "role": "neutral",
+        "displayName": "Newsprint (enigma)",
+        "canonical": "#f2e3c0",
+        "tonalRamp": [
+          "#0f0a02",
+          "#2a2312",
+          "#483f28",
+          "#685c40",
+          "#897c5e",
+          "#a99d83",
+          "#cdc3ad",
+          "#f5eedd"
+        ]
+      },
+      "enigma-host": {
+        "role": "secondary",
+        "displayName": "Wheat Gold (enigma)",
+        "canonical": "xterm-256 index 222",
+        "tonalRamp": [
+          "#110a00",
+          "#302100",
+          "#513c08",
+          "#785800",
+          "#9a772a",
+          "#b89a5d",
+          "#dac18f",
+          "#feecca"
+        ]
+      },
+      "enigma-dim": {
+        "role": "secondary",
+        "displayName": "Sepia (enigma)",
+        "canonical": "xterm-256 index 137",
+        "tonalRamp": [
+          "#140800",
+          "#331f09",
+          "#54391d",
+          "#785633",
+          "#9a7550",
+          "#b89777",
+          "#dabfa4",
+          "#ffebd8"
+        ]
+      },
+      "enigma-player": {
+        "role": "secondary",
+        "displayName": "Sky (enigma)",
+        "canonical": "xterm-256 index 117",
+        "tonalRamp": [
+          "#000d16",
+          "#012838",
+          "#014660",
+          "#186686",
+          "#3b87aa",
+          "#6aa8c6",
+          "#9bcce6",
+          "#dcf3ff"
+        ]
+      },
+      "enigma-status": {
+        "role": "secondary",
+        "displayName": "Tan (enigma)",
+        "canonical": "xterm-256 index 180",
+        "tonalRamp": [
+          "#140800",
+          "#331f0a",
+          "#533a1e",
+          "#765634",
+          "#997551",
+          "#b79879",
+          "#d9bfa5",
+          "#feebd8"
+        ]
+      },
+      "enigma-field": {
+        "role": "primary",
+        "displayName": "Plum (enigma)",
+        "canonical": "#45285e",
+        "tonalRamp": [
+          "#10051a",
+          "#2c1b3b",
+          "#4a355e",
+          "#6a5084",
+          "#8b6fa8",
+          "#ab92c4",
+          "#cfbae5",
+          "#f3eafe"
+        ]
+      },
+      "enigma-ink": {
+        "role": "primary",
+        "displayName": "Parchment (enigma)",
+        "canonical": "#f6ead0",
+        "tonalRamp": [
+          "#0e0b04",
+          "#292317",
+          "#463f2f",
+          "#665d48",
+          "#867c66",
+          "#a79e8a",
+          "#cbc3b3",
+          "#f4eee1"
+        ]
+      },
+      "enigma-quiet": {
+        "role": "primary",
+        "displayName": "Lilac (enigma)",
+        "canonical": "#c6b1d6",
+        "tonalRamp": [
+          "#0f0814",
+          "#291f31",
+          "#473951",
+          "#675673",
+          "#877595",
+          "#a797b4",
+          "#ccbed6",
+          "#f4eafd"
+        ]
+      },
+      "zork-ground": {
+        "role": "neutral",
+        "displayName": "Amber Black (zork)",
+        "canonical": "#0c0800",
+        "tonalRamp": [
+          "#0d0b05",
+          "#27241a",
+          "#434033",
+          "#625e4e",
+          "#827d6c",
+          "#a39e8f",
+          "#c8c4b7",
+          "#f1efe4"
+        ]
+      },
+      "zork-text": {
+        "role": "neutral",
+        "displayName": "Amber (zork)",
+        "canonical": "#ffb000",
+        "tonalRamp": [
+          "#120900",
+          "#322003",
+          "#553a07",
+          "#7b5510",
+          "#a47218",
+          "#ce9121",
+          "#edba6d",
+          "#feecd2"
+        ]
+      },
+      "zork-host": {
+        "role": "secondary",
+        "displayName": "Amber (zork)",
+        "canonical": "xterm-256 index 214",
+        "tonalRamp": [
+          "#120900",
+          "#322003",
+          "#563907",
+          "#7c5510",
+          "#a47219",
+          "#cf9121",
+          "#eeba6d",
+          "#feecd2"
+        ]
+      },
+      "zork-dim": {
+        "role": "secondary",
+        "displayName": "Umber (zork)",
+        "canonical": "xterm-256 index 94",
+        "tonalRamp": [
+          "#120900",
+          "#312101",
+          "#543a02",
+          "#7a5606",
+          "#9d762d",
+          "#bb995f",
+          "#dcc091",
+          "#ffecce"
+        ]
+      },
+      "zork-player": {
+        "role": "secondary",
+        "displayName": "Cream (zork)",
+        "canonical": "xterm-256 index 230",
+        "tonalRamp": [
+          "#0c0c02",
+          "#262512",
+          "#424128",
+          "#606040",
+          "#80805e",
+          "#a1a183",
+          "#c6c6ad",
+          "#f0f0dd"
+        ]
+      },
+      "zork-status": {
+        "role": "secondary",
+        "displayName": "Ochre (zork)",
+        "canonical": "xterm-256 index 172",
+        "tonalRamp": [
+          "#140800",
+          "#341e03",
+          "#5a3706",
+          "#81520f",
+          "#ab6e17",
+          "#d08f40",
+          "#efb87c",
+          "#ffebd6"
+        ]
+      },
+      "zork-field": {
+        "role": "primary",
+        "displayName": "Burnt Amber (zork)",
+        "canonical": "#4d2c00",
+        "tonalRamp": [
+          "#140800",
+          "#331f09",
+          "#543a1d",
+          "#775633",
+          "#997550",
+          "#b89878",
+          "#dabfa4",
+          "#feebd8"
+        ]
+      },
+      "zork-ink": {
+        "role": "primary",
+        "displayName": "Lamp Cream (zork)",
+        "canonical": "#ffe2a8",
+        "tonalRamp": [
+          "#110a00",
+          "#2f2202",
+          "#4f3d14",
+          "#715a29",
+          "#937a46",
+          "#b29c70",
+          "#d4c29e",
+          "#fbedd1"
+        ]
+      },
+      "zork-quiet": {
+        "role": "primary",
+        "displayName": "Honey (zork)",
+        "canonical": "#d9ab62",
+        "tonalRamp": [
+          "#120900",
+          "#322002",
+          "#553a03",
+          "#7b550a",
+          "#9e752f",
+          "#bc9860",
+          "#ddbf91",
+          "#feecd1"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Pixel (F57)",
+        "purpose": "portmart's 5x7 half-block pixel font, 4 rows tall: the title wordmark and the LAST TURN number only."
+      },
+      "headline": {
+        "displayName": "Host Name",
+        "purpose": "Bold, caps, letter-spaced with single spaces: the header host name and the SELECT panel name."
+      },
+      "title": {
+        "displayName": "Bold Caps Label",
+        "purpose": "Speaker tags, rail module tabs, status words, boot step labels, host bill, turn total."
+      },
+      "body": {
+        "displayName": "Terminal Body",
+        "purpose": "foot's fontconfig monospace at size 22 (106x30 cells on the Flip 2): transcript, panel copy, MACHINE values."
+      },
+      "label": {
+        "displayName": "Dim / Quiet Label",
+        "purpose": "Subtitles, hint labels, timing legend, MACHINE keys, the note under the score."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "frame-active",
+        "value": "0.1s (10 fps)",
+        "purpose": "Redraw cap while LISTENING (the mic meter) or after a state change."
+      },
+      {
+        "name": "frame-idle-anim",
+        "value": "0.25s (4 fps)",
+        "purpose": "Redraw cadence for spinners, the title chase and the best-turn tint; nothing redraws when idle."
+      },
+      {
+        "name": "spinner",
+        "value": "◐◓◑◒ at 4 Hz",
+        "purpose": "HEARING/THINKING status and a boot step that is running."
+      },
+      {
+        "name": "wordmark-arrive",
+        "value": "0.04s per letter",
+        "purpose": "The title wordmark's letters arrive one by one."
+      },
+      {
+        "name": "marquee-chase",
+        "value": "2 Hz, one letter per step",
+        "purpose": "Host colours chase through the title wordmark like marquee bulbs while the servers load."
+      },
+      {
+        "name": "credit-type",
+        "value": "0.03s per character, starting at 0.8s",
+        "purpose": "The ╰─ credit line types in portmart's manner, with a █ cursor."
+      },
+      {
+        "name": "best-turn-post",
+        "value": "3s",
+        "purpose": "A new BEST TURNS row is bold on an 18% field-to-ink tint and LAST TURN reads '1ST BEST TURN'; then both settle. Nothing blinks."
+      },
+      {
+        "name": "row-diff",
+        "value": "changed rows only",
+        "purpose": "Buffer.ansi(prev) resends only rows that differ; a theme change (OSC 10/11) repaints everything."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "rail",
+        "value": "80 cols x 18 rows",
+        "purpose": "At or above: the 26-column marquee rail. Below: no rail; rail stats move to the bar's right side in short form."
+      },
+      {
+        "name": "wordmark-full",
+        "value": "95 cols",
+        "purpose": "At or above: RETRO VOICE CHAT (91 cells) on the title; below: RETRO VOICE."
+      },
+      {
+        "name": "rail-modules",
+        "value": "rows - 2",
+        "purpose": "When modules overflow the rail, BEST TURNS drops first, then LAST TURN."
+      },
+      {
+        "name": "flip2-default",
+        "value": "106 x 30 cells",
+        "purpose": "foot at size 22 on the Retroid Pocket Flip 2."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Button Pill (A)",
+      "kind": "button",
+      "refersTo": "pill-a",
+      "description": "A pad button as printed: half-disc caps in the pad colour around a bold label in Pill Ink.",
+      "html": "<span class=\"ds-pill\"><span class=\"ds-cap\" style=\"color:#4ade80\">◖</span><b class=\"ds-lbl\" style=\"background:#4ade80\">A</b><span class=\"ds-cap\" style=\"color:#4ade80\">◗</span></span> <span class=\"ds-hint\">stop</span>",
+      "css": ".ds-pill, .ds-hint { font-family: 'DejaVu Sans Mono', monospace; font-size: 15px; line-height: 1.25; white-space: pre; } .ds-pill { background:#030a03; } .ds-lbl { color:#05060a; font-weight:700; } .ds-hint { color:#008700; }"
+    },
+    {
+      "name": "Button Pill Row",
+      "kind": "button",
+      "refersTo": "pill-b",
+      "description": "Hint row: B/R1 alternatives joined with a muted slash, chords with a plus, groups 3 cells apart.",
+      "html": "<div class=\"ds-hints\"><span style=\"color:#ff5a6e\">◖</span><b style=\"background:#ff5a6e\">B</b><span style=\"color:#ff5a6e\">◗</span><span class=\"ds-sep\">/</span><span style=\"color:#9ca3b0\">◖</span><b style=\"background:#9ca3b0\">R1</b><span style=\"color:#9ca3b0\">◗</span> <span class=\"ds-dim\">hold: talk</span>   <span style=\"color:#ffb000\">◖</span><b style=\"background:#ffb000\">Y</b><span style=\"color:#ffb000\">◗</span> <span class=\"ds-dim\">repeat</span>   <span style=\"color:#d4c090\">◖</span><b style=\"background:#d4c090\">SELECT</b><span style=\"color:#d4c090\">◗</span><span class=\"ds-sep\">+</span><span style=\"color:#d4c090\">◖</span><b style=\"background:#d4c090\">START</b><span style=\"color:#d4c090\">◗</span> <span class=\"ds-dim\">quit</span></div>",
+      "css": ".ds-hints { font-family: 'DejaVu Sans Mono', monospace; font-size: 15px; line-height: 1.25; white-space: pre; background:#030a03; padding:2px 6px; } .ds-hints b { color:#05060a; font-weight:700; } .ds-sep { color:#9ca3b0; } .ds-dim { color:#008700; }"
+    },
+    {
+      "name": "Breadcrumb Bar",
+      "kind": "nav",
+      "refersTo": "breadcrumb-bar",
+      "description": "portmart's bottom status bar: ◆ > ROCKNIX > device > mic > voice, a slate rule, servers on the right.",
+      "html": "<div class=\"ds-bar\"><b style=\"color:#ff4fd8\">◆</b> <span class=\"ds-s\">&gt;</span> <span style=\"color:#e8eaf0\">ROCKNIX</span> <span class=\"ds-s\">&gt;</span> <span style=\"color:#00dbe4\">Flip 2</span> <span class=\"ds-s\">&gt;</span> <span style=\"color:#4ade80\">USB/BT mic</span> <span class=\"ds-s\">&gt;</span> <span style=\"color:#9ca3b0\">voice alba</span> <span class=\"ds-s ds-run\">────────────</span> <span style=\"color:#00dbe4\">cpu 34% · servers ✓</span></div>",
+      "css": ".ds-bar { font-family: 'DejaVu Sans Mono', monospace; font-size: 15px; line-height: 1.25; white-space: pre; background:#0f1216; padding:0 6px; display:flex; gap:0; } .ds-s { color:#2a3038; } .ds-run { flex:1; overflow:hidden; }"
+    },
+    {
+      "name": "Marquee Rail Module (HOSTS)",
+      "kind": "card",
+      "refersTo": "marquee-retro",
+      "description": "Inverted header tab plus a quiet hairline, then host rows; the active row inverts to ink.",
+      "html": "<div class=\"ds-rail\"><div><b class=\"ds-tab\"> HOSTS </b> <span class=\"ds-q\">───────────</span></div><div> <span style=\"color:#87afff\">■</span> GEMMA<span class=\"ds-q ds-r\">chat</span></div><div class=\"ds-on\"><b>▶</b><span style=\"color:#0d4a1e\">■</span> <b>TRIXY</b><span class=\"ds-r\">gaming</span></div><div> <span style=\"color:#ffd787\">■</span> ENIGMA<span class=\"ds-q ds-r\">puzzles</span></div><div> <span style=\"color:#ffaf00\">■</span> ZORK<span class=\"ds-q ds-r\">—</span></div></div>",
+      "css": ".ds-rail { font-family: 'DejaVu Sans Mono', monospace; font-size: 15px; line-height: 1.25; white-space: pre; background:#0d4a1e; color:#d2ffdc; width:26ch; padding:4px 0; } .ds-rail > div { padding:0 1ch; display:flex; gap:1ch; } .ds-tab { background:#d2ffdc; color:#0d4a1e; } .ds-q { color:#86d39b; } .ds-r { margin-left:auto; } .ds-on { background:#d2ffdc; color:#0d4a1e; }"
+    },
+    {
+      "name": "LAST TURN Score",
+      "kind": "custom",
+      "refersTo": "marquee-retro",
+      "description": "The one large number: time to first word in the 5x7 half-block pixel font, in marquee ink.",
+      "html": "<div class=\"ds-score\"><b class=\"ds-tab\"> LAST TURN </b><pre class=\"ds-px\"> ▄█      ▄▀▀▀▄\n  █      ▀▄▄▄█\n  █   ▄▄    ▄▀\n ▀▀▀  ▀▀  ▀▀   <span class=\"ds-unit\">s</span></pre><b>1ST BEST TURN</b></div>",
+      "css": ".ds-score { font-family: 'DejaVu Sans Mono', monospace; font-size: 15px; line-height: 1.25; white-space: pre; background:#0d4a1e; color:#d2ffdc; width:26ch; padding:4px 2ch; } .ds-tab { background:#d2ffdc; color:#0d4a1e; } .ds-px { margin:0; font:inherit; line-height:1; } .ds-unit { font-weight:400; }"
+    },
+    {
+      "name": "BEST TURNS Board",
+      "kind": "custom",
+      "refersTo": "marquee-retro",
+      "description": "Top four session times in arcade rank colours; a new record row is bold on an 18% ink tint for 3 s.",
+      "html": "<div class=\"ds-best\"><b class=\"ds-tab\"> BEST TURNS </b><div class=\"ds-new\" style=\"color:#ffd75f\"><b>1ST  ZORK</b><b>1.9s</b></div><div style=\"color:#ff8f6b\"><span>2ND  TRIXY</span><span>2.8s</span></div><div style=\"color:#5fd7ff\"><span>3RD  TRIXY</span><span>3.0s</span></div><div style=\"color:#d7a1ff\"><span>4TH  GEMMA</span><span>3.2s</span></div></div>",
+      "css": ".ds-best { font-family: 'DejaVu Sans Mono', monospace; font-size: 15px; line-height: 1.25; white-space: pre; background:#0d4a1e; width:26ch; padding:4px 1ch; } .ds-tab { background:#d2ffdc; color:#0d4a1e; margin-left:1ch; } .ds-best > div { display:flex; justify-content:space-between; padding:0 1ch; } .ds-new { background:#306b40; transition:background 0s 3s; }"
+    },
+    {
+      "name": "Turn Timing Bar",
+      "kind": "custom",
+      "description": "Signature: hear, think and speak as ━ segments, one cell per 0.25 s, dim legend, bold total in host colour.",
+      "html": "<div class=\"ds-time\"><span style=\"color:#5fd7ff\">━━━━━</span><span style=\"color:#ffd75f\">━━━━━━</span><span style=\"color:#e8eaf0\">━━━</span> <span class=\"ds-d\">hear</span> 1.2  <span class=\"ds-d\">think</span> 1.4  <span class=\"ds-d\">speak</span> 0.8<b class=\"ds-tot\">3.4s</b></div>",
+      "css": ".ds-time { font-family: 'DejaVu Sans Mono', monospace; font-size: 15px; line-height: 1.25; white-space: pre; background:#030a03; color:#33ff66; display:flex; padding:0 6px; } .ds-d { color:#008700; margin:0 1ch 0 2ch; } .ds-tot { margin-left:auto; color:#00ff00; }"
+    },
+    {
+      "name": "Status Line (LISTENING)",
+      "kind": "input",
+      "description": "Glyph and word in bold, then a 30-cell input meter in host colour over dim, elapsed time and the next action.",
+      "html": "<div class=\"ds-st\"><b style=\"color:#ff5f5f\">● LISTENING </b><span style=\"color:#00ff00\">▮▮▮▮▮▮▮▮▮▮▮▮▮▮▮▮▮▮</span><span style=\"color:#008700\">▯▯▯▯▯▯▯▯▯▯▯▯</span>   1.8s   release to send</div>",
+      "css": ".ds-st { font-family: 'DejaVu Sans Mono', monospace; font-size: 15px; line-height: 1.25; white-space: pre; background:#030a03; color:#33ff66; padding:0 6px; }"
+    },
+    {
+      "name": "Credit Line",
+      "kind": "custom",
+      "description": "portmart's ╰─ hook under the bar on the title screen; the credit types at 0.03 s a character with a block cursor.",
+      "html": "<div class=\"ds-cr\"><span class=\"ds-hook\">╰─</span> retro voice chat is maintained by github.com/mercurious<span class=\"ds-cur\">█</span></div>",
+      "css": ".ds-cr { font-family: 'DejaVu Sans Mono', monospace; font-size: 15px; line-height: 1.25; white-space: pre; background:#030a03; color:#e8eaf0; padding:0 6px; } .ds-hook { color:#2a3038; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Arcade Marquee",
+    "overview": "The screen is a cabinet front for a voice companion. Each host owns a lit marquee down the left rail: a solid truecolour field over the mode's own terminal ground. The working screen sits to the right of it, and every spoken turn is posted like a score: a timing bar sized to the turn's real duration, the time to first word as one large pixel number, and the session's best times on a ranked board. The machine's state (models, speed, context, memory, battery, servers) is always on the glass, never in a log.\n\nThis is a terminal, not a web page. The medium is a grid of cells in `foot` (fontconfig `monospace`, size 22: 106×30 cells on the Retroid Pocket Flip 2). Every frame is drawn into `screen.Buffer` and written once; only rows that changed are resent. Colour is truecolour `#rrggbb` for the shared chrome and the marquees, and xterm-256 indexes for each mode's text palette. The terminal's own background and foreground are switched per mode with OSC 11/10. The density is that of a working instrument panel, and nothing animates unless it reports something.\n\nThe pixel font, the ◖A◗ button pills, the ◆ > breadcrumb status bar and the ╰─ credit line come from the maintainer's other ROCKNIX app, portmart, so the two read as one family on the same handheld. Nothing else of portmart's identity carries over. The arcade costume is held in check: there is one large number, no glow, and the only highlight that times out is the new-score row.",
+    "keyCharacteristics": [
+      "One truecolour marquee field per host, 26 columns wide, on the left. Everything else sits on the mode's terminal ground.",
+      "Turns are measured visibly. Hear, think and speak are drawn as ━ segments at one cell per 0.25 s.",
+      "The 5×7 half-block pixel font is used for exactly two things: the title wordmark and the LAST TURN number.",
+      "Modules are inverted header tabs plus a hairline rule. There are no boxes.",
+      "Every state pairs a glyph with a word (● LISTENING, ♪ SPEAKING, ✖ error, ✓ servers).",
+      "The chrome is fixed: the status line, two rows of button pills and the breadcrumb bar sit at the bottom on every screen."
+    ],
+    "rules": [
+      {
+        "name": "The Host Owns the Rail Rule",
+        "body": "The marquee field is the only large solid colour on screen and belongs to the host on view. A new mode brings its own `marquee = (field, ink, quiet)` and its own `bg`, `fg` and `colors`, and borrows from no other mode.",
+        "section": "colors"
+      },
+      {
+        "name": "The Rank Colours Stay on the Board Rule",
+        "body": "Gold, coral, cyan and violet as ranks appear only on BEST TURNS rows. LAST TURN is drawn in the marquee ink even when it sets a record. Hear-cyan and think-gold appear elsewhere only as timing segments.",
+        "section": "colors"
+      },
+      {
+        "name": "The Speak Is Neutral Rule",
+        "body": "Speaking is drawn in Bright Neutral, never in a host colour: ENIGMA's and Zork's host colours sit next to gold and would merge with the think segment.",
+        "section": "colors"
+      },
+      {
+        "name": "The Glyph and Word Rule",
+        "body": "No state is shown by colour alone. Red is always ✖ plus a message, the mic meter sits next to ● LISTENING, and servers read ✓ or ✖ with their names.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Big Things Rule",
+        "body": "The pixel font is used for the wordmark and the score and nowhere else. The SELECT panel spells the host name in letter-spaced bold text, not pixels.",
+        "section": "typography"
+      },
+      {
+        "name": "The Caps Are Labels Rule",
+        "body": "Capitals mark names and states (hosts, YOU, module tabs, status words). Sentences, hints and readings stay in lower case.",
+        "section": "typography"
+      },
+      {
+        "name": "The Fixed Floor Rule",
+        "body": "The bottom five rows (rule, status line, two pill rows, breadcrumb bar) are the same on every booted screen. A new screen draws into the transcript region, not around it.",
+        "section": "layout"
+      },
+      {
+        "name": "The No Box Rule",
+        "body": "Modules are separated by an inverted tab and a ─ hairline in the quiet colour. Never wrap a region in box-drawing corners.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** give a new mode a full world in `app/modes/<id>.py`: `bg`/`fg` hex, `colors = (host, dim, player, status)` as 256-colour indexes, and `marquee = (field, ink, quiet)` in truecolour. Keep the field dark and saturated enough that ink and quiet read on it (shipped: ink 9.5–10.4:1, quiet 5.9–6.2:1).",
+      "**Do** check that the dim index stays readable on the new ground. Dim carries hint labels and the timing legend. Shipped values range from 3.1:1 (chat) to 6.0:1 (enigma).",
+      "**Do** draw new screens into `screen.Buffer` with `put`/`rput`/`fill`/`pill`, so the row-diff output keeps redraws cheap.",
+      "**Do** pair every new state with a glyph and a word, and use Alarm Red, Warn Amber and OK Green for those meanings only.",
+      "**Do** keep the button hints on screen and reuse the pad colours from `screen.PAD` for any new button.",
+      "**Do** give anything measured a number with a unit (s, tok/s, GB, W, %), right-aligned when it sits in a column."
+    ],
+    "donts": [
+      "**Don't** use the pixel font for anything but the wordmark and the LAST TURN number.",
+      "**Don't** use rank colours outside BEST TURNS, or a host colour for the speak segment.",
+      "**Don't** frame modules or panels with box-drawing corners. Use a tab and a ─ hairline.",
+      "**Don't** add a second large number, glow, or blinking. The 3 s best-turn tint is the only highlight that times out.",
+      "**Don't** let one mode's palette leak into another's rail or text. The menu previews a mode by switching to its whole world.",
+      "**Don't** carry portmart's identity beyond the shared pixel font, pills, breadcrumb bar and credit line."
+    ]
+  }
+}

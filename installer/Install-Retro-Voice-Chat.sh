@@ -17,8 +17,10 @@ SELF=$(cd "$(dirname "$0")" && pwd)/$(basename "$0")
 if [ -z "${IN_FOOT:-}" ] && command -v foot >/dev/null; then   # show it: a fullscreen terminal, like the app's menu
   SWAYSOCK=$(ls "$XDG_RUNTIME_DIR"/sway-ipc.*.sock 2>/dev/null | head -1); export SWAYSOCK
   ( for i in 1 2 3 4 5 6; do sleep 0.5; swaymsg '[app_id="llamatalk-installer"] fullscreen enable' >/dev/null 2>&1 && break; done ) &
-  IN_FOOT=1 exec foot --app-id=llamatalk-installer -f "monospace:size=16" -o colors.background=030a03 \
-    -o colors.foreground=33ff66 sh "$SELF"
+  # foot 1.26 renamed [colors] to [colors-dark] (the old name warns; 1.28 drops it); -d error: harmless notices
+  FC=colors; foot --version 2>/dev/null | awk '{split($3, v, "."); exit !(v[1] > 1 || v[2] >= 26)}' && FC=colors-dark
+  IN_FOOT=1 exec foot -d error --app-id=llamatalk-installer -f "monospace:size=16" -o $FC.background=030a03 \
+    -o $FC.foreground=33ff66 sh "$SELF"
 fi
 
 wait_button() {   # until any gamepad button, or $1 seconds

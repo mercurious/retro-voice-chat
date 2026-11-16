@@ -15,8 +15,21 @@ SELECT opens the menu that switches between them.
 import array, fcntl, io, json, math, os, queue, random, re, select, shutil, struct, subprocess, sys
 import textwrap, threading, time, traceback, unicodedata, urllib.error, urllib.request, uuid, wave
 import modes
+import screen
 
-VERSION = "0.0.1"
+
+def read_version():
+    here = os.path.dirname(os.path.abspath(__file__))
+    for p in (os.path.join(here, "VERSION"), os.path.join(here, "..", "VERSION")):    # release dir, repo
+        try:
+            with open(p) as f:
+                return f.read().strip()
+        except OSError:
+            pass
+    return "?"
+
+
+VERSION = read_version()
 ASR_URL = os.environ.get("RV_ASR_URL", "http://127.0.0.1:8091")
 LLM_URL = os.environ.get("RV_LLM_URL", "http://127.0.0.1:8092")
 TTS_URL = os.environ.get("RV_TTS_URL", "http://127.0.0.1:8093")
@@ -57,6 +70,8 @@ SLOT_DIR = os.path.join(LOG_DIR, "kv")
 # restart the LLM server (the file RESTART names the model) and opening the app again.
 MODEL_KIND = os.environ.get("RV_MODE", "fast")
 MODELS_AVAILABLE = os.environ.get("RV_MODELS_AVAILABLE", MODEL_KIND).split()
+# launch.sh's label already names the kind ("E2B fast"); a bare model name gets it added
+MODEL_NAME = MODEL_LABEL if MODEL_KIND in MODEL_LABEL else f"{MODEL_LABEL} ({MODEL_KIND})"
 RESTART = os.path.join(LOG_DIR, "restart")
 CHAT_MAX_TOKENS = 200
 CTX_FULL = re.compile(r"request \((\d+) tokens\) exceeds the available context size")
@@ -451,6 +466,34 @@ def find_battery():
     return None
 
 
+# device-tree model prefix -> status bar label, as portmart has them (ROCKNIX's Flip 2 reports
+# "Retroid Pocket Flip2 Visionox")
+MODELS = [("Retroid Pocket Flip2", "Flip 2"), ("Retroid Pocket Flip 2", "Flip 2"),
+          ("Retroid Pocket Mini", "RP Mini"), ("Retroid Pocket Classic", "RP Classic"),
+          ("Retroid Pocket 5", "RP5"), ("Retroid Pocket 6", "RP6"), ("AYN Odin 2 Portal", "Odin 2 Portal"),
+          ("AYN Odin 2", "Odin 2"), ("AYN Odin 3", "Odin 3"), ("AYN Thor", "Thor")]
+
+
+def device_label(width=16):
+    """The handheld's name for the status bar ("Flip 2"), from the device tree; "" when there is none."""
+    model = sysfs("/proc/device-tree", "model").strip("\0 ")
+    for prefix, label in MODELS:
+        if model.startswith(prefix):
+            return label
+    return model if len(model) <= width else model[:width - 1].rstrip() + "…"
+
+
+def mem_free_gb():
+    try:
+        with open("/proc/meminfo") as f:
+            for line in f:
+                if line.startswith("MemAvailable:"):
+                    return int(line.split()[1]) / 1048576
+    except (OSError, ValueError, IndexError):
+        pass
+    return None
+
+
 def load_prefs():
     try:
         with open(PREFS_PATH) as f:
@@ -469,15 +512,19 @@ def save_prefs(prefs):
         pass
 
 
+def cpu_times():
+    """(total, idle + iowait) jiffies since boot, from /proc/stat."""
+    with open("/proc/stat") as f:
+        v = [int(x) for x in f.readline().split()[1:9]]
+    return sum(v), v[3] + v[4]
+
+
 def system_load():
     """One status line: CPU busy over half a second, what the GPU is doing, memory in use."""
-    def cpu():
-        v = [int(x) for x in open("/proc/stat").readline().split()[1:9]]
-        return sum(v), v[3] + v[4]      # total, idle + iowait
     try:
-        t0, i0 = cpu()
+        t0, i0 = cpu_times()
         time.sleep(0.5)
-        t1, i1 = cpu()
+        t1, i1 = cpu_times()
         mem = dict(l.split(":")[0:2] for l in open("/proc/meminfo"))
         total, avail = int(mem["MemTotal"].split()[0]), int(mem["MemAvailable"].split()[0])
         gpu = "running the model" if os.environ.get("RV_LLM_GPU") else "off"
@@ -636,7 +683,27 @@ class App:
         self.select_alone = False  # SELECT is down and nothing else was pressed with it
         self.theme_due = False     # the terminal's colours are to be set at the next frame
         self.quit_when_quiet = 0.0     # when set: quit once the last words are spoken (a model switch)
-        self.metrics = ""
+        self.last_turn = None      # the last turn's timings: {"hear", "think", "first", "how"}, seconds
+        self.tok_s = None          # the model's speed on its last reply
+        self.best = []             # the session's turns as [first word s, host name, turn number], fastest first
+        self.turn_n, self.posted = 0, (0, 0.0)     # turns timed so far; (turn number, when) of the last one posted
+        self.mem_free = None       # GB available
+        self.boot_steps = []       # the title screen's server lines: [label, what, status, t0, t1]
+        self.booted = False        # the title screen gives way once boot() is done
+        self.t_launch = time.time()
+        self.device = device_label()
+        # the title screen's background: the next of screen.Buffer.BACKDROPS each launch (kept in prefs.json),
+        # or the one RV_BACKDROP names
+        kinds = screen.Buffer.BACKDROPS
+        self.backdrop = os.environ.get("RV_BACKDROP", "")
+        if self.backdrop not in kinds:
+            last = self.prefs.get("backdrop")
+            self.backdrop = kinds[(kinds.index(last) + 1) % len(kinds) if last in kinds else 0]
+            self.prefs["backdrop"] = self.backdrop
+            save_prefs(self.prefs)
+        self.frame = None          # the last frame written: the next one sends only the rows that changed
+        self.down = set()          # servers that stopped answering /health after boot
+        self.cpu_pct, self.cpu_last = None, None
         self.n_ctx = 0             # the LLM's context window (tokens), from /props
         self.bat_dir = find_battery()
         self.bat_pct, self.bat_status, self.bat_w = None, "", None   # watts: smoothed over ~15 s
@@ -699,14 +766,21 @@ class App:
         say(f"driver: {info['driver'] or 'none in use: the model runs on the CPU'}")
         say(info["llama"] and f"llama.cpp: {info['llama']}")
         say(info["tuning"] and f"tuning: {info['tuning']}")
-        for name, url in (("ASR", ASR_URL), ("LLM", LLM_URL), ("TTS", TTS_URL)):
-            t0 = time.time()
+        steps = self.boot_steps = [["ASR", "speech recognition", "wait", 0.0, 0.0],
+                                   ["LLM", MODEL_NAME, "wait", 0.0, 0.0],
+                                   ["TTS", "speech", "wait", 0.0, 0.0],
+                                   ["", "reading the host's prompt", "wait", 0.0, 0.0]]
+        for step, url in zip(steps, (ASR_URL, LLM_URL, TTS_URL)):
+            t0 = step[3] = time.time()
+            step[2] = "run"
             while not healthy(url):
-                self.set_state("BOOT", f"loading {name} ({time.time() - t0:.0f}s)")
+                self.set_state("BOOT", f"loading {step[0]} ({time.time() - t0:.0f}s)")
                 time.sleep(0.5)
                 if time.time() - t0 > 300:
-                    self.set_state("ERROR", f"{name} server did not start")
+                    step[2] = "fail"
+                    self.set_state("ERROR", f"{step[0]} server did not start")
                     return False
+            step[2], step[4], self.dirty = "ok", time.time(), True
         if not info["llama"]:
             try:
                 say(f"llama.cpp: {http_json(LLM_URL + '/props', timeout=10).get('build_info', '?')}")
@@ -725,7 +799,9 @@ class App:
         self.set_state("BOOT", "warming up the model")
         for m in self.modes.values():      # their data (the puzzle book's index, ~1 s) loads while the model warms up
             threading.Thread(target=m.warm, daemon=True).start()
+        steps[3][2], steps[3][3] = "run", time.time()
         self.warm_llm()
+        steps[3][2], steps[3][4] = "ok", time.time()
         say(system_load())
         say(f"voice: {self.voice_label()}")
         self.source, self.source_desc = pick_source()
@@ -739,8 +815,33 @@ class App:
         else:
             self.speak_now("I'm ready, but I can't find a microphone. Plug in a headset with a mic and I'll hear you.",
                            self.add("host", ""))
+        self.booted = True
         self.set_state("READY", self.source_desc)
+        threading.Thread(target=self.watch_servers, daemon=True).start()
         return True
+
+    def watch_servers(self):
+        """After boot, every 5 s: which servers stop answering /health, for the status bar's ✓ or ✖. A failed
+        request marks its server down at once (mark_down); two missed checks in a row do too, and a healthy
+        answer clears it."""
+        missed = {}
+        while self.running:
+            time.sleep(5)
+            for name, url in (("ASR", ASR_URL), ("LLM", LLM_URL), ("TTS", TTS_URL)):
+                missed[name] = 0 if healthy(url) else missed.get(name, 0) + 1
+                down = name in self.down
+                if missed[name] == 0 and down or missed[name] >= 2 and not down:
+                    (self.down.discard if down else self.down.add)(name)
+                    self.ev(f"{name} server {'back' if down else 'down'}")
+                    self.dirty = True
+
+    def mark_down(self, name, e):
+        """A request that could not reach its server (not one the server answered with an error)."""
+        if isinstance(e, (urllib.error.URLError, ConnectionError, TimeoutError)) and \
+                not isinstance(e, urllib.error.HTTPError) and name not in self.down:
+            self.down.add(name)
+            self.ev(f"{name} server down: {e}")
+            self.dirty = True
 
     def warm_llm(self):
         """Process the system prompt once so the first real turn only reads the new words."""
@@ -866,6 +967,7 @@ class App:
                             break
             except Exception as e:
                 cap["failed"] = True
+                self.mark_down("TTS", e)
                 self.q.put(("sys", f"TTS error: {e}"))
             finally:
                 cap["done"] = True
@@ -916,7 +1018,11 @@ class App:
         t = {"t0": time.time()}
         if kind == "wav":
             self.set_state("HEARING", "transcribing")
-            user = transcribe(payload)
+            try:
+                user = transcribe(payload)
+            except Exception as e:
+                self.mark_down("ASR", e)
+                raise
             t["asr"] = time.time()
             self.ev(f"asr {t['asr'] - t['t0']:.2f}s -> {user!r}")
             if gen != self.gen:
@@ -963,7 +1069,7 @@ class App:
             switched = f"{old.id} -> {new.id}"
             old.leave()
             self.prev, self.mode = old, new
-            self.scroll, self.metrics = 0, ""
+            self.scroll = 0
             self.apply_theme()
             self.prefs["mode"] = new.id
             self.ev(f"mode: {old.id} -> {new.id}")
@@ -1102,10 +1208,9 @@ class App:
         asr_s = t["asr"] - t["t0"]
         ttft_s = t.get("ttft", time.time()) - t["asr"]
         fa = t.get("first_audio")
-        self.metrics = (f"hear {asr_s:.1f}s · think {ttft_s:.1f}s · first word "
-                        f"{(fa - t['t0']) if fa else 0:.1f}s · " +
-                        (f"{timings.get('predicted_per_second', 0):.1f} tok/s" if ask_llm else "puzzle book"))
-        self.dirty = True
+        if ask_llm:
+            self.tok_s = timings.get("predicted_per_second") or self.tok_s
+        self.post_turn(asr_s, ttft_s, fa - t["t0"] if fa else None, "" if ask_llm else "puzzle book")
         # log once the whole reply has been voiced (or cut off), so every stall is in it
         while gen == self.gen and len(t.get("tts", [])) < t["pieces"]:
             time.sleep(0.1)
@@ -1135,6 +1240,18 @@ class App:
                                    "voice": self.voice, "model": MODEL_LABEL}) + "\n")
         self.log.flush()
 
+    def post_turn(self, hear, think, first, how):
+        """A timed turn: its timing bar in the transcript, LAST TURN, and BEST TURNS when it ranks there.
+        how: "" when the model answered, else what did instead ("puzzle book", "parser")."""
+        rec = {"hear": hear, "think": think, "first": first, "how": how}
+        self.last_turn = rec
+        if first:
+            self.turn_n += 1
+            self.best = sorted(self.best + [[first, self.mode.name, self.turn_n]])[:4]
+            if any(b[2] == self.turn_n for b in self.best):
+                self.posted = (self.turn_n, time.time())
+        self.add("time", rec)
+
     def speak_text(self, gen, text, t, who="host"):
         """Speak a block of text sentence by sentence on a new transcript line, which fills in as it is heard."""
         row = self.live = self.add(who, "")
@@ -1155,6 +1272,9 @@ class App:
             return http_json(LLM_URL + "/v1/chat/completions", body, timeout=300)
         except urllib.error.HTTPError as e:
             raise RuntimeError(self.llm_error(e.read())) from None
+        except (urllib.error.URLError, OSError) as e:
+            self.mark_down("LLM", e)
+            raise
 
     def stream_reply(self, gen, user_msg, row, t, max_tokens, act):
         """Ask the model, speaking each sentence as it is written. The mode screens each sentence first: ENIGMA
@@ -1195,6 +1315,9 @@ class App:
             resp = urllib.request.urlopen(req, timeout=300)
         except urllib.error.HTTPError as e:   # e.g. the conversation no longer fits the context window
             raise RuntimeError(self.llm_error(e.read())) from None
+        except (urllib.error.URLError, OSError) as e:
+            self.mark_down("LLM", e)
+            raise
         with resp as r:
             for raw in r:
                 if gen != self.gen or state["done"]:
@@ -1513,139 +1636,417 @@ class App:
         self.set_state("READY", self.source_desc)
 
     # -- UI
-    # the current mode's colours: host and title, rules and hints, the player, status lines
-    G, DIM, AMB, CYN = (property(lambda s, i=i: s.mode.ansi[i]) for i in range(4))
-    RED, RST = "\033[38;5;203m", "\033[0m"
+    # One frame is drawn into a screen.Buffer and written in one go. Until boot is done: the title (the pixel
+    # wordmark, each server's line, the credit typed under portmart's status bar). Then: the host's marquee down
+    # the left (hosts, the last turn's time, the session's best times, the machine), the conversation on the
+    # right with each turn's timing under it, the status line, the buttons, and the status bar along the bottom.
+    RAIL_W = 26
+    FLASH_S = 3.0               # how long a time that makes BEST TURNS stays marked
+    SEC_CELLS = 4               # timing bar cells per second (a cell is 0.25 s)
+    HEAR, THINK, SPEAK = "#5fd7ff", "#ffd75f", "#e8eaf0"    # the timing bar's parts (gold would clash with
+    # ENIGMA's and Zork's own colours for speaking, so it is the bright neutral)
+    RANKS = ("#ffd75f", "#ff8f6b", "#5fd7ff", "#d7a1ff")    # arcade high-score rows, 1st to 4th
+    ORDINALS = ("1ST", "2ND", "3RD", "4TH")
+    RED, AMBER, GREEN = "#ff5f5f", "#ffb000", "#4ade80"
+    BAR_BG, SEP, MUTED, TEXT, CYAN, PINK = "#0f1216", "#2a3038", "#9ca3b0", "#e8eaf0", "#00dbe4", "#ff4fd8"
+    SPIN = "◐◓◑◒"               # turns 4 times a second: each turn rewrites one row
+    CREDIT = "retro voice chat is maintained by github.com/mercurious, assisted by claude"
+    # the button hints, in priority order (the least needed are left out on a narrow screen), and the order
+    # they are shown in. X (next voice) still works; the menu has it too.
+    HINTS = [(0, ("B", "R1"), "hold: talk"), (2, ("A",), "stop"), (5, ("Y",), "repeat"), (4, ("START",), "new chat"),
+             (1, ("SELECT",), "hosts"), (3, ("SELECT", "START"), "quit")]
+    MENU_HINTS = [(0, ("▲▼",), "choose"), (1, ("A",), "select"), (2, ("B",), "back")]
+
+    def view_mode(self):
+        """The mode on show: the menu previews the highlighted one (colours, marquee, the panel)."""
+        if self.menu is not None:
+            return self.modes.get(self.menu_rows()[self.menu]) or self.mode
+        return self.mode
+
+    def spin(self):
+        return self.SPIN[int(time.time() * 4) % 4]
+
+    SHADES = " ░▒▓█"
+
+    def flanks(self, v):
+        """The shaded blocks either side of the host's name, as its title has them ("▓▒░ T R I X Y ░▒▓"), and
+        their colour. Idle they stand still; listening, they swell with the mic level; hearing and thinking, a
+        swell runs outward from the name once a second; speaking, they pulse twice a second."""
+        raw = v.title.strip(" ")
+        lead = raw[:len(raw) - len(raw.lstrip("░▒▓█"))] or "▓▒░"
+        trail = raw[len(raw.rstrip("░▒▓█")):] or "░▒▓"
+        near_out = lambda s: [self.SHADES.index(c) for c in s]      # shade levels from the name outward
+        lv_l, lv_r = near_out(lead[::-1]), near_out(trail)
+        g, dim = (screen.x256(c) if isinstance(c, int) else c for c in v.colors[:2])
+        t, st = time.time(), self.state
+        speaking = st == "SPEAKING" or (self.player and self.player.speaking())
+        swell = lambda x: (math.sin(2 * math.pi * x) + 1) / 2
+        if self.menu is not None or v is not self.mode:
+            bump, glow = (lambda i: 0), 1.0
+        elif st == "LISTENING":
+            a = min(1.0, self.level * 1.5)
+            bump, glow = (lambda i: max(0, round(a * 2 - i * 0.7))), 0.45 + 0.55 * a
+        elif st in ("HEARING", "THINKING"):
+            bump, glow = (lambda i: round(swell(t - i * 0.2))), 0.45 + 0.55 * swell(t)
+        elif speaking:
+            p = swell(2 * t)
+            bump, glow = (lambda i: round(p)), 0.45 + 0.55 * p
+        else:
+            bump, glow = (lambda i: 0), 1.0
+        shade = lambda lv: "".join(self.SHADES[min(4, l + bump(i))] for i, l in enumerate(lv))
+        return shade(lv_l)[::-1], shade(lv_r), screen.lerp(dim, g, glow)
 
     def render(self):
         cols, rows = shutil.get_terminal_size((100, 30))
-        out = ["\033[H\033[2J\033[?25l"]
-        if self.theme_due:
-            self.theme_due = False
-            out.insert(0, self.theme_codes())
-        mode = self.mode
-        title = mode.title + mode.subtitle
-        right = f"voice: {self.voice_label()}  ·  {MODEL_LABEL} "
-        if self.bat_pct is not None and cols - len(title) - len(right) - 3 < 28:   # narrow: the meter wins
-            title = mode.title
-        bat, bat_len = self.battery_meter(cols - len(title) - len(right) - 3)
-        out.append(self.G + "\033[1m" + title + self.RST + self.DIM +
-                   right.rjust(max(0, cols - len(title) - bat_len)) + self.RST + bat + "\n")
-        out.append(self.DIM + "─" * cols + self.RST + "\n")
-        body_h = rows - 9
-        wrapped = []
-        tw = max(4, len(mode.name))     # the speaker tags line up
-        for n, (who, text) in enumerate(self.lines):
-            color, tag = {"you": (self.AMB, "YOU" + "›".rjust(tw - 2)),
-                          "host": (self.G, mode.name + "›".rjust(tw - len(mode.name) + 1)),
-                          "game": (self.G, "ZORK" + "›".rjust(tw - 3)),
-                          "sys": (self.CYN, "  ·" + " " * (tw - 3))}[who]
-            tag += " "
-            for i, w in enumerate(textwrap.wrap(text or "…", max(20, cols - 8)) or [""]):
-                wrapped.append(color + (tag if i == 0 else " " * len(tag)) + w + self.RST)
-            if not (who == "sys" and n + 1 < len(self.lines) and self.lines[n + 1][0] == "sys"):
-                wrapped.append("")      # status lines sit together
-        end = max(0, len(wrapped) - self.scroll)
-        view = wrapped[max(0, end - body_h): end] if self.menu is None else self.menu_view(body_h)
-        out.append("\n".join(view) + "\n" * (body_h - len(view) + 1))
-        out.append(self.DIM + "─" * cols + self.RST + "\n")
-        spin = "◐◓◑◒"[int(time.time() * 6) % 4]
-        if self.state == "LISTENING":
-            n = int(self.level * 30)
-            st = f"{self.RED}● LISTENING {self.G}{'▮' * n}{self.DIM}{'▯' * (30 - n)}{self.RST}  " \
-                 f"{time.time() - self.rec_start:4.1f}s   release to send"
-        elif self.state in ("HEARING", "THINKING"):
-            st = f"{self.G}{spin} {self.state}…{self.RST} {self.note}"
-        elif self.state == "SPEAKING" or (self.player and self.player.speaking()):
-            st = f"{self.G}♪ SPEAKING{self.RST}   [A] to stop"
-        elif self.state == "BOOT":
-            st = f"{self.G}{spin} BOOTING{self.RST} {self.note}"
-        elif self.state == "ERROR":
-            st = f"{self.RED}✖ {self.note}{self.RST}"
-        elif self.menu is not None:
-            st = f"{self.G}☰ MODES{self.RST}   [▲▼] choose   [A] select   [B] or [SELECT] back"
+        b = screen.Buffer(cols, rows)
+        if self.booted:
+            self.draw_main(b)
         else:
-            st = mode.ready_line(self.note if self.note else self.source_desc)
-        if self.state in ("BOOT", "ERROR") or self.menu is not None:
-            hints = "[SELECT+START] quit"       # before the model is loaded nothing else works
-        else:
-            hints = self.fit_hints(cols)
-        out.append(st + "\n\n")
-        out.append(self.DIM + hints + self.RST + "\n\n")
-        out.append(self.bottom_line(cols))
-        sys.stdout.write("".join(out))
+            self.draw_title(b)
+        # a new theme repaints everything (the terminal's own colours change); otherwise only changed rows go out
+        prev = None if self.theme_due else self.frame
+        out = (self.theme_codes() if self.theme_due else "") + "\033[?25l" + b.ansi(prev)
+        self.theme_due, self.frame = False, b
+        sys.stdout.write(out)
         sys.stdout.flush()
         self.dirty = False
 
-    # the button hints, in priority order (the least needed are left out on a narrow screen), and the order
-    # they are shown in. X (next voice) still works; the menu has it too.
-    HINTS = [(0, "[B]/[R1] hold: talk"), (2, "[A] stop"), (5, "[Y] repeat"), (4, "[START] new chat"),
-             (1, "[SELECT] menu"), (3, "[SELECT+START] quit")]
+    # -- the title screen
+    def draw_title(self, b):
+        now = time.time()
+        t, cols, rows = now - self.t_launch, b.cols, b.rows
+        mode = self.mode
+        dim = mode.colors[1]
+        # behind it all, squares in near shades of the mode's ground that pulse in size and brightness; each row
+        # of text sits on a band of clean ground, so the squares move around the words, not through them
+        ground = "#" + mode.bg
+        b.backdrop(self.backdrop, 0, rows - 2, t, ground, "#" + mode.fg)
+        band = lambda x, y, w: b.fill(x - 2, y, w + 4, 1, ground)
+        word = "RETRO VOICE CHAT" if cols >= screen.big_width("RETRO VOICE CHAT") + 4 else "RETRO VOICE"
+        ww = screen.big_width(word)
+        oy = max(0, (rows - 26) // 2)
+        wx, wy = max(0, (cols - ww) // 2), 3 + oy
+        for r in range(4):
+            band(wx, wy + r, ww)
+        stops = [m.colors[0] for m in self.modes.values()]
+        shown = word[:int(t / 0.04) + 1]     # the letters arrive one by one, then the hosts' colours chase along
+        step = int(t * 2)                    # them like marquee bulbs, twice a second
+        letter = [i for i, ch in enumerate(shown) for _ in range(screen.big_width(ch) + 1)]     # pixel -> letter
+        b.big(wx, wy, shown, lambda px, py: stops[(letter[px] + step) % len(stops)])
+        line = f"v{VERSION}  ·  local voice chat for ROCKNIX"
+        band((cols - len(line)) // 2, wy + 5, len(line))
+        b.put((cols - len(line)) // 2, wy + 5, line, self.MUTED)
+        bill = [(m.name, m.colors[0]) for m in self.modes.values()]       # who is on: each host in its colours
+        bw = sum(len(n) for n, _ in bill) + 5 * (len(bill) - 1)
+        x = (cols - bw) // 2
+        band(x, wy + 7, bw)
+        for i, (name, c) in enumerate(bill):
+            x = b.put(x + (5 if i else 0), wy + 7, name, c, None, True)
+            if i < len(bill) - 1:
+                b.put(x + 2, wy + 7, "·", self.MUTED)
+        sx, y = (cols - 50) // 2, wy + 10
+        for label, what, st, t0, t1 in self.boot_steps:
+            band(sx, y, 50)
+            b.put(sx, y, label, mode.colors[0], None, True)
+            b.put(sx + 5, y, what[:34], None if st in ("run", "ok") else dim)
+            glyph, note, c = {"wait": ("·", "", dim), "run": (self.spin(), f"{now - t0:.0f} s", self.CYAN),
+                              "ok": ("✓", f"{t1 - t0:.1f} s", self.GREEN),
+                              "fail": ("✖", "did not start", self.RED)}[st]
+            b.put(sx + 40, y, glyph, c, None, True)
+            b.put(sx + 42, y, note, c)
+            y += 1
+        y += 1
+        # the driver, llama.cpp and tuning details stay in the transcript; here, one plain line
+        tagline = "local language models powered by llamatalk runtime"
+        band(sx, y, len(tagline))
+        b.put(sx, y, tagline, dim)
+        y += 1
+        if self.state == "ERROR":
+            err = f"✖ {self.note}: see logs/ for its output"
+            band(sx, y + 1, len(err))
+            b.put(sx, y + 1, err, self.RED, None, True)
+        failed = any(s[2] == "fail" for s in self.boot_steps)
+        right = "models " + ("✖" if failed else self.spin())
+        self.draw_bar(b, rows - 2, [(mode.name, mode.colors[0])], [(right, self.RED if failed else self.CYAN)])
+        b.put(1, rows - 1, "╰─", self.SEP)
+        typed = self.CREDIT[:max(0, int((t - 0.8) / 0.03))]      # typed after the wordmark lands, as portmart
+        x = b.put(4, rows - 1, typed, self.TEXT)
+        if t > 0.8:
+            b.put(x, rows - 1, "█", self.TEXT)
+        x = cols - 1 - len("quit") - 1 - len("SELECT") - len("START") - 5
+        if x > 4 + len(self.CREDIT) + 2:
+            x = b.pill(x, rows - 1, "SELECT", screen.PAD["SELECT"])
+            x = b.put(x, rows - 1, "+", self.MUTED)
+            x = b.pill(x, rows - 1, "START", screen.PAD["START"])
+            b.put(x + 1, rows - 1, "quit", self.MUTED)
 
-    def fit_hints(self, cols):
-        keep = sorted(self.HINTS)
-        if not self.source:     # no mic: nothing to hold a button for
-            keep = keep[1:]
-        while keep and len("  ".join(h for _, h in keep)) > cols - 1:
-            keep.pop()
-        return "  ".join(h for _, h in sorted(keep, key=lambda x: self.HINTS.index(x)))
+    def draw_bar(self, b, y, extra, right):
+        """portmart's status bar: ◆ > ROCKNIX > device > ... ──── right, a list of (text, colour) joined by ·."""
+        b.fill(0, y, b.cols, 1, self.BAR_BG)
+        segs = [("◆", self.PINK), ("ROCKNIX", self.TEXT)] + ([(self.device, self.CYAN)] if self.device else []) + extra
+        rw = sum(len(s) for s, _ in right) + 3 * (len(right) - 1)
+        while len(segs) > 1 and sum(len(s) + 3 for s, _ in segs) > b.cols - rw - 6:    # narrow: the last ones go first
+            segs.pop()
+        x = 1
+        for i, (s, c) in enumerate(segs):
+            if i:
+                x = b.put(x + 1, y, ">", self.SEP) + 1
+            x = b.put(x, y, s, c, None, i == 0)
+        b.put(x + 1, y, "─" * max(0, b.cols - x - rw - 4), self.SEP)
+        x = b.cols - 1 - rw
+        for i, (s, c) in enumerate(right):
+            if i:
+                x = b.put(x, y, " · ", self.MUTED)
+            x = b.put(x, y, s, c)
 
-    def menu_view(self, height):
-        """The SELECT menu, in place of the transcript: each mode in its own colours, the current one marked."""
-        out = ["", f"{self.G}\033[1m   M O D E S{self.RST}", ""]
-        for i, row in enumerate(self.menu_rows()):
-            here = i == self.menu
-            ptr = "▶" if here else " "
-            if row in self.modes:
-                m = self.modes[row]
-                g, d = m.ansi[0], m.ansi[1]
-                cur = "●" if m is self.mode else " "
-                label = f" {m.label:<16} "
-                note = m.blurb if m.available() else "not installed"
-                out.append(f"  {g}{ptr} {cur} " + (f"\033[7m\033[1m{label}\033[0m" if here else f"{g}{label}") +
-                           f"  {d}{note}{self.RST}")
-            else:
-                name, value, act = ("Voice", self.voice_label(), "[A] next voice") if row == "voice" else \
-                    ("Model", MODEL_LABEL, f"[A] switch to {self.other_model()} (restarts the model)")
-                label = f" {name:<16} "
-                out.append(f"  {self.G}{ptr}   " + (f"\033[7m{label}\033[0m" if here else label) +
-                           f"  {self.DIM}{value}   {act}{self.RST}")
-            out.append("")
-        return out[:height]
-
-    def battery_meter(self, room):
-        """Battery meter for the top right corner, as (text, visible length); fits in `room` columns."""
-        if self.bat_pct is None:
-            return "", 0
-        pct = self.bat_pct
-        if self.bat_status in ("Charging", "Full"):
-            tail = f" {pct}% {self.bat_status.lower()} "
+    # -- the main screen
+    def draw_main(self, b):
+        cols, rows = b.cols, b.rows
+        v = self.view_mode()
+        g, dim = v.colors[:2]
+        rail = cols >= 80 and rows >= 18
+        x0 = self.RAIL_W + 2 if rail else 1
+        w = cols - x0 - 1
+        if rail:
+            self.draw_rail(b, v)
+        # header: the host between its shaded blocks (which throb while it listens, thinks or speaks), what it is
+        # for, the voice
+        title = v.title.strip(" ▓▒░█") or v.name
+        left, right, fc = self.flanks(v)
+        x = b.put(x0, 0, left, fc)
+        x = b.put(x + 1, 0, title, g, None, True)
+        x = b.put(x + 1, 0, right, fc)
+        b.put(x + 3, 0, v.subtitle.strip(), dim)
+        b.rput(cols - 1, 0, f"voice {self.voice_label()}", dim)
+        b.put(x0, 1, "─" * w, dim)
+        if self.menu is not None:
+            self.draw_menu_panel(b, x0, 3, w)
         else:
-            tail = f" {pct}% · {self.bat_w:.1f} W "
-        head = " ·  battery "
-        cells = min(10, room - len(head) - len(tail))
-        if cells < 4:                        # narrow screen: just the number
-            head, cells = " · ", 0
-        n = min(cells, round(pct * cells / 100))
-        color = self.G if pct > 50 or self.bat_status in ("Charging", "Full") else self.AMB if pct > 20 else self.RED
-        text = f"{self.DIM}{head}{color}{'▮' * n}{self.DIM}{'▯' * (cells - n)}{color}{tail}{self.RST}"
-        return text, len(head) + cells + len(tail)
+            self.draw_transcript(b, x0, 2, w, rows - 7)
+        b.put(x0, rows - 5, "─" * w, dim)
+        x = x0
+        for text, c, bold in self.status_segs():
+            x = b.put(x, rows - 4, text, c, None, bold)
+        self.draw_hints(b, x0, rows - 3, w)
+        mic = (self.source_desc, self.GREEN if self.source else self.AMBER)
+        # right of the bar: whether the servers answer, and the CPU; with no marquee, what it would have shown,
+        # in short labels, battery early (on a handheld it is the one not to lose)
+        rec = self.last_turn
+        items = [] if rail else \
+            ([f"{rec['first']:.1f}s"] if rec and rec["first"] else []) + \
+            ([f"bat {self.bat_pct}%"] if self.bat_pct is not None else []) + \
+            ([f"ctx {round(100 * self.ctx_used / self.n_ctx)}%"] if self.n_ctx else []) + \
+            ([f"{self.tok_s:.1f} tok/s"] if self.tok_s else []) + \
+            ([f"mem {self.mem_free:.1f}G"] if self.mem_free is not None else [])
+        items += [f"cpu {self.cpu_pct}%"] if self.cpu_pct is not None else []
+        servers = "✖ " + " ".join(sorted(self.down)) if self.down else "✓" if not rail else "servers ✓"
+        while items and len(" · ".join(items + [servers])) > cols - 6:
+            items.pop()
+        self.draw_bar(b, rows - 1, [mic, (f"voice {self.voice_label()}", self.MUTED)],
+                      [(s, self.CYAN) for s in items] + [(servers, self.RED if self.down else self.CYAN)])
 
-    def bottom_line(self, cols):
-        """Turn metrics on the left, context window meter in the lower right corner."""
-        if not self.n_ctx:
-            return self.DIM + self.metrics + self.RST
-        frac = self.ctx_used / self.n_ctx
-        count = f" {self.ctx_used:,} / {self.n_ctx:,}"
-        left = self.metrics
-        cells = min(20, max(6, cols - 1 - len(left) - 2 - len("context ") - len(count)))
-        if len(left) + 2 + len("context ") + cells + len(count) > cols - 1:   # narrow screen: meter wins
-            left = ""
-        n = min(cells, round(frac * cells))
-        color = self.G if frac < 0.6 else self.AMB if frac < 0.85 else self.RED
-        meter = f"{self.DIM}context {color}{'▮' * n}{self.DIM}{'▯' * (cells - n)}{color}{count}{self.RST}"
-        pad = cols - 1 - len(left) - len("context ") - cells - len(count)
-        return self.DIM + left + self.RST + " " * pad + meter
+    def draw_transcript(self, b, x0, y0, w, height):
+        mode = self.mode
+        g, dim, amb, cyn = mode.colors
+        tw = max(4, len(mode.name))     # the speaker tags line up
+        rows = []                       # (tag, text, colour) | ("time", rec) | None for a gap
+        for n, (who, text) in enumerate(self.lines):
+            nxt = self.lines[n + 1][0] if n + 1 < len(self.lines) else None
+            if who == "time":
+                rows += [("time", text), None]
+                continue
+            color, name = {"you": (amb, "YOU"), "host": (g, mode.name), "game": (g, "ZORK"), "sys": (cyn, "·")}[who]
+            tag = f"{name:>{tw}}{'›' if who != 'sys' else ' '} "
+            for i, line in enumerate(textwrap.wrap(text or "…", max(20, w - len(tag))) or [""]):
+                rows.append((tag if i == 0 else " " * len(tag), line, color))
+            if not (who == "sys" and nxt == "sys" or nxt == "time"):     # status lines and a turn's timing sit close
+                rows.append(None)
+        end = max(0, len(rows) - self.scroll)
+        for i, row in enumerate(rows[max(0, end - height): end]):
+            if row is None:
+                continue
+            if row[0] == "time":
+                self.draw_timing(b, x0 + tw + 2, y0 + i, w - tw - 2, row[1])
+            else:
+                b.put(b.put(x0, y0 + i, row[0], row[2], None, row[0].strip() != ""), y0 + i, row[1], row[2])
+
+    def draw_timing(self, b, x, y, w, rec):
+        """A turn's timing as one bar, each part as long as it took (SEC_CELLS a second), then the legend and
+        the time to the first spoken word."""
+        hear, think, first = rec["hear"], rec["think"], rec["first"]
+        speak = max(0.0, first - hear - think) if first else 0.0
+        parts = [("hear", hear, self.HEAR), (rec["how"] or "think", think, self.THINK)] + \
+                ([("speak", speak, self.SPEAK)] if first else [])
+        label = lambda name, s: f"{name} {s:.1f}" if s >= 0.05 else name     # the parser takes no time worth a number
+        legend = "  ".join(label(name, s) for name, s, _ in parts)
+        total = f"{first:.1f}s" if first else "not voiced"
+        room = max(4, w - len(legend) - len(total) - 4)
+        k = min(self.SEC_CELLS, room / max(0.1, hear + think + speak))     # a long turn is drawn to scale, smaller
+        xx = x
+        for _, s, c in parts:
+            xx = b.put(xx, y, "━" * (max(1, round(s * k)) if s >= 0.05 else 0), c)
+        dim = self.mode.colors[1]         # only the bar carries colour; the legend reads in its order
+        for i, (name, s, _) in enumerate(parts):
+            xx = b.put(xx + (2 if i else 1), y, name, dim)
+            if s >= 0.05:
+                xx = b.put(xx + 1, y, f"{s:.1f}")
+        b.rput(x + w, y, total, self.mode.colors[0], None, True)
+
+    def draw_menu_panel(self, b, x0, y, w):
+        """SELECT: the highlighted row, large, with what it is and what A does."""
+        row = self.menu_rows()[self.menu]
+        m = self.modes.get(row)
+        if m:
+            g, dim = m.colors[:2]
+            name, lines = m.name, [m.blurb, "not installed" if not m.available() else
+                                   "you are here" if m is self.mode else "A to switch: it keeps its own conversation"]
+        else:
+            g, dim = self.mode.colors[:2]
+            name = "VOICE" if row == "voice" else "MODEL"
+            lines = [f"now: {self.voice_label()}", "A for the next voice"] if row == "voice" else \
+                    [f"now: {MODEL_NAME}", f"A to switch to {self.other_model()} (restarts the model)"]
+        b.put(x0, y, " ".join(name), g, None, True)     # the pixel font is the wordmark's and the score's alone
+        y += 2
+        b.put(x0, y, lines[0][:w])
+        b.put(x0, y + 2, lines[1][:w], dim)
+
+    def status_segs(self):
+        """The status line as [(text, colour, bold)]."""
+        g, dim = self.view_mode().colors[:2]
+        st = self.state
+        if st == "LISTENING":
+            n = int(self.level * 30)
+            return [("● LISTENING ", self.RED, True), ("▮" * n, g, False), ("▯" * (30 - n), dim, False),
+                    (f"  {time.time() - self.rec_start:4.1f}s   release to send", None, False)]
+        if st in ("HEARING", "THINKING"):
+            return [(f"{self.spin()} {st}…", g, True), (f" {self.note}", None, False)]
+        if st == "SPEAKING" or (self.player and self.player.speaking()):
+            return [("♪ SPEAKING", g, True), ("   A to stop", dim, False)]
+        if st == "ERROR":
+            return [(f"✖ {self.note}", self.RED, True)]
+        if self.menu is not None:
+            return [("☰ HOSTS", g, True), ("   SELECT or B to go back", dim, False)]
+        return self.mode.ready_line(self.note if self.note else self.source_desc)
+
+    def draw_hints(self, b, x, y, w):
+        """The buttons, as pills, over two rows; the least needed are left out only when two rows can't hold them."""
+        hints = self.MENU_HINTS if self.menu is not None else \
+            [h for h in self.HINTS if self.source or h[1][0] != "B"]      # no mic: nothing to hold a button for
+        size = lambda h: sum(len(k) + 2 for k in h[1]) + len(h[1]) + len(h[2])
+        keep = sorted(hints)
+        while True:
+            lines, cur = [[]], 0
+            for h in sorted(keep, key=hints.index):
+                need = size(h) + (3 if lines[-1] else 0)
+                if lines[-1] and cur + need > w:
+                    lines.append([])
+                    cur, need = 0, size(h)
+                lines[-1].append(h)
+                cur += need
+            if len(lines) <= 2 or not keep:
+                break
+            keep.pop()
+        dim = self.view_mode().colors[1]
+        for row, line in enumerate(lines):
+            xx = x
+            for h in line:
+                for i, k in enumerate(h[1]):
+                    if i:
+                        xx = b.put(xx, y + row, "+" if h[1] == ("SELECT", "START") else "/", self.MUTED)
+                    xx = b.pill(xx, y + row, k, screen.PAD[k])
+                xx = b.put(xx + 1, y + row, h[2], dim) + 3
+
+    # -- the marquee: the left rail, in the host's own field colour
+    def draw_rail(self, b, v):
+        field, ink, quiet = v.marquee
+        W, last_row = self.RAIL_W, b.rows - 2
+        b.fill(0, 0, W, b.rows - 1, field)
+        b.put(2, 0, "RETRO VOICE CHAT", ink, None, True)
+        rows = self.menu_rows() if self.menu is not None else [m.id for m in self.modes.values()]
+        # the modules, top down; BEST TURNS, then LAST TURN, give way when the screen is short
+        mods = [("HOSTS", len(rows), self.rail_hosts), ("LAST TURN", 5, self.rail_last),
+                ("BEST TURNS", 4, self.rail_best), ("MACHINE", 6, self.rail_machine)]
+        for drop in ("BEST TURNS", "LAST TURN"):
+            if 2 + sum(h + 2 for _, h, _ in mods) - 1 > last_row:
+                mods = [m for m in mods if m[0] != drop]
+        y = 2
+        for title, h, draw in mods:
+            b.put(2, y, f" {title} ", field, ink, True)
+            b.put(len(title) + 5, y, "─" * (W - len(title) - 7), quiet)
+            draw(b, y + 1, field, ink, quiet, rows)
+            y += h + 2
+
+    def rail_hosts(self, b, y, field, ink, quiet, rows):
+        W = self.RAIL_W
+        for i, row in enumerate(rows):
+            m = self.modes.get(row)
+            here = i == self.menu if self.menu is not None else m is self.mode
+            fg = field if here else ink
+            if here:
+                b.fill(1, y + i, W - 2, 1, ink)
+            if m:
+                b.put(1, y + i, "▶" if m is self.mode else " ", fg, None, True)
+                b.put(3, y + i, "■", field if here else m.colors[0])
+                b.put(5, y + i, m.name, fg if here or m.available() else quiet, None, here or m is self.mode)
+                side = m.subtitle.split()[-1] if m.available() and m.subtitle.split() else "—"
+                b.rput(W - 2, y + i, side, fg if here else quiet)
+            else:
+                b.put(5, y + i, row.capitalize(), fg, None, here)
+                b.rput(W - 2, y + i, (self.voice_label() if row == "voice" else MODEL_KIND)[:W - 13], fg if here else quiet)
+
+    def rail_last(self, b, y, field, ink, quiet, rows):
+        rec = self.last_turn
+        first = rec["first"] if rec else None
+        rank = next((i for i, x in enumerate(self.best) if x[2] == self.turn_n), None) if first else None
+        c = ink if first else quiet       # the rank colours belong to BEST TURNS alone
+        if first:                         # before the first timed turn: no number at all, not a fake one
+            x = 3 + b.big(3, y, f"{min(first, 99.9):.1f}", lambda px, py: c)
+            b.put(x + 1, y + 3, "s", c)
+        fresh = rank is not None and self.posted[0] == self.turn_n and time.time() - self.posted[1] < self.FLASH_S
+        if fresh:
+            note = f"{self.ORDINALS[rank]} BEST TURN"
+        else:
+            note = ("to first word" + (f" · {rec['how']}" if rec["how"] else "")) if first else \
+                "not voiced" if rec else "talk to time a turn"
+        b.put(3, y + (4 if first else 0), note[:self.RAIL_W - 4], ink if fresh else quiet, None, fresh)
+
+    def rail_best(self, b, y, field, ink, quiet, rows):
+        if not self.best:
+            b.put(3, y, "no times yet", quiet)
+            return
+        flash = self.posted[0] if time.time() - self.posted[1] < self.FLASH_S else None
+        for i, (secs, name, n) in enumerate(self.best):
+            c = self.RANKS[i]
+            if n == flash:
+                b.fill(1, y + i, self.RAIL_W - 2, 1, screen.lerp(field, ink, 0.18))
+            b.put(3, y + i, f"{self.ORDINALS[i]}  {name[:8]}", c, None, n == flash)
+            b.rput(self.RAIL_W - 2, y + i, f"{secs:.1f}s", c, None, n == flash)
+
+    def rail_machine(self, b, y, field, ink, quiet, rows):
+        R = self.RAIL_W - 2
+        b.put(3, y, MODEL_NAME[:R - 3], ink)
+        b.put(3, y + 1, "speed", quiet)
+        b.rput(R, y + 1, f"{self.tok_s:.1f} tok/s" if self.tok_s else "—", ink)
+        b.put(3, y + 2, "context", quiet)
+        if self.n_ctx:
+            frac = min(1.0, self.ctx_used / self.n_ctx)
+            c = ink if frac < 0.6 else self.AMBER if frac < 0.85 else self.RED
+            n = round(frac * 8)
+            b.put(11, y + 2, "▮" * n, c)
+            b.put(11 + n, y + 2, "▯" * (8 - n), quiet)
+            b.rput(R, y + 2, f"{round(frac * 100)}%", c)
+            b.rput(R, y + 3, f"{self.ctx_used:,} / {self.n_ctx:,} tokens", quiet)
+        else:
+            b.rput(R, y + 2, "—", quiet)
+        b.put(3, y + 4, "memory", quiet)
+        b.rput(R, y + 4, f"{self.mem_free:.1f} GB free" if self.mem_free is not None else "—", ink)
+        b.put(3, y + 5, "battery", quiet)
+        if self.bat_pct is not None:
+            pct, charging = self.bat_pct, self.bat_status in ("Charging", "Full")
+            c = ink if pct > 50 or charging else self.AMBER if pct > 20 else self.RED
+            b.rput(R, y + 5, f"{pct}% " + (self.bat_status.lower() if charging else f"{self.bat_w:.1f} W"), c)
+        else:
+            b.rput(R, y + 5, "—", quiet)
 
     def main(self):
         if not HEADLESS:
@@ -1661,7 +2062,6 @@ class App:
             "".join(traceback.format_exception(a.exc_type, a.exc_value, a.exc_traceback)).replace("\n", " | "))
         self.ev(f"screen {shutil.get_terminal_size((0, 0))}")
         self.apply_theme()
-        self.add("sys", f"v{VERSION} brought to you by mercurious assisted by claude")
         InputThread(self.q).start()
         threading.Thread(target=self.speaker_loop, daemon=True).start()
         threading.Thread(target=self.work_loop, daemon=True).start()
@@ -1693,11 +2093,26 @@ class App:
                 if now - self.jack_t >= 1 and self.state != "BOOT":
                     self.jack_t = now
                     self.poll_jack(now)
-                if self.bat_dir and now - self.bat_t >= 2:
+                if now - self.bat_t >= 2:
                     self.bat_t = now
-                    self.poll_battery()
-                animated = self.state in ("LISTENING", "HEARING", "THINKING", "BOOT")
-                if not HEADLESS and (self.dirty or animated) and now - last > 0.1:
+                    self.bat_dir and self.poll_battery()
+                    mem, self.mem_free = self.mem_free, mem_free_gb()
+                    self.dirty |= mem is None or self.mem_free is None or abs(mem - self.mem_free) >= 0.05
+                    try:
+                        cpu = cpu_times()
+                        if self.cpu_last and cpu[0] > self.cpu_last[0]:
+                            self.cpu_pct = round(100 * (1 - (cpu[1] - self.cpu_last[1]) / (cpu[0] - self.cpu_last[0])))
+                        self.cpu_last, self.dirty = cpu, True
+                    except (OSError, ValueError):
+                        pass
+                speaking = self.state == "SPEAKING" or (self.player and self.player.speaking())
+                animated = self.state in ("LISTENING", "HEARING", "THINKING", "BOOT") or not self.booted or \
+                    speaking or now - self.posted[1] < self.FLASH_S + 0.2
+                # the mic meter wants 10 frames a second and the header's throb and spinners about 6 (only the rows
+                # that change are sent); the title's backdrop repaints nearly every row, about 20 ms on a little
+                # core, so it steps 4 times a second while the models load
+                wait = 0.1 if self.dirty or self.state == "LISTENING" else 0.25 if not self.booted else 0.16
+                if not HEADLESS and (self.dirty or animated) and now - last > wait:
                     self.render()
                     last = now
         finally:

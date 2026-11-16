@@ -57,6 +57,7 @@ class Retro(Mode):
     title, subtitle = " ▓▒░ T R I X Y ░▒▓", "   retro gaming"
     bg, fg = "030a03", "33ff66"         # phosphor green
     colors = (46, 28, 214, 44)
+    marquee = ("#0d4a1e", "#d2ffdc", "#86d39b")    # deep phosphor
     greet = "TRIXY here, ready to talk games. Hold the B button or R1 and talk to me."
     back = "TRIXY here. What are we playing?"
     fresh = "Fresh start. What's on your mind?"

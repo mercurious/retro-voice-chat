@@ -18,13 +18,12 @@ Hooks, all optional:
   after(user, act, kept, asked, invented)   words to speak after the model's reply
   reset()                     START: a new conversation
   status()                    a short state for the status line and the log
-  ready_line(mic)             the whole status line while idle
+  ready_line(mic)             the whole status line while idle, as [(text, colour, bold), ...]
   close()                     the app is quitting
 """
 import time
 
-# 256-colour codes: (host and title, dim rules and hints, the player's lines, status lines)
-ANSI = "\033[38;5;{}m"
+# colours are 256-colour indexes or "#rrggbb" (see screen.py)
 
 
 class Mode:
@@ -39,7 +38,9 @@ class Mode:
     title = ""
     subtitle = ""
     bg, fg = "000000", "e0e0e0"     # the terminal's background and text
-    colors = (252, 244, 214, 44)
+    colors = (252, 244, 214, 44)    # host and title, dim rules and hints, the player's lines, status lines
+    # the marquee: the left rail's field, its text, and its quieter text (truecolour, one world per host)
+    marquee = ("#1e2230", "#e6e8ef", "#9aa0b4")
     prompt = ""
     greet = ""              # the first time this mode is entered
     back = ""               # coming back to it later
@@ -53,10 +54,6 @@ class Mode:
         self.ctx_used = self.ctx_base = 0
         self.entered = False
         self.sys = None
-
-    @property
-    def ansi(self):
-        return tuple(ANSI.format(c) for c in self.colors)
 
     def system(self):
         """The system prompt, fixed for the session (a change would make the model read it all again)."""
@@ -110,8 +107,8 @@ class Mode:
         return ""
 
     def ready_line(self, mic):
-        app, s = self.app, self.status()
-        return f"{app.G}▶ {s or 'READY'}{app.RST}   {app.DIM}{mic}{app.RST}"
+        s, (g, dim) = self.status(), self.colors[:2]
+        return [(f"▶ {s or 'READY'}", g, True), ("   " + mic, dim, False)]
 
     def close(self):
         pass
